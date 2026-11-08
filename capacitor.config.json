@@ -1,0 +1,22 @@
+{
+  "appId": "com.smartrouter.dashboard",
+  "appName": "Smart Router Control",
+  "webDir": "public",
+  "bundledWebRuntime": false,
+  "server": {
+    "cleartext": true,
+    "allowNavigation": [
+      "192.168.*",
+      "10.*",
+      "172.*"
+    ]
+  },
+  "android": {
+    "allowMixedContent": true
+  },
+  "plugins": {
+    "CapacitorHttp": {
+      "enabled": true
+    }
+  }
+}

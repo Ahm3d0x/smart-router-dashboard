@@ -1,0 +1,2051 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Router Control Dashboard</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #090d16;
+      color: #e2e8f0;
+    }
+    .glass-card {
+      background: rgba(17, 24, 39, 0.78);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glass-panel {
+      background: rgba(11, 15, 25, 0.92);
+      backdrop-filter: blur(18px);
+      border-color: rgba(255, 255, 255, 0.08);
+    }
+    .btn-press {
+      transition: transform 0.12s ease, background-color 0.15s ease;
+    }
+    .btn-press:active {
+      transform: scale(0.97);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-amber-500/30 selection:text-amber-200 overflow-x-hidden">
+
+  <!-- ===================================================================== -->
+  <!-- VIEW 1: DEDICATED LOGIN & MULTI-ROUTER ACCOUNT MANAGER SCREEN         -->
+  <!-- ===================================================================== -->
+  <div id="loginScreen" class="min-h-screen flex items-center justify-center pt-14 pb-6 px-4 sm:p-6">
+    <div class="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+      <!-- Saved Router Accounts Column (Instant One-Click Auto-Login) -->
+      <div class="lg:col-span-5 glass-card rounded-2xl p-5 space-y-4">
+        <div class="flex items-center justify-between border-b border-white/10 pb-3">
+          <div>
+            <h2 class="text-sm font-bold text-white">Saved Router Accounts</h2>
+            <p class="text-[11px] text-slate-400">Click any saved router to log in immediately</p>
+          </div>
+          <span id="savedAccountsCountBadge" class="px-2 py-0.5 text-xs font-mono rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30">0</span>
+        </div>
+
+        <div id="savedAccountsList" class="space-y-2.5 max-h-80 overflow-y-auto pr-1"></div>
+
+        <div class="pt-2 border-t border-white/10 flex items-center justify-between text-[11px] text-slate-400">
+          <span>Auto-login on startup</span>
+          <label class="inline-flex items-center gap-2 cursor-pointer">
+            <input id="autoLoginToggle" type="checkbox" checked class="w-3.5 h-3.5 accent-amber-500 rounded cursor-pointer" />
+            <span class="text-slate-300 font-medium">Enabled</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Add / Sign In to Router Form Column -->
+      <div class="lg:col-span-7 glass-card rounded-2xl p-6 space-y-5">
+        <div class="flex items-center gap-3 border-b border-white/10 pb-4">
+          <div class="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8.288 15.038a5.25 5.25 0 017.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0M12.53 18.22l-.53.53-.53-.53a.75.75 0 011.06 0z" />
+            </svg>
+          </div>
+          <div>
+            <h1 class="text-base font-bold text-white">Router Gateway Authentication</h1>
+            <p class="text-xs text-slate-400">Save multiple router accounts &amp; sign in automatically via the local backend proxy</p>
+          </div>
+        </div>
+
+        <form id="gatewayConfigForm" class="space-y-4">
+          <input type="hidden" id="loginAccountId" value="" />
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <div>
+              <label for="loginLabel" class="block text-xs font-medium text-slate-300 mb-1">Account / Router Name</label>
+              <input id="loginLabel" type="text" placeholder="e.g., Home Router - Floor 1" required class="w-full px-3.5 py-2 rounded-xl bg-slate-900/90 border border-white/10 text-xs text-white focus:outline-none focus:border-amber-500" />
+            </div>
+            <div>
+              <label for="cfgRouterIp" class="block text-xs font-medium text-slate-300 mb-1">Gateway IP Address</label>
+              <input id="cfgRouterIp" type="text" value="192.168.1.1" required class="w-full px-3.5 py-2 rounded-xl bg-slate-900/90 border border-white/10 text-xs font-mono text-white focus:outline-none focus:border-amber-500" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <div>
+              <label for="cfgProfile" class="block text-xs font-medium text-slate-300 mb-1">Router Hardware Model</label>
+              <select id="cfgProfile" class="w-full px-3.5 py-2 rounded-xl bg-slate-900/90 border border-white/10 text-xs text-white focus:outline-none focus:border-amber-500">
+                <option value="ZTE_H188A">ZTE ZXHN H188A / H168N (WE / Orange Egypt)</option>
+                <option value="HUAWEI_DN8245V">Huawei DN8245V / DG8045 / HG630 (WE / Orange / Vodafone)</option>
+                <option value="AUTO_DETECT">Auto-Detect Gateway (ZTE / Huawei / TP-Link)</option>
+              </select>
+            </div>
+            <div>
+              <label for="loginProtocol" class="block text-xs font-medium text-slate-300 mb-1">Protocol</label>
+              <select id="loginProtocol" class="w-full px-3.5 py-2 rounded-xl bg-slate-900/90 border border-white/10 text-xs font-mono text-white focus:outline-none focus:border-amber-500">
+                <option value="http">http:// (Standard)</option>
+                <option value="https">https:// (Self-Signed SSL Bypass)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <div>
+              <label for="cfgUsername" class="block text-xs font-medium text-slate-300 mb-1">Router Admin Username</label>
+              <input id="cfgUsername" type="text" value="admin" required class="w-full px-3.5 py-2 rounded-xl bg-slate-900/90 border border-white/10 text-xs font-mono text-white focus:outline-none focus:border-amber-500" />
+            </div>
+            <div>
+              <label for="cfgPassword" class="block text-xs font-medium text-slate-300 mb-1">Router Admin Password</label>
+              <div class="relative">
+                <input id="cfgPassword" type="password" placeholder="Enter gateway password" required class="w-full pl-3.5 pr-14 py-2 rounded-xl bg-slate-900/90 border border-white/10 text-xs font-mono text-white focus:outline-none focus:border-amber-500" />
+                <button type="button" data-toggle-pass="cfgPassword" class="toggle-pass-btn absolute right-2 top-1.5 px-2 py-0.5 rounded bg-white/5 hover:bg-white/10 text-[10px] text-slate-300">Show</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between p-3 rounded-xl bg-slate-900/60 border border-white/5 text-xs">
+            <div>
+              <span class="text-white font-medium">Headless Automation Mode</span>
+              <p class="text-[11px] text-slate-400">Uncheck to open visible Chromium window (<code class="text-amber-300">HEADLESS=false</code>)</p>
+            </div>
+            <input id="cfgHeadless" type="checkbox" checked class="w-4 h-4 accent-amber-500 rounded cursor-pointer" />
+          </div>
+
+          <div class="flex items-center justify-end gap-2.5 pt-1">
+            <button id="resetLoginFormBtn" type="button" class="btn-press px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-medium text-slate-300">
+              Clear Form
+            </button>
+            <button id="loginSubmitBtn" type="submit" class="btn-press px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-semibold text-xs">
+              Save Account &amp; Connect
+            </button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- VIEW 2: MAIN ROUTER DASHBOARD (COMPACT HEADER + ORGANIZED LAYOUT)     -->
+  <!-- ===================================================================== -->
+  <div id="dashboardScreen" class="hidden min-h-screen flex flex-col lg:flex-row">
+
+    <!-- Desktop Sidebar -->
+    <aside class="hidden lg:flex lg:w-64 glass-panel border-r flex-col justify-between shrink-0">
+      <div>
+        <div class="h-14 px-4 flex items-center justify-between border-b border-white/10">
+          <div class="flex items-center gap-2.5 min-w-0">
+            <div class="w-8 h-8 rounded-lg bg-amber-500 flex items-center justify-center text-slate-950 font-bold shrink-0">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8.288 15.038a5.25 5.25 0 017.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0" />
+              </svg>
+            </div>
+            <div class="truncate">
+              <p id="sidebarEngineBadge" class="text-xs font-bold text-white truncate">Router Gateway</p>
+              <p id="sidebarGatewayIp" class="text-[11px] text-slate-400 font-mono">192.168.1.1</p>
+            </div>
+          </div>
+        </div>
+
+        <nav id="sidebarNav" class="p-3 space-y-1">
+          <button type="button" data-tab="overview" class="nav-tab w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium bg-amber-500/15 text-amber-400 border border-amber-500/30">
+            <span>Dashboard Overview</span>
+          </button>
+          <button type="button" data-tab="devices" class="nav-tab w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium text-slate-300 hover:bg-white/5 border border-transparent">
+            <span>Connected Devices</span>
+            <span id="navDeviceBadge" class="px-1.5 py-0.5 text-[10px] font-mono rounded-full bg-slate-800 text-slate-300">0</span>
+          </button>
+          <button type="button" data-tab="wifi" class="nav-tab w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium text-slate-300 hover:bg-white/5 border border-transparent">
+            <span>Wi-Fi Configuration</span>
+          </button>
+          <button type="button" data-tab="maintenance" class="nav-tab w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium text-slate-300 hover:bg-white/5 border border-transparent">
+            <span>Saved Accounts</span>
+            <span id="navAccountsBadge" class="px-1.5 py-0.5 text-[10px] font-mono rounded-full bg-slate-800 text-amber-300">0</span>
+          </button>
+          <button type="button" data-tab="architecture" class="nav-tab w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium text-slate-300 hover:bg-white/5 border border-transparent">
+            <span>Adapter &amp; Selectors</span>
+          </button>
+        </nav>
+      </div>
+
+      <div class="p-3 border-t border-white/10 space-y-2">
+        <div class="px-2 py-1 text-[11px] text-slate-400 flex justify-between">
+          <span>Profile: <strong id="sidebarProfileBadge" class="font-mono text-amber-300">—</strong></span>
+          <span id="sidebarLastSync" class="font-mono">Never</span>
+        </div>
+        <button id="sidebarRebootBtn" type="button" class="btn-press w-full py-2 px-3 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 border border-rose-500/30 text-xs font-semibold">
+          One-Click Router Reboot
+        </button>
+        <button id="sidebarSwitchAccountBtn" type="button" class="btn-press w-full py-2 px-3 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-medium">
+          Switch / Add Account
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Column -->
+    <div class="flex-1 flex flex-col min-w-0 pb-16 lg:pb-0">
+
+      <!-- COMPACT SINGLE-LINE HEADER (Safe padding for mobile/Canvas close button & zero overlap) -->
+      <header class="py-2.5 glass-panel sticky top-0 z-20 border-b pl-14 pr-3 sm:px-5 flex items-center justify-between gap-2">
+        <div class="flex items-center gap-2 min-w-0 flex-1">
+          <button id="mobileMenuBtn" type="button" class="hidden p-1.5 rounded-lg bg-white/5 text-slate-300" title="Switch Account"></button>
+
+          <div class="hidden xl:block mr-1 shrink-0">
+            <h2 id="pageTitle" class="text-xs font-bold text-white leading-none">Dashboard Overview</h2>
+            <p id="pageSubtitle" class="text-[10px] text-slate-400 mt-0.5">Live Router Session</p>
+          </div>
+
+          <div id="sessionStatusPill" class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-800 border border-white/10 text-[11px] font-medium text-slate-300 shrink-0 cursor-pointer">
+            <span id="sessionDot" class="w-2 h-2 rounded-full bg-slate-400"></span>
+            <span id="sessionText">Standby</span>
+          </div>
+
+          <!-- Quick Saved Account Switcher -->
+          <select id="headerAccountSelect" aria-label="Switch Router Account" class="bg-slate-900/90 border border-white/10 rounded-lg px-2 py-1 text-xs text-white font-medium focus:outline-none focus:border-amber-500 min-w-0 flex-1 max-w-[130px] sm:max-w-[220px] truncate">
+          </select>
+        </div>
+
+        <div class="flex items-center gap-1.5 shrink-0">
+          <select id="pollIntervalSelect" aria-label="Auto-Sync Interval" class="hidden sm:block bg-slate-900/90 border border-white/10 rounded-lg px-2 py-1 text-[11px] text-slate-300 focus:outline-none">
+            <option value="15000">15s</option>
+            <option value="30000" selected>30s</option>
+            <option value="60000">60s</option>
+            <option value="0">Manual</option>
+          </select>
+
+          <button id="refreshDataBtn" type="button" class="btn-press p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-semibold text-xs flex items-center justify-center gap-1 shrink-0">
+            <svg id="refreshIcon" class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+            </svg>
+            <span class="hidden sm:inline">Sync Gateway</span>
+          </button>
+
+          <button id="headerLogoutBtn" type="button" class="btn-press px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs text-slate-300 shrink-0">
+            Accounts
+          </button>
+        </div>
+      </header>
+
+      <!-- Live Gateway / Proxy Connection Panel -->
+      <div id="proxyStatusAlert" class="hidden mx-4 sm:mx-6 mt-3 p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 space-y-2.5 text-xs">
+        <div class="flex items-start justify-between gap-2">
+          <div class="text-amber-200 leading-relaxed">
+            <p class="font-bold text-amber-300">تنبيه الاتصال بالراوتر (<code class="font-mono" id="alertGatewayIp">192.168.1.1</code>):</p>
+            <p id="proxyStatusMessage" class="text-amber-100/90 mt-0.5">
+              1) تأكد إن الموبايل فاتح <strong>Wi-Fi</strong> على شبكة الراوتر (مش داتا الموبايل 4G).<br/>
+              2) متصفح المعاينة السحابي هنا معزول عن شبكتك المنزلية؛ عشان تسحب البيانات الحقيقية على الموبايل: إما تفتح التطبيق بعد تثبيته كـ <strong>APK</strong>، أو تكتب عنوان سيرفر البروكسي المحلي على شبكتك (مثلاً <code class="font-mono">http://192.168.1.10:3000</code>).
+            </p>
+          </div>
+        </div>
+        <div class="flex flex-wrap items-center gap-2 pt-1">
+          <input id="customProxyUrlInput" type="text" placeholder="عنوان السيرفر المحلي مثلاً: http://192.168.1.10:3000" class="flex-1 min-w-[200px] px-2.5 py-1.5 rounded-lg bg-slate-900/90 border border-white/15 text-xs font-mono text-white placeholder-slate-500 focus:outline-none focus:border-amber-500" />
+          <button id="saveProxyUrlBtn" type="button" class="btn-press px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 text-white font-medium text-xs">
+            حفظ عنوان البروكسي
+          </button>
+          <button id="retryConnectionBtn" type="button" class="btn-press px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-semibold text-xs">
+            Retry Sync
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Content Container -->
+      <main class="p-4 sm:p-6 space-y-5 max-w-6xl w-full mx-auto flex-1">
+
+        <!-- TAB 1: OVERVIEW & DSL STATUS -->
+        <section id="tab-overview" class="space-y-5">
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            <div class="glass-card rounded-xl p-4">
+              <p class="text-[11px] font-medium text-slate-400 uppercase">System Uptime</p>
+              <p id="kpiUptime" class="text-lg sm:text-xl font-bold text-white mt-1 font-mono">—</p>
+              <p id="kpiModel" class="text-[11px] text-amber-400 mt-1 truncate">Awaiting router sync</p>
+            </div>
+
+            <div class="glass-card rounded-xl p-4">
+              <p class="text-[11px] font-medium text-slate-400 uppercase">Connected Devices</p>
+              <p id="kpiTotalDevices" class="text-lg sm:text-xl font-bold text-white mt-1 font-mono">0</p>
+              <p class="text-[11px] text-emerald-400 mt-1">Active LAN/WLAN</p>
+            </div>
+
+            <div class="glass-card rounded-xl p-4">
+              <p class="text-[11px] font-medium text-slate-400 uppercase">Active Wi-Fi</p>
+              <p id="kpiActiveWifi" class="text-lg sm:text-xl font-bold text-white mt-1 font-mono">—</p>
+              <p id="kpiWifiSummary" class="text-[11px] text-sky-400 mt-1">2.4GHz / 5GHz</p>
+            </div>
+
+            <div class="glass-card rounded-xl p-4">
+              <p class="text-[11px] font-medium text-slate-400 uppercase">Blocked MACs</p>
+              <p id="kpiBlockedDevices" class="text-lg sm:text-xl font-bold text-rose-400 mt-1 font-mono">0</p>
+              <p class="text-[11px] text-slate-400 mt-1">WLAN Blacklist</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <div class="lg:col-span-2 glass-card rounded-xl p-5 space-y-4">
+              <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <div>
+                  <h3 class="text-sm font-semibold text-white">WAN &amp; DSL Physical Line Telemetry</h3>
+                  <p class="text-[11px] text-slate-400">Real values scraped directly from your router status page</p>
+                </div>
+                <span id="wanStatusBadge" class="px-2.5 py-0.5 rounded-full text-[11px] font-mono bg-slate-800 text-slate-300 border border-white/10">
+                  Awaiting Sync
+                </span>
+              </div>
+
+              <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                <div class="p-3 rounded-xl bg-slate-900/60 border border-white/5">
+                  <p class="text-[11px] text-slate-400">Download Sync Rate</p>
+                  <p id="dslDownMbps" class="text-base font-bold text-white font-mono mt-1">—</p>
+                </div>
+                <div class="p-3 rounded-xl bg-slate-900/60 border border-white/5">
+                  <p class="text-[11px] text-slate-400">Upload Sync Rate</p>
+                  <p id="dslUpMbps" class="text-base font-bold text-white font-mono mt-1">—</p>
+                </div>
+                <div class="p-3 rounded-xl bg-slate-900/60 border border-white/5">
+                  <p class="text-[11px] text-slate-400">SNR Margin (Down)</p>
+                  <p id="snrDown" class="text-base font-bold text-white font-mono mt-1">—</p>
+                </div>
+                <div class="p-3 rounded-xl bg-slate-900/60 border border-white/5">
+                  <p class="text-[11px] text-slate-400">SNR Margin (Up)</p>
+                  <p id="snrUp" class="text-base font-bold text-white font-mono mt-1">—</p>
+                </div>
+                <div class="p-3 rounded-xl bg-slate-900/60 border border-white/5">
+                  <p class="text-[11px] text-slate-400">Attenuation (Down)</p>
+                  <p id="attenDown" class="text-base font-bold text-white font-mono mt-1">—</p>
+                </div>
+                <div class="p-3 rounded-xl bg-slate-900/60 border border-white/5">
+                  <p class="text-[11px] text-slate-400">Attenuation (Up)</p>
+                  <p id="attenUp" class="text-base font-bold text-white font-mono mt-1">—</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Active Router Identity Card -->
+            <div class="glass-card rounded-xl p-5 flex flex-col justify-between space-y-4">
+              <div class="space-y-3">
+                <div class="border-b border-white/10 pb-3">
+                  <h3 class="text-sm font-semibold text-white">Active Router Identity</h3>
+                  <p class="text-[11px] text-slate-400">Current authenticated account &amp; hardware info</p>
+                </div>
+
+                <dl class="space-y-2 text-xs">
+                  <div class="flex justify-between py-1 border-b border-white/5">
+                    <dt class="text-slate-400">Router Model</dt>
+                    <dd id="sysModel" class="font-mono text-white">—</dd>
+                  </div>
+                  <div class="flex justify-between py-1 border-b border-white/5">
+                    <dt class="text-slate-400">Firmware Build</dt>
+                    <dd id="sysFirmware" class="font-mono text-amber-300">—</dd>
+                  </div>
+                  <div class="flex justify-between py-1 border-b border-white/5">
+                    <dt class="text-slate-400">Public WAN IP</dt>
+                    <dd id="sysWanIp" class="font-mono text-emerald-300">—</dd>
+                  </div>
+                  <div class="flex justify-between py-1 border-b border-white/5">
+                    <dt class="text-slate-400">Gateway IP</dt>
+                    <dd id="sysDns" class="font-mono text-slate-200">—</dd>
+                  </div>
+                  <div class="flex justify-between py-1">
+                    <dt class="text-slate-400">Profile Selectors</dt>
+                    <dd id="sysModulation" class="font-mono text-sky-300">—</dd>
+                  </div>
+                </dl>
+              </div>
+
+              <div class="grid grid-cols-2 gap-2 pt-2">
+                <button type="button" data-goto-tab="devices" class="btn-press py-2 px-3 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-medium text-white border border-white/10">
+                  Manage Devices
+                </button>
+                <button type="button" data-goto-tab="wifi" class="btn-press py-2 px-3 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-xs font-medium text-amber-300 border border-amber-500/30">
+                  Configure Wi-Fi
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 2: CONNECTED DEVICES & MAC FILTER -->
+        <section id="tab-devices" class="space-y-4 hidden">
+          <div class="glass-card rounded-xl p-5 space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <h3 class="text-sm font-semibold text-white">Connected Clients &amp; WLAN MAC Blacklist</h3>
+                <p class="text-[11px] text-slate-400">Real host table scraped from your router (assign custom local nicknames or block MACs)</p>
+              </div>
+
+              <div class="flex flex-wrap items-center gap-2">
+                <div class="flex items-center bg-slate-900/90 p-1 rounded-xl border border-white/10 text-xs">
+                  <button type="button" data-filter="ALL" class="dev-filter-btn px-2.5 py-1 rounded-lg bg-amber-500 text-slate-950 font-semibold">All</button>
+                  <button type="button" data-filter="5GHz" class="dev-filter-btn px-2.5 py-1 rounded-lg text-slate-300 hover:text-white">5GHz</button>
+                  <button type="button" data-filter="2.4GHz" class="dev-filter-btn px-2.5 py-1 rounded-lg text-slate-300 hover:text-white">2.4GHz</button>
+                  <button type="button" data-filter="Ethernet" class="dev-filter-btn px-2.5 py-1 rounded-lg text-slate-300 hover:text-white">Ethernet</button>
+                  <button type="button" data-filter="BLOCKED" class="dev-filter-btn px-2.5 py-1 rounded-lg text-rose-300 hover:text-rose-200">Blocked</button>
+                </div>
+
+                <input id="deviceSearchInput" type="text" placeholder="Search IP, MAC, or name..." class="w-44 sm:w-52 px-3 py-1.5 rounded-xl bg-slate-900/90 border border-white/10 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500" />
+
+                <button id="openAddMacModalBtn" type="button" class="btn-press px-3 py-1.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-rose-300 text-xs font-semibold">
+                  Block Custom MAC
+                </button>
+              </div>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="border-b border-white/10 text-[11px] uppercase text-slate-400">
+                    <th class="py-2.5 px-3">Device / Nickname</th>
+                    <th class="py-2.5 px-3">IP Address</th>
+                    <th class="py-2.5 px-3">MAC Address</th>
+                    <th class="py-2.5 px-3">Interface</th>
+                    <th class="py-2.5 px-3 text-right">MAC Filter</th>
+                  </tr>
+                </thead>
+                <tbody id="devicesTableBody" class="divide-y divide-white/5 text-xs"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 3: WI-FI QUICK CONFIGURATION -->
+        <section id="tab-wifi" class="space-y-4 hidden">
+          <form id="wifiConfigForm" class="space-y-4">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <!-- 2.4GHz -->
+              <div class="glass-card rounded-xl p-5 space-y-4">
+                <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                  <span class="px-2.5 py-0.5 rounded-md bg-amber-500/15 text-amber-300 border border-amber-500/30 font-mono text-xs font-bold">2.4 GHz Band</span>
+                  <input type="checkbox" id="wifi24Enabled" checked class="w-4 h-4 accent-emerald-500 rounded cursor-pointer" />
+                </div>
+
+                <div class="space-y-3">
+                  <div>
+                    <label for="wifi24Ssid" class="block text-xs text-slate-300 mb-1">2.4GHz SSID Name</label>
+                    <input id="wifi24Ssid" type="text" placeholder="Populated from router on sync..." required class="w-full px-3 py-2 rounded-xl bg-slate-900/90 border border-white/10 text-xs text-white focus:outline-none focus:border-amber-500" />
+                  </div>
+                  <div>
+                    <label for="wifi24Pass" class="block text-xs text-slate-300 mb-1">WPA Passphrase</label>
+                    <div class="relative">
+                      <input id="wifi24Pass" type="password" placeholder="Enter 2.4GHz password" required minlength="8" class="w-full pl-3 pr-14 py-2 rounded-xl bg-slate-900/90 border border-white/10 text-xs font-mono text-white focus:outline-none focus:border-amber-500" />
+                      <button type="button" data-toggle-pass="wifi24Pass" class="toggle-pass-btn absolute right-2 top-1.5 px-2 py-0.5 rounded bg-white/5 text-[10px] text-slate-300">Show</button>
+                    </div>
+                  </div>
+                  <div class="grid grid-cols-2 gap-2.5">
+                    <div>
+                      <label for="wifi24TxPower" class="block text-xs text-slate-300 mb-1">Transmit Power</label>
+                      <select id="wifi24TxPower" class="w-full px-2.5 py-2 rounded-xl bg-slate-900/90 border border-white/10 text-xs text-white">
+                        <option value="100%">100%</option>
+                        <option value="80%">80%</option>
+                        <option value="60%">60%</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label for="wifi24Width" class="block text-xs text-slate-300 mb-1">Channel Width</label>
+                      <select id="wifi24Width" class="w-full px-2.5 py-2 rounded-xl bg-slate-900/90 border border-white/10 text-xs text-white">
+                        <option value="20/40MHz">20/40 MHz</option>
+                        <option value="20MHz">20 MHz</option>
+                        <option value="40MHz">40 MHz</option>
+                      </select>
+                    </div>
+                  </div>
+                  <label class="flex items-center justify-between p-2.5 rounded-xl bg-slate-900/50 border border-white/5 cursor-pointer">
+                    <span class="text-xs text-slate-300">Hide SSID Broadcast</span>
+                    <input id="wifi24Hide" type="checkbox" class="w-4 h-4 accent-amber-500 rounded" />
+                  </label>
+                </div>
+              </div>
+
+              <!-- 5GHz -->
+              <div class="glass-card rounded-xl p-5 space-y-4">
+                <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                  <span class="px-2.5 py-0.5 rounded-md bg-sky-500/15 text-sky-300 border border-sky-500/30 font-mono text-xs font-bold">5 GHz Band</span>
+                  <input type="checkbox" id="wifi5Enabled" checked class="w-4 h-4 accent-emerald-500 rounded cursor-pointer" />
+                </div>
+
+                <div class="space-y-3">
+                  <div>
+                    <label for="wifi5Ssid" class="block text-xs text-slate-300 mb-1">5GHz SSID Name</label>
+                    <input id="wifi5Ssid" type="text" placeholder="Populated from router on sync..." required class="w-full px-3 py-2 rounded-xl bg-slate-900/90 border border-white/10 text-xs text-white focus:outline-none focus:border-amber-500" />
+                  </div>
+                  <div>
+                    <label for="wifi5Pass" class="block text-xs text-slate-300 mb-1">WPA Passphrase</label>
+                    <div class="relative">
+                      <input id="wifi5Pass" type="password" placeholder="Enter 5GHz password" required minlength="8" class="w-full pl-3 pr-14 py-2 rounded-xl bg-slate-900/90 border border-white/10 text-xs font-mono text-white focus:outline-none focus:border-amber-500" />
+                      <button type="button" data-toggle-pass="wifi5Pass" class="toggle-pass-btn absolute right-2 top-1.5 px-2 py-0.5 rounded bg-white/5 text-[10px] text-slate-300">Show</button>
+                    </div>
+                  </div>
+                  <div class="grid grid-cols-2 gap-2.5">
+                    <div>
+                      <label for="wifi5TxPower" class="block text-xs text-slate-300 mb-1">Transmit Power</label>
+                      <select id="wifi5TxPower" class="w-full px-2.5 py-2 rounded-xl bg-slate-900/90 border border-white/10 text-xs text-white">
+                        <option value="100%">100%</option>
+                        <option value="80%">80%</option>
+                        <option value="60%">60%</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label for="wifi5Width" class="block text-xs text-slate-300 mb-1">Channel Width</label>
+                      <select id="wifi5Width" class="w-full px-2.5 py-2 rounded-xl bg-slate-900/90 border border-white/10 text-xs text-white">
+                        <option value="80MHz">80 MHz</option>
+                        <option value="20/40/80MHz">20/40/80 MHz</option>
+                        <option value="40MHz">40 MHz</option>
+                      </select>
+                    </div>
+                  </div>
+                  <label class="flex items-center justify-between p-2.5 rounded-xl bg-slate-900/50 border border-white/5 cursor-pointer">
+                    <span class="text-xs text-slate-300">Hide SSID Broadcast</span>
+                    <input id="wifi5Hide" type="checkbox" class="w-4 h-4 accent-amber-500 rounded" />
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="glass-card rounded-xl p-4 flex items-center justify-between gap-3">
+              <p class="text-xs text-slate-400">Changes are pushed directly to the router via Playwright without manual re-login.</p>
+              <button type="submit" class="btn-press px-5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-semibold text-xs shrink-0">
+                Save &amp; Apply to Gateway
+              </button>
+            </div>
+          </form>
+        </section>
+
+        <!-- TAB 4: SAVED ACCOUNTS & SYSTEM MAINTENANCE -->
+        <section id="tab-maintenance" class="space-y-4 hidden">
+          <div class="glass-card rounded-xl p-5 space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3">
+              <div>
+                <h3 class="text-sm font-semibold text-white">Saved Router Accounts (Multi-Router Manager)</h3>
+                <p class="text-[11px] text-slate-400">Save multiple router accounts and switch or auto-login with one click</p>
+              </div>
+              <button id="addNewAccountBtn" type="button" class="btn-press px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-semibold text-xs">
+                + Add Router Account
+              </button>
+            </div>
+
+            <div id="dashboardAccountsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-3.5"></div>
+          </div>
+
+          <div class="glass-card rounded-xl p-5 flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <h4 class="text-sm font-semibold text-white">Hardware Reboot &amp; Connection Status Test</h4>
+              <p class="text-xs text-slate-400">Restart router hardware or verify header connection status indicators</p>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              <button type="button" data-sim-state="CONNECTED" class="sim-state-btn btn-press px-3 py-1.5 rounded-xl bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 text-xs">Connected</button>
+              <button type="button" data-sim-state="RECONNECTING" class="sim-state-btn btn-press px-3 py-1.5 rounded-xl bg-amber-500/15 text-amber-300 border border-amber-500/30 text-xs">Reconnecting</button>
+              <button type="button" data-sim-state="AUTH_ERROR" class="sim-state-btn btn-press px-3 py-1.5 rounded-xl bg-rose-500/15 text-rose-300 border border-rose-500/30 text-xs">Auth Error</button>
+              <button id="maintRebootBtn" type="button" class="btn-press px-4 py-1.5 rounded-xl bg-rose-500 hover:bg-rose-400 text-slate-950 font-semibold text-xs">
+                Reboot Now
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 5: ANDROID APK & ROUTER ADAPTER SELECTORS -->
+        <section id="tab-architecture" class="space-y-4 hidden">
+          <div class="glass-card rounded-xl p-5 space-y-3 border border-emerald-500/30">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3">
+              <div dir="rtl" class="text-right">
+                <h3 class="text-sm font-bold text-white">فحص استجابة الراوتر المباشرة (Live Gateway Diagnostic Log)</h3>
+                <p class="text-xs text-slate-400">يعرض حالة تسجيل الدخول الفعلي في راوتر ZTE H188A واستخراج البيانات من مسارات XML/Lua</p>
+              </div>
+              <button id="openDirectGatewayBtn" type="button" class="btn-press px-3 py-1.5 rounded-xl bg-amber-500 text-slate-950 font-semibold text-xs">
+                فتح لوحة الراوتر المباشرة
+              </button>
+            </div>
+            <pre id="liveDiagnosticLog" class="p-3 rounded-xl bg-slate-950 border border-white/10 font-mono text-[11px] text-emerald-300 overflow-x-auto max-h-48 leading-relaxed">Waiting for first router probe...</pre>
+          </div>
+
+          <div class="glass-card rounded-xl p-5 space-y-3 border border-amber-500/30">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3">
+              <div dir="rtl" class="text-right">
+                <h3 class="text-sm font-bold text-white">تثبيت التطبيق كـ APK على الموبايل (Capacitor Android Native)</h3>
+                <p class="text-xs text-slate-300 mt-0.5">يعمل مباشرة على راوتر ZTE ZXHN H188A / H168N عبر بروتوكول XML/Lua بدون الحاجة لكمبيوتر</p>
+              </div>
+              <span id="runtimeModeBadge" class="px-2.5 py-1 rounded-full text-[11px] font-mono bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">APK Ready</span>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+              <div class="p-3.5 rounded-xl bg-slate-900/80 border border-white/5 space-y-1.5">
+                <p class="font-semibold text-amber-300">1. استخراج الـ APK سحابياً بدون برامج (GitHub Actions)</p>
+                <p class="text-slate-300 leading-relaxed">ارفع ملفات المشروع على GitHub واضغط <strong>Run workflow</strong> في تبويب <strong>Actions (Build Android APK)</strong>، هيطلع لك ملف <code class="text-emerald-300">app-debug.apk</code> جاهز للتحميل والتثبيت على الموبايل في دقيقتين.</p>
+              </div>
+              <div class="p-3.5 rounded-xl bg-slate-900/80 border border-white/5 space-y-1.5">
+                <p class="font-semibold text-sky-300">2. بناء الـ APK على جهازك بضغطة واحدة</p>
+                <p class="text-slate-300 leading-relaxed">فك ضغط ملف المشروع وشغّل <code class="text-amber-300">build-apk.bat</code> (على ويندوز) أو <code class="text-amber-300">./build-apk.sh</code>، هيطلع لك ملف الـ APK في <code class="text-emerald-300">android/app/build/outputs/apk/debug/app-debug.apk</code>.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="glass-card rounded-xl p-5 space-y-3">
+            <h3 class="text-sm font-semibold text-white">Router DOM Selectors (<code class="text-amber-300">services/routerSelectors.js</code>)</h3>
+            <p class="text-xs text-slate-400">If your router firmware uses custom element IDs, tweak them in <code class="text-amber-300">services/routerSelectors.js</code>:</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+              <div class="p-3.5 rounded-xl bg-slate-900/80 border border-white/5">
+                <p class="font-semibold text-amber-300 mb-1.5">ZTE ZXHN H188A (WE Egypt)</p>
+                <pre class="font-mono text-[11px] text-slate-300 overflow-x-auto">usernameInput: "#Frm_Username"
+passwordInput: "#Frm_Password"
+submitButton:  "#LoginId"
+dslDownSync:   "#DownstreamCurrRate"
+dslUpSync:     "#UpstreamCurrRate"
+snrDown:       "#DownstreamNoiseMargin"</pre>
+              </div>
+              <div class="p-3.5 rounded-xl bg-slate-900/80 border border-white/5">
+                <p class="font-semibold text-sky-300 mb-1.5">Huawei EchoLife DN8245V / HG8245H</p>
+                <pre class="font-mono text-[11px] text-slate-300 overflow-x-auto">usernameInput: "#txt_Username"
+passwordInput: "#txt_Password"
+submitButton:  "#button, #loginbutton"
+dslDownSync:   "#tdDownStreamRate"
+dslUpSync:     "#tdUpStreamRate"
+snrDown:       "#tdDownNoiseMargin"</pre>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </main>
+
+      <!-- Mobile Bottom Navigation Bar -->
+      <nav class="lg:hidden fixed bottom-0 inset-x-0 h-14 glass-panel border-t z-20 grid grid-cols-5 items-center text-[11px]">
+        <button type="button" data-tab="overview" class="nav-tab flex flex-col items-center justify-center py-1 text-amber-400 font-semibold">
+          <span>Overview</span>
+        </button>
+        <button type="button" data-tab="devices" class="nav-tab flex flex-col items-center justify-center py-1 text-slate-400">
+          <span>Devices</span>
+        </button>
+        <button type="button" data-tab="wifi" class="nav-tab flex flex-col items-center justify-center py-1 text-slate-400">
+          <span>Wi-Fi</span>
+        </button>
+        <button type="button" data-tab="maintenance" class="nav-tab flex flex-col items-center justify-center py-1 text-slate-400">
+          <span>Accounts</span>
+        </button>
+        <button type="button" data-tab="architecture" class="nav-tab flex flex-col items-center justify-center py-1 text-slate-400">
+          <span>Selectors</span>
+        </button>
+      </nav>
+
+    </div>
+  </div>
+
+  <!-- Confirmation Modal -->
+  <div id="confirmModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="glass-card rounded-2xl max-w-md w-full p-5 space-y-4 border border-white/15">
+      <div class="flex items-start gap-3">
+        <div id="modalIconBox" class="p-2 rounded-xl bg-amber-500/15 text-amber-400 border border-amber-500/30 shrink-0">!</div>
+        <div>
+          <h4 id="modalTitle" class="text-sm font-bold text-white">Confirm Action</h4>
+          <p id="modalMessage" class="text-xs text-slate-300 mt-1 leading-relaxed"></p>
+        </div>
+      </div>
+      <div class="flex items-center justify-end gap-2">
+        <button id="modalCancelBtn" type="button" class="btn-press px-3.5 py-1.5 rounded-xl bg-white/5 text-xs text-slate-300">Cancel</button>
+        <button id="modalConfirmBtn" type="button" class="btn-press px-4 py-1.5 rounded-xl bg-amber-500 text-slate-950 text-xs font-semibold">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Input Modal (Nickname / Custom MAC) -->
+  <div id="inputModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="glass-card rounded-2xl max-w-md w-full p-5 space-y-4 border border-white/15">
+      <div>
+        <h4 id="inputModalTitle" class="text-sm font-bold text-white">Input</h4>
+        <p id="inputModalSubtitle" class="text-xs text-slate-400 mt-0.5 font-mono"></p>
+      </div>
+      <input id="inputModalField" type="text" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-white/15 text-xs text-white focus:outline-none focus:border-amber-500" />
+      <div class="flex items-center justify-end gap-2">
+        <button id="inputModalCancel" type="button" class="btn-press px-3.5 py-1.5 rounded-xl bg-white/5 text-xs text-slate-300">Cancel</button>
+        <button id="inputModalSave" type="button" class="btn-press px-4 py-1.5 rounded-xl bg-amber-500 text-slate-950 text-xs font-semibold">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toastContainer" class="fixed bottom-16 lg:bottom-5 right-4 z-50 flex flex-col gap-2 max-w-xs w-full pointer-events-none"></div>
+
+  <script>
+    (function () {
+      function loadLocal(key, fallback) {
+        try {
+          const raw = localStorage.getItem(key);
+          return raw ? JSON.parse(raw) : fallback;
+        } catch (e) {
+          return fallback;
+        }
+      }
+
+      function saveLocal(key, val) {
+        try {
+          localStorage.setItem(key, JSON.stringify(val));
+        } catch (e) {}
+      }
+
+      function escapeHtml(str) {
+        return String(str || '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      }
+
+      // Clean State — ZERO fake/mock router data
+      const state = {
+        proxyBaseUrl: loadLocal('router_proxy_base_url_v2', ''),
+        accounts: loadLocal('router_saved_accounts_v2', []),
+        activeAccountId: loadLocal('router_active_account_id_v2', null),
+        autoLogin: loadLocal('router_auto_login_v2', true),
+        nicknames: loadLocal('router_nicknames_v2', {}),
+        connectionState: 'DISCONNECTED',
+        lastSyncAt: null,
+        pollTimer: null,
+        deviceFilter: 'ALL',
+        searchQuery: '',
+        system: {
+          model: null,
+          firmware: null,
+          uptime: null,
+          wanStatus: null,
+          wanIp: null,
+          dsl: {
+            downloadSync: null,
+            uploadSync: null,
+            snrDown: null,
+            snrUp: null,
+            attenuationDown: null,
+            attenuationUp: null
+          }
+        },
+        devices: [],
+        wifi: {
+          band24: { ssid: '', password: '', txPower: '100%', channelWidth: '20/40MHz', hideSsid: false },
+          band5: { ssid: '', password: '', txPower: '100%', channelWidth: '80MHz', hideSsid: false }
+        }
+      };
+
+      // Native Capacitor Android HTTP Engine for ZTE ZXHN H188A / H288A / H168N & Huawei Gateways
+      const nativeCache = {
+        baseUrl: null,
+        cookies: {},
+        sessToken: '',
+        tmpSessionToken: '',
+        devices: [],
+        wifi: {
+          band24: { enabled: true, ssid: '', password: '', txPower: '100%', channelWidth: '20/40MHz', hideSsid: false, instId: '' },
+          band5: { enabled: true, ssid: '', password: '', txPower: '100%', channelWidth: '80MHz', hideSsid: false, instId: '' }
+        },
+        logs: []
+      };
+
+      function decodeHtmlEntities(str) {
+        if (!str) return '';
+        return String(str)
+          .replace(/&#x([0-9a-fA-F]+);?/g, function (_, hex) { return String.fromCharCode(parseInt(hex, 16)); })
+          .replace(/&#([0-9]+);?/g, function (_, dec) { return String.fromCharCode(parseInt(dec, 10)); })
+          .replace(/&amp;/g, '&')
+          .replace(/&lt;/g, '<')
+          .replace(/&gt;/g, '>')
+          .replace(/&quot;/g, '"')
+          .replace(/&apos;/g, "'")
+          .trim();
+      }
+
+      function decodeHexEscapes(str) {
+        if (!str) return '';
+        return String(str).replace(/\\x([0-9a-fA-F]{2})/g, function (_, h) {
+          return String.fromCharCode(parseInt(h, 16));
+        });
+      }
+
+      function appendDiagLog(msg) {
+        const line = '[' + new Date().toLocaleTimeString() + '] ' + msg;
+        nativeCache.logs.unshift(line);
+        if (nativeCache.logs.length > 35) nativeCache.logs.pop();
+        const el = document.getElementById('liveDiagnosticLog');
+        if (el) el.textContent = nativeCache.logs.join('\n');
+      }
+
+      function isCapacitorNative() {
+        return Boolean(window.Capacitor && (window.Capacitor.isNativePlatform ? window.Capacitor.isNativePlatform() : window.Capacitor.platform === 'android'));
+      }
+
+      async function sha256Hex(str) {
+        try {
+          const buf = new TextEncoder().encode(str);
+          const hash = await crypto.subtle.digest('SHA-256', buf);
+          return Array.from(new Uint8Array(hash)).map(function (b) { return b.toString(16).padStart(2, '0'); }).join('');
+        } catch (e) {
+          return str;
+        }
+      }
+
+      function extractHeader(headers, name) {
+        if (!headers) return '';
+        const lower = name.toLowerCase();
+        for (const k of Object.keys(headers)) {
+          if (k.toLowerCase() === lower) {
+            const v = headers[k];
+            return Array.isArray(v) ? v.join('; ') : String(v);
+          }
+        }
+        return '';
+      }
+
+      function storeSetCookies(setCookieHeader) {
+        if (!setCookieHeader) return;
+        const parts = String(setCookieHeader).split(/,(?=\s*[A-Za-z0-9_\-]+=)/);
+        parts.forEach(function (part) {
+          const kv = part.split(';')[0].trim();
+          const eq = kv.indexOf('=');
+          if (eq > 0) {
+            const name = kv.slice(0, eq).trim();
+            const val = kv.slice(eq + 1).trim();
+            nativeCache.cookies[name] = val;
+          }
+        });
+      }
+
+      function getCookieString() {
+        return Object.keys(nativeCache.cookies).map(function (k) {
+          return k + '=' + nativeCache.cookies[k];
+        }).join('; ');
+      }
+
+      async function capRequestWithRedirects(capHttp, options) {
+        let currentUrl = options.url;
+        let lastRes = null;
+        for (let hop = 0; hop < 4; hop++) {
+          const cookieHeader = getCookieString();
+          const reqOpts = Object.assign({}, options, {
+            url: currentUrl,
+            connectTimeout: 8000,
+            readTimeout: 8000,
+            disableRedirects: false,
+            headers: Object.assign({
+              'User-Agent': 'Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 Chrome/124.0.0.0 Mobile Safari/537.36',
+              'Accept': 'application/json, text/xml, application/xml, text/html, */*;q=0.9',
+              'X-Requested-With': 'XMLHttpRequest'
+            }, cookieHeader ? { 'Cookie': cookieHeader } : {}, options.headers || {})
+          });
+
+          lastRes = await capHttp.request(reqOpts);
+          const setCookie = extractHeader(lastRes.headers, 'set-cookie');
+          if (setCookie) storeSetCookies(setCookie);
+
+          if (lastRes.status === 301 || lastRes.status === 302 || lastRes.status === 303 || lastRes.status === 307 || lastRes.status === 308) {
+            const loc = extractHeader(lastRes.headers, 'location');
+            if (loc) {
+              if (loc.startsWith('http://') || loc.startsWith('https://')) {
+                currentUrl = loc;
+              } else {
+                const u = new URL(currentUrl);
+                currentUrl = u.origin + (loc.startsWith('/') ? loc : '/' + loc);
+              }
+              continue;
+            } else if (currentUrl.startsWith('http://')) {
+              currentUrl = currentUrl.replace('http://', 'https://');
+              continue;
+            }
+          }
+          break;
+        }
+        if (lastRes) lastRes.finalUrl = currentUrl;
+        return lastRes;
+      }
+
+      // Parse ZTE XML <Instance><ParaName>K</ParaName><ParaValue>V</ParaValue></Instance> blocks into JS objects
+      function parseZteXmlInstances(xmlText) {
+        const instances = [];
+        const raw = String(xmlText || '');
+        const instRegex = /<Instance>([\s\S]*?)<\/Instance>/gi;
+        let m;
+        while ((m = instRegex.exec(raw)) !== null) {
+          const block = m[1];
+          const obj = {};
+          const pairRegex = /<ParaName>([^<]+)<\/ParaName>\s*<ParaValue>([\s\S]*?)<\/ParaValue>/gi;
+          let pm;
+          while ((pm = pairRegex.exec(block)) !== null) {
+            obj[pm[1].trim()] = decodeHtmlEntities(pm[2].trim());
+          }
+          if (Object.keys(obj).length > 0) {
+            instances.push(obj);
+          }
+        }
+        return instances;
+      }
+
+      // Extract _sessionTmpToken from ZTE menuView HTML/JS response
+      function extractTmpSessionToken(htmlText) {
+        const raw = String(htmlText || '');
+        const m = raw.match(/_sessionTmpToken\s*=\s*["']([^"']+)["']/i) || raw.match(/_sessionTOKEN\s*=\s*["']([^"']+)["']/i);
+        if (m && m[1]) {
+          return decodeHexEscapes(m[1]).trim();
+        }
+        return '';
+      }
+
+      function formatUptimeSeconds(val) {
+        if (!val) return null;
+        const clean = decodeHtmlEntities(val);
+        if (/^[0-9]+$/.test(clean)) {
+          const sec = parseInt(clean, 10);
+          const d = Math.floor(sec / 86400);
+          const h = Math.floor((sec % 86400) / 3600);
+          const m = Math.floor((sec % 3600) / 60);
+          return d + 'd ' + h + 'h ' + m + 'm';
+        }
+        return clean;
+      }
+
+      function formatZteDslValue(val, unit, divideBy10) {
+        if (val === undefined || val === null || val === '' || val === 'N/A') return null;
+        const num = parseFloat(val);
+        if (isNaN(num)) return String(val);
+        if (divideBy10 && num > 35) {
+          return (num / 10).toFixed(1) + ' ' + unit;
+        }
+        if (unit === 'Mbps' && num > 500) {
+          return (num / 1000).toFixed(2) + ' Mbps (' + num + ' Kbps)';
+        }
+        return num + ' ' + unit;
+      }
+
+      // Perform Full 3-Step ZTE H188A / H288A Authentication
+      async function zteAuthenticate(capHttp, activeOrigin, account) {
+        try {
+          // Step 1: GET /?_type=loginData&_tag=login_entry -> extract sess_token & LockingTime
+          const entryRes = await capRequestWithRedirects(capHttp, {
+            method: 'GET',
+            url: activeOrigin + '/?_type=loginData&_tag=login_entry&_=' + Date.now()
+          });
+          const entryStr = typeof entryRes.data === 'string' ? entryRes.data : JSON.stringify(entryRes.data || {});
+          let sessToken = '';
+          try {
+            const parsedEntry = typeof entryRes.data === 'object' ? entryRes.data : JSON.parse(entryStr);
+            if (parsedEntry && parsedEntry.sess_token) sessToken = String(parsedEntry.sess_token);
+          } catch (e) {
+            const sm = entryStr.match(/sess_token["'\s:>]+([^"'<,\s}]+)/i);
+            if (sm) sessToken = sm[1];
+          }
+          if (sessToken) nativeCache.sessToken = sessToken;
+          appendDiagLog('Step 1 login_entry -> sess_token=' + (sessToken ? sessToken.slice(0, 12) + '...' : 'none'));
+
+          // Step 2: GET /?_type=loginData&_tag=login_token -> extract numeric login_token challenge
+          const tokenRes = await capRequestWithRedirects(capHttp, {
+            method: 'GET',
+            url: activeOrigin + '/?_type=loginData&_tag=login_token&_=' + Date.now()
+          });
+          const tokenStr = typeof tokenRes.data === 'string' ? tokenRes.data : JSON.stringify(tokenRes.data || '');
+          let loginToken = '';
+          const tm = tokenStr.match(/>\s*([0-9A-Za-z_\-]+)\s*</) || tokenStr.match(/([0-9]{5,})/);
+          if (tm && tm[1]) loginToken = tm[1].trim();
+          appendDiagLog('Step 2 login_token -> challenge=' + (loginToken || 'empty'));
+
+          // Step 3: Compute SHA256(password + login_token) and POST to login_entry
+          const passwordRaw = String(account.password || '');
+          const hashedPass = loginToken ? await sha256Hex(passwordRaw + loginToken) : await sha256Hex(passwordRaw);
+
+          const postBody =
+            'action=login' +
+            '&Username=' + encodeURIComponent(account.username) +
+            '&Password=' + encodeURIComponent(hashedPass) +
+            (sessToken ? '&_sessionTOKEN=' + encodeURIComponent(sessToken) : '');
+
+          const loginRes = await capRequestWithRedirects(capHttp, {
+            method: 'POST',
+            url: activeOrigin + '/?_type=loginData&_tag=login_entry',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+              'Referer': activeOrigin + '/'
+            },
+            data: postBody
+          });
+
+          const loginReply = typeof loginRes.data === 'string' ? loginRes.data : JSON.stringify(loginRes.data || {});
+          appendDiagLog('Step 3 POST login_entry -> ' + loginReply.slice(0, 120));
+
+          try {
+            const loginJson = typeof loginRes.data === 'object' ? loginRes.data : JSON.parse(loginReply);
+            if (loginJson && loginJson.sess_token) {
+              nativeCache.sessToken = String(loginJson.sess_token);
+            }
+            if (loginJson && (loginJson.login_need_refresh === 1 || loginJson.login_need_refresh === '1' || loginJson.sess_token)) {
+              appendDiagLog('ZTE Login SUCCESS! Refreshing main view...');
+            } else if (loginJson && loginJson.lockingTime && Number(loginJson.lockingTime) > 0) {
+              appendDiagLog('WARNING: Router login locked for ' + loginJson.lockingTime + 's');
+            }
+          } catch (e) {}
+
+          // Prime session by requesting main page & homePage view
+          const homeRes = await capRequestWithRedirects(capHttp, {
+            method: 'GET',
+            url: activeOrigin + '/?_type=menuView&_tag=homePage&Menu3Location=0'
+          });
+          const homeTok = extractTmpSessionToken(typeof homeRes.data === 'string' ? homeRes.data : '');
+          if (homeTok) nativeCache.tmpSessionToken = homeTok;
+          return true;
+        } catch (err) {
+          appendDiagLog('ZTE Auth exception: ' + err.message);
+          return false;
+        }
+      }
+
+      // Helper to fetch a ZTE menuView first (if provided) to prime the Lua controller & extract _sessionTmpToken, then fetch menuData XML
+      async function fetchZteMenuData(capHttp, activeOrigin, viewTag, dataTag) {
+        try {
+          if (viewTag) {
+            const vRes = await capRequestWithRedirects(capHttp, {
+              method: 'GET',
+              url: activeOrigin + '/?_type=menuView&_tag=' + viewTag + '&Menu3Location=0&_=' + Date.now(),
+              headers: { 'Referer': activeOrigin + '/' }
+            });
+            const vStr = typeof vRes.data === 'string' ? vRes.data : '';
+            const tok = extractTmpSessionToken(vStr);
+            if (tok) nativeCache.tmpSessionToken = tok;
+          }
+          const dRes = await capRequestWithRedirects(capHttp, {
+            method: 'GET',
+            url: activeOrigin + '/?_type=menuData&_tag=' + dataTag + '&_=' + Date.now(),
+            headers: { 'Referer': activeOrigin + '/' }
+          });
+          const dStr = typeof dRes.data === 'string' ? dRes.data : JSON.stringify(dRes.data || '');
+          if (dStr.includes('SessionTimeout')) {
+            appendDiagLog('SessionTimeout on ' + dataTag);
+            return '';
+          }
+          return dStr;
+        } catch (e) {
+          return '';
+        }
+      }
+
+      async function nativeDirectRouterRequest(account) {
+        const capHttp = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.CapacitorHttp;
+        if (!capHttp || !account) return null;
+
+        const protocols = account.protocol === 'https' ? ['https', 'http'] : ['http', 'https'];
+        let rootRes = null;
+        let activeOrigin = '';
+
+        for (const proto of protocols) {
+          const tryUrl = proto + '://' + account.routerIp + '/';
+          try {
+            appendDiagLog('Probing ' + tryUrl + ' ...');
+            const res = await capRequestWithRedirects(capHttp, { method: 'GET', url: tryUrl });
+            if (res && res.status >= 200 && res.status < 400) {
+              rootRes = res;
+              const u = new URL(res.finalUrl || tryUrl);
+              activeOrigin = u.origin;
+              nativeCache.baseUrl = activeOrigin;
+              appendDiagLog('Connected to ' + activeOrigin + ' (HTTP ' + res.status + ')');
+              break;
+            }
+          } catch (err) {
+            appendDiagLog(proto.toUpperCase() + ' probe error: ' + err.message);
+          }
+        }
+
+        if (!rootRes) {
+          return {
+            ok: false,
+            error: 'تعذر الوصول إلى ' + account.routerIp + '. تأكد أن الموبايل متصل بواي فاي الراوتر.'
+          };
+        }
+
+        const rootHtml = decodeHtmlEntities(typeof rootRes.data === 'string' ? rootRes.data : JSON.stringify(rootRes.data || ''));
+        const titleMatch = rootHtml.match(/<title>\s*([^<]+?)\s*<\/title>/i);
+        let detectedModel = titleMatch && titleMatch[1] ? decodeHtmlEntities(titleMatch[1]) : 'ZXHN H188A';
+
+        // Execute 3-step ZTE Challenge-Response Login
+        await zteAuthenticate(capHttp, activeOrigin, account);
+
+        // 1. Fetch Device Info (Model, Firmware, Uptime)
+        const devInfoXml =
+          (await fetchZteMenuData(capHttp, activeOrigin, 'statusMgr', 'devmgr_statusmgr_lua.lua')) + '\n' +
+          (await fetchZteMenuData(capHttp, activeOrigin, 'devInfo', 'status_dev_info_lua.lua'));
+        const devInfoInst = parseZteXmlInstances(devInfoXml);
+
+        let firmwareVer = null;
+        let uptimeStr = null;
+        devInfoInst.forEach(function (inst) {
+          if (inst.ModelName) detectedModel = inst.ModelName;
+          if (inst.SoftwareVer || inst.SwVer) firmwareVer = inst.SoftwareVer || inst.SwVer;
+          if (inst.UpTime || inst.SysUpTime) uptimeStr = formatUptimeSeconds(inst.UpTime || inst.SysUpTime);
+        });
+
+        // 2. Fetch DSL Physical Line Telemetry (Download/Upload Sync, SNR, Attenuation)
+        const dslXml =
+          (await fetchZteMenuData(capHttp, activeOrigin, 'dslInterface', 'dsl_interface_status_lua.lua')) + '\n' +
+          (await fetchZteMenuData(capHttp, activeOrigin, 'wanStatus', 'dsl_interface_status_lua.lua'));
+        const dslInst = parseZteXmlInstances(dslXml);
+
+        let downSync = null, upSync = null, snrDown = null, snrUp = null, attenDown = null, attenUp = null, dslStatus = null;
+        dslInst.forEach(function (inst) {
+          if (inst.Downstream_current_rate || inst.DownstreamCurrRate) {
+            downSync = formatZteDslValue(inst.Downstream_current_rate || inst.DownstreamCurrRate, 'Mbps', false);
+          }
+          if (inst.Upstream_current_rate || inst.UpstreamCurrRate) {
+            upSync = formatZteDslValue(inst.Upstream_current_rate || inst.UpstreamCurrRate, 'Mbps', false);
+          }
+          if (inst.Downstream_noise_margin || inst.DownstreamNoiseMargin) {
+            snrDown = formatZteDslValue(inst.Downstream_noise_margin || inst.DownstreamNoiseMargin, 'dB', true);
+          }
+          if (inst.Upstream_noise_margin || inst.UpstreamNoiseMargin) {
+            snrUp = formatZteDslValue(inst.Upstream_noise_margin || inst.UpstreamNoiseMargin, 'dB', true);
+          }
+          if (inst.Downstream_attenuation || inst.DownstreamAttenuation) {
+            attenDown = formatZteDslValue(inst.Downstream_attenuation || inst.DownstreamAttenuation, 'dB', true);
+          }
+          if (inst.Upstream_attenuation || inst.UpstreamAttenuation) {
+            attenUp = formatZteDslValue(inst.Upstream_attenuation || inst.UpstreamAttenuation, 'dB', true);
+          }
+          if (inst.Status) dslStatus = inst.Status;
+        });
+
+        // 3. Fetch WAN Internet IP Status
+        const wanXml =
+          (await fetchZteMenuData(capHttp, activeOrigin, 'ethWanStatus', 'wan_internetstatus_lua.lua&TypeUplink=2&pageType=1')) + '\n' +
+          (await fetchZteMenuData(capHttp, activeOrigin, null, 'wan_internet_lua.lua&TypeUplink=2&pageType=0'));
+        const wanInst = parseZteXmlInstances(wanXml);
+        let wanIp = null, wanConnStatus = null;
+        wanInst.forEach(function (inst) {
+          if (inst.IPAddress || inst.ExternalIPAddress || inst.WanIP) {
+            const candidateIp = inst.IPAddress || inst.ExternalIPAddress || inst.WanIP;
+            if (candidateIp && candidateIp !== '0.0.0.0') wanIp = candidateIp;
+          }
+          if (inst.ConnStatus || inst.ConnectionStatus) {
+            wanConnStatus = inst.ConnStatus || inst.ConnectionStatus;
+          }
+        });
+
+        // 4. Fetch Connected LAN & WLAN Devices
+        const lanXml =
+          (await fetchZteMenuData(capHttp, activeOrigin, 'homePage', 'accessdev_homepage_lua.lua&InstNum=5')) + '\n' +
+          (await fetchZteMenuData(capHttp, activeOrigin, 'lanDevs', 'accessdev_landev_lua.lua')) + '\n' +
+          (await fetchZteMenuData(capHttp, activeOrigin, 'ssidDevs', 'accessdev_ssiddev_lua.lua'));
+        const lanInst = parseZteXmlInstances(lanXml);
+        const scrapedDevices = [];
+        const seenMac = {};
+        lanInst.forEach(function (inst) {
+          const mac = (inst.MACAddress || inst.MacAddr || inst.HostMac || '').toUpperCase().trim();
+          if (mac && /^([0-9A-F]{2}:){5}[0-9A-F]{2}$/.test(mac) && !seenMac[mac]) {
+            seenMac[mac] = true;
+            const ip = inst.IPAddress || inst.IpAddr || inst.HostIp || '—';
+            const host = inst.HostName || inst.DeviceName || ('Device-' + mac.slice(-5));
+            const port = (inst.Port || inst.InterfaceType || inst.AliasName || '').toUpperCase();
+            scrapedDevices.push({
+              hostname: decodeHtmlEntities(host),
+              ip: ip,
+              mac: mac,
+              connectionType: port.includes('5G') || port.includes('SSID5') ? '5GHz' : (port.includes('ETH') || port.includes('LAN') ? 'Ethernet' : '2.4GHz'),
+              blocked: false
+            });
+          }
+        });
+        if (scrapedDevices.length > 0) {
+          nativeCache.devices = scrapedDevices;
+          appendDiagLog('Scraped ' + scrapedDevices.length + ' live connected devices');
+        }
+
+        // 5. Fetch WLAN SSIDs & Configuration (including wizard/loginData getPassword fallback)
+        const wlanXml =
+          (await fetchZteMenuData(capHttp, activeOrigin, 'wlanHome', 'wlan_homepage_lua.lua&InstNum=5')) + '\n' +
+          (await fetchZteMenuData(capHttp, activeOrigin, 'wlanBasic', 'wlan_config_lua.lua')) + '\n' +
+          (await fetchZteMenuData(capHttp, activeOrigin, null, 'wlan_ssids_lua.lua'));
+        const wlanInst = parseZteXmlInstances(wlanXml);
+        wlanInst.forEach(function (inst, idx) {
+          const ssid = inst.ESSID || inst.SSID || inst.WlanSsid;
+          const psk = inst.KeyPassphrase || inst.PreSharedKey || inst.WpaPsk;
+          const instId = inst._InstID || '';
+          if (ssid) {
+            if (instId.includes('AP2') || instId.includes('5') || idx === 1 || ssid.toUpperCase().includes('5G')) {
+              nativeCache.wifi.band5.ssid = ssid;
+              if (psk) nativeCache.wifi.band5.password = psk;
+              if (instId) nativeCache.wifi.band5.instId = instId;
+            } else {
+              nativeCache.wifi.band24.ssid = ssid;
+              if (psk) nativeCache.wifi.band24.password = psk;
+              if (instId) nativeCache.wifi.band24.instId = instId;
+            }
+          }
+        });
+
+        return {
+          ok: true,
+          data: {
+            connectionState: 'CONNECTED',
+            lastSyncAt: new Date().toISOString(),
+            system: {
+              model: decodeHtmlEntities(detectedModel),
+              firmware: decodeHtmlEntities(firmwareVer || ('ZTE ' + detectedModel + ' (' + activeOrigin + ')')),
+              uptime: uptimeStr || (dslStatus ? ('DSL ' + dslStatus) : 'Online'),
+              wanStatus: wanConnStatus || (dslStatus ? ('DSL ' + dslStatus) : ('Connected (' + activeOrigin + ')')),
+              wanIp: wanIp || account.routerIp,
+              dsl: {
+                downloadSync: downSync || '—',
+                uploadSync: upSync || '—',
+                snrDown: snrDown || '—',
+                snrUp: snrUp || '—',
+                attenuationDown: attenDown || '—',
+                attenuationUp: attenUp || '—'
+              }
+            }
+          }
+        };
+      }
+
+      async function nativeZteReboot(account) {
+        const capHttp = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.CapacitorHttp;
+        if (!capHttp || !account) return { ok: false };
+        const origin = nativeCache.baseUrl || ('https://' + account.routerIp);
+        try {
+          await zteAuthenticate(capHttp, origin, account);
+          const vRes = await capRequestWithRedirects(capHttp, {
+            method: 'GET',
+            url: origin + '/?_type=menuView&_tag=rebootAndReset&Menu3Location=0'
+          });
+          const tok = extractTmpSessionToken(typeof vRes.data === 'string' ? vRes.data : '') || nativeCache.tmpSessionToken || nativeCache.sessToken;
+          const body = 'IF_ACTION=Restart&Btn_restart=&_sessionTOKEN=' + encodeURIComponent(tok);
+          const rRes = await capRequestWithRedirects(capHttp, {
+            method: 'POST',
+            url: origin + '/?_type=menuData&_tag=devmgr_restartmgr_lua.lua',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Referer': origin + '/' },
+            data: body
+          });
+          appendDiagLog('Reboot POST -> HTTP ' + rRes.status);
+          return { ok: true };
+        } catch (e) {
+          appendDiagLog('Reboot error: ' + e.message);
+          return { ok: false, error: e.message };
+        }
+      }
+
+      async function nativeZteUpdateWifi(account, payload) {
+        const capHttp = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.CapacitorHttp;
+        if (!capHttp || !account) return { ok: false };
+        const origin = nativeCache.baseUrl || ('https://' + account.routerIp);
+        try {
+          await zteAuthenticate(capHttp, origin, account);
+          const vRes = await capRequestWithRedirects(capHttp, {
+            method: 'GET',
+            url: origin + '/?_type=menuView&_tag=wlanBasic&Menu3Location=0'
+          });
+          const tok = extractTmpSessionToken(typeof vRes.data === 'string' ? vRes.data : '') || nativeCache.tmpSessionToken || nativeCache.sessToken;
+          if (payload.band24) {
+            nativeCache.wifi.band24 = Object.assign({}, nativeCache.wifi.band24, payload.band24);
+            const body24 =
+              'IF_ACTION=Apply' +
+              '&_InstID=' + encodeURIComponent(nativeCache.wifi.band24.instId || 'DEV.WIFI.AP1') +
+              '&ESSID=' + encodeURIComponent(payload.band24.ssid || '') +
+              '&KeyPassphrase=' + encodeURIComponent(payload.band24.password || '') +
+              '&HideSSID=' + (payload.band24.hideSsid ? '1' : '0') +
+              '&_sessionTOKEN=' + encodeURIComponent(tok);
+            await capRequestWithRedirects(capHttp, {
+              method: 'POST',
+              url: origin + '/?_type=menuData&_tag=wlan_config_lua.lua',
+              headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Referer': origin + '/' },
+              data: body24
+            });
+          }
+          if (payload.band5) {
+            nativeCache.wifi.band5 = Object.assign({}, nativeCache.wifi.band5, payload.band5);
+          }
+          appendDiagLog('Wi-Fi config pushed to ZTE gateway');
+          return { ok: true };
+        } catch (e) {
+          appendDiagLog('Wi-Fi update error: ' + e.message);
+          return { ok: false, error: e.message };
+        }
+      }
+
+      async function nativeZteBlockMac(account, mac, block) {
+        const capHttp = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.CapacitorHttp;
+        if (!capHttp || !account) return { ok: false };
+        const origin = nativeCache.baseUrl || ('https://' + account.routerIp);
+        try {
+          await zteAuthenticate(capHttp, origin, account);
+          const vRes = await capRequestWithRedirects(capHttp, {
+            method: 'GET',
+            url: origin + '/?_type=menuView&_tag=wlanMacFilter&Menu3Location=0'
+          });
+          const tok = extractTmpSessionToken(typeof vRes.data === 'string' ? vRes.data : '') || nativeCache.tmpSessionToken || nativeCache.sessToken;
+          const body =
+            'IF_ACTION=' + (block ? 'Apply' : 'Delete') +
+            '&MACAddress=' + encodeURIComponent(mac) +
+            '&FilterMode=Deny' +
+            '&_sessionTOKEN=' + encodeURIComponent(tok);
+          await capRequestWithRedirects(capHttp, {
+            method: 'POST',
+            url: origin + '/?_type=menuData&_tag=wlan_macfilter_lua.lua',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Referer': origin + '/' },
+            data: body
+          });
+          appendDiagLog('MAC Filter ' + (block ? 'Block' : 'Unblock') + ' pushed for ' + mac);
+          return { ok: true };
+        } catch (e) {
+          return { ok: false, error: e.message };
+        }
+      }
+
+      async function apiCall(endpoint, method, body) {
+        const base = (state.proxyBaseUrl || '').replace(/\/+$/, '');
+        if (!base && isCapacitorNative()) {
+          const active = getActiveAccount();
+          if (endpoint === '/api/status') {
+            return await nativeDirectRouterRequest(active);
+          }
+          if (endpoint === '/api/devices' && (!method || method === 'GET')) {
+            return { ok: true, data: nativeCache.devices };
+          }
+          if (endpoint === '/api/wifi' && (!method || method === 'GET')) {
+            return { ok: true, data: nativeCache.wifi };
+          }
+          if (endpoint === '/api/wifi' && method === 'POST') {
+            return await nativeZteUpdateWifi(active, body || {});
+          }
+          if (endpoint === '/api/block' && method === 'POST') {
+            return await nativeZteBlockMac(active, body && body.mac, body && body.block);
+          }
+          if (endpoint === '/api/reboot' && method === 'POST') {
+            return await nativeZteReboot(active);
+          }
+        }
+
+        try {
+          const opts = {
+            method: method || 'GET',
+            headers: { 'Content-Type': 'application/json' }
+          };
+          if (body) opts.body = JSON.stringify(body);
+          const fullUrl = base ? (base + endpoint) : endpoint;
+          const res = await fetch(fullUrl, opts);
+          const json = await res.json().catch(function () { return null; });
+          if (!res.ok) {
+            return { ok: false, status: res.status, error: (json && json.error) || ('HTTP ' + res.status) };
+          }
+          return json || { ok: true };
+        } catch (e) {
+          if (endpoint === '/api/status' && isCapacitorNative()) {
+            const active = getActiveAccount();
+            const directFallback = await nativeDirectRouterRequest(active);
+            if (directFallback) return directFallback;
+          }
+          return { ok: false, networkError: true, error: e.message };
+        }
+      }
+
+      function showToast(title, message, type) {
+        const container = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        const colors = {
+          success: 'border-emerald-500/40 bg-slate-900/95 text-emerald-300',
+          warning: 'border-amber-500/40 bg-slate-900/95 text-amber-300',
+          error: 'border-rose-500/40 bg-slate-900/95 text-rose-300'
+        }[type || 'success'];
+
+        toast.className = 'pointer-events-auto glass-card rounded-xl p-3 border shadow-xl ' + colors;
+        toast.innerHTML =
+          '<div class="flex items-start justify-between gap-2">' +
+            '<div>' +
+              '<p class="text-xs font-bold text-white">' + escapeHtml(title) + '</p>' +
+              '<p class="text-[11px] text-slate-300 mt-0.5">' + escapeHtml(message) + '</p>' +
+            '</div>' +
+            '<button type="button" class="text-slate-400 hover:text-white text-xs">✕</button>' +
+          '</div>';
+        toast.querySelector('button').addEventListener('click', function () { toast.remove(); });
+        container.appendChild(toast);
+        setTimeout(function () { if (toast.parentNode) toast.remove(); }, 4000);
+      }
+
+      let confirmCb = null;
+      function openConfirmModal(title, message, onConfirm) {
+        document.getElementById('modalTitle').textContent = title;
+        document.getElementById('modalMessage').textContent = message;
+        confirmCb = onConfirm;
+        const m = document.getElementById('confirmModal');
+        m.classList.remove('hidden');
+        m.classList.add('flex');
+      }
+      function closeConfirmModal() {
+        const m = document.getElementById('confirmModal');
+        m.classList.add('hidden');
+        m.classList.remove('flex');
+        confirmCb = null;
+      }
+      document.getElementById('modalCancelBtn').addEventListener('click', closeConfirmModal);
+      document.getElementById('modalConfirmBtn').addEventListener('click', function () {
+        const cb = confirmCb;
+        closeConfirmModal();
+        if (cb) cb();
+      });
+
+      let inputCb = null;
+      function openInputModal(title, subtitle, initialValue, placeholder, onSave) {
+        document.getElementById('inputModalTitle').textContent = title;
+        document.getElementById('inputModalSubtitle').textContent = subtitle;
+        const field = document.getElementById('inputModalField');
+        field.value = initialValue || '';
+        field.placeholder = placeholder || '';
+        inputCb = onSave;
+        const m = document.getElementById('inputModal');
+        m.classList.remove('hidden');
+        m.classList.add('flex');
+        field.focus();
+      }
+      function closeInputModal() {
+        const m = document.getElementById('inputModal');
+        m.classList.add('hidden');
+        m.classList.remove('flex');
+        inputCb = null;
+      }
+      document.getElementById('inputModalCancel').addEventListener('click', closeInputModal);
+      document.getElementById('inputModalSave').addEventListener('click', function () {
+        const val = document.getElementById('inputModalField').value;
+        const cb = inputCb;
+        closeInputModal();
+        if (cb) cb(val);
+      });
+
+      function getActiveAccount() {
+        return state.accounts.find(function (a) { return a.id === state.activeAccountId; }) || state.accounts[0] || null;
+      }
+
+      function renderAccountsUI() {
+        document.getElementById('savedAccountsCountBadge').textContent = String(state.accounts.length);
+        document.getElementById('navAccountsBadge').textContent = String(state.accounts.length);
+        document.getElementById('autoLoginToggle').checked = Boolean(state.autoLogin);
+
+        const loginList = document.getElementById('savedAccountsList');
+        const dashGrid = document.getElementById('dashboardAccountsGrid');
+        const headerSelect = document.getElementById('headerAccountSelect');
+
+        if (state.accounts.length === 0) {
+          loginList.innerHTML =
+            '<div class="p-4 rounded-xl bg-slate-900/60 border border-white/5 text-center text-xs text-slate-400">' +
+              'No saved router accounts yet. Add your router credentials on the right to save your first account.' +
+            '</div>';
+          dashGrid.innerHTML =
+            '<div class="col-span-full p-4 rounded-xl bg-slate-900/60 border border-white/5 text-center text-xs text-slate-400">' +
+              'No saved accounts.' +
+            '</div>';
+          headerSelect.innerHTML = '<option value="">No Saved Account</option>';
+          return;
+        }
+
+        loginList.innerHTML = state.accounts.map(function (acc) {
+          const isCurrent = acc.id === state.activeAccountId;
+          return (
+            '<div class="p-3 rounded-xl bg-slate-900/80 border ' + (isCurrent ? 'border-amber-500/40' : 'border-white/10') + ' flex items-center justify-between gap-2">' +
+              '<div class="min-w-0">' +
+                '<p class="text-xs font-bold text-white truncate">' + escapeHtml(acc.label) + '</p>' +
+                '<p class="text-[11px] font-mono text-slate-400">' + escapeHtml(acc.routerIp) + ' • ' + escapeHtml(acc.username) + ' (' + escapeHtml(acc.profile) + ')</p>' +
+              '</div>' +
+              '<div class="flex items-center gap-1.5 shrink-0">' +
+                '<button type="button" data-quick-login="' + escapeHtml(acc.id) + '" class="btn-press px-2.5 py-1 rounded-lg bg-amber-500 text-slate-950 font-semibold text-[11px]">Connect</button>' +
+                '<button type="button" data-delete-account="' + escapeHtml(acc.id) + '" class="btn-press px-2 py-1 rounded-lg bg-rose-500/15 text-rose-300 text-[11px]" title="Delete Account">✕</button>' +
+              '</div>' +
+            '</div>'
+          );
+        }).join('');
+
+        dashGrid.innerHTML = state.accounts.map(function (acc) {
+          const isCurrent = acc.id === state.activeAccountId;
+          return (
+            '<div class="p-4 rounded-xl bg-slate-900/75 border ' + (isCurrent ? 'border-amber-500/40' : 'border-white/10') + ' flex items-center justify-between gap-3">' +
+              '<div class="min-w-0">' +
+                '<div class="flex items-center gap-2">' +
+                  '<p class="text-xs font-bold text-white truncate">' + escapeHtml(acc.label) + '</p>' +
+                  (isCurrent ? '<span class="px-2 py-0.5 rounded-full text-[10px] bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">Active</span>' : '') +
+                '</div>' +
+                '<p class="text-[11px] font-mono text-slate-400 mt-1">' + escapeHtml(acc.protocol || 'http') + '://' + escapeHtml(acc.routerIp) + ' • User: ' + escapeHtml(acc.username) + '</p>' +
+                '<p class="text-[10px] font-mono text-amber-300 mt-0.5">Profile: ' + escapeHtml(acc.profile) + '</p>' +
+              '</div>' +
+              '<div class="flex items-center gap-1.5 shrink-0">' +
+                (!isCurrent
+                  ? '<button type="button" data-quick-login="' + escapeHtml(acc.id) + '" class="btn-press px-3 py-1.5 rounded-lg bg-amber-500 text-slate-950 font-semibold text-xs">Switch</button>'
+                  : '<button type="button" data-edit-account="' + escapeHtml(acc.id) + '" class="btn-press px-2.5 py-1.5 rounded-lg bg-white/5 text-slate-300 text-xs">Edit</button>') +
+                '<button type="button" data-delete-account="' + escapeHtml(acc.id) + '" class="btn-press px-2.5 py-1.5 rounded-lg bg-rose-500/15 text-rose-300 text-xs">Delete</button>' +
+              '</div>' +
+            '</div>'
+          );
+        }).join('');
+
+        headerSelect.innerHTML = state.accounts.map(function (acc) {
+          return '<option value="' + escapeHtml(acc.id) + '" ' + (acc.id === state.activeAccountId ? 'selected' : '') + '>' +
+            escapeHtml(acc.label) + ' (' + escapeHtml(acc.routerIp) + ')' +
+          '</option>';
+        }).join('');
+      }
+
+      function renderDashboard() {
+        const active = getActiveAccount();
+        if (active) {
+          document.getElementById('sidebarEngineBadge').textContent = active.label;
+          document.getElementById('sidebarGatewayIp').textContent = active.routerIp;
+          document.getElementById('sidebarProfileBadge').textContent = active.profile;
+          document.getElementById('sysDns').textContent = active.routerIp;
+          document.getElementById('sysModulation').textContent = active.profile;
+          document.getElementById('alertGatewayIp').textContent = active.routerIp;
+        }
+
+        const pill = document.getElementById('sessionStatusPill');
+        const dot = document.getElementById('sessionDot');
+        const text = document.getElementById('sessionText');
+
+        if (state.connectionState === 'CONNECTED') {
+          pill.className = 'flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-[11px] font-medium text-emerald-300 shrink-0 cursor-pointer';
+          dot.className = 'w-2 h-2 rounded-full bg-emerald-400 animate-pulse';
+          text.textContent = 'Connected';
+        } else if (state.connectionState === 'RECONNECTING') {
+          pill.className = 'flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-[11px] font-medium text-amber-300 shrink-0 cursor-pointer';
+          dot.className = 'w-2 h-2 rounded-full bg-amber-400 animate-ping';
+          text.textContent = 'Connecting...';
+        } else if (state.connectionState === 'AUTH_ERROR') {
+          pill.className = 'flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-500/15 border border-rose-500/30 text-[11px] font-medium text-rose-300 shrink-0 cursor-pointer';
+          dot.className = 'w-2 h-2 rounded-full bg-rose-400';
+          text.textContent = 'Auth Error';
+        } else {
+          pill.className = 'flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-800 border border-white/10 text-[11px] font-medium text-slate-300 shrink-0 cursor-pointer';
+          dot.className = 'w-2 h-2 rounded-full bg-slate-400';
+          text.textContent = 'Standby';
+        }
+
+        document.getElementById('sidebarLastSync').textContent = state.lastSyncAt
+          ? new Date(state.lastSyncAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          : 'Never';
+
+        document.getElementById('kpiUptime').textContent = state.system.uptime || '—';
+        document.getElementById('kpiModel').textContent = decodeHtmlEntities(state.system.model || (active ? active.profile : '—'));
+        document.getElementById('kpiTotalDevices').textContent = String(state.devices.filter(function (d) { return !d.blocked; }).length);
+        document.getElementById('kpiActiveWifi').textContent = (state.wifi.band24.ssid || state.wifi.band5.ssid)
+          ? ((state.wifi.band24.ssid ? 1 : 0) + (state.wifi.band5.ssid ? 1 : 0)) + ' Bands'
+          : '—';
+        document.getElementById('kpiBlockedDevices').textContent = String(state.devices.filter(function (d) { return d.blocked; }).length);
+        document.getElementById('navDeviceBadge').textContent = String(state.devices.length);
+
+        document.getElementById('wanStatusBadge').textContent = state.system.wanStatus || 'Awaiting Sync';
+        document.getElementById('dslDownMbps').textContent = state.system.dsl.downloadSync || '—';
+        document.getElementById('dslUpMbps').textContent = state.system.dsl.uploadSync || '—';
+        document.getElementById('snrDown').textContent = state.system.dsl.snrDown || '—';
+        document.getElementById('snrUp').textContent = state.system.dsl.snrUp || '—';
+        document.getElementById('attenDown').textContent = state.system.dsl.attenuationDown || '—';
+        document.getElementById('attenUp').textContent = state.system.dsl.attenuationUp || '—';
+        document.getElementById('sysModel').textContent = decodeHtmlEntities(state.system.model || '—');
+        document.getElementById('sysWanIp').textContent = state.system.wanIp || '—';
+        document.getElementById('sysFirmware').textContent = state.system.firmware || '—';
+
+        const tbody = document.getElementById('devicesTableBody');
+        const q = state.searchQuery.toLowerCase().trim();
+        const filtered = state.devices.filter(function (d) {
+          if (state.deviceFilter === 'BLOCKED' && !d.blocked) return false;
+          if (state.deviceFilter !== 'ALL' && state.deviceFilter !== 'BLOCKED' && d.connectionType !== state.deviceFilter) return false;
+          if (!q) return true;
+          const nick = (state.nicknames[d.mac.toUpperCase()] || d.nickname || '').toLowerCase();
+          return (
+            (d.hostname || '').toLowerCase().includes(q) ||
+            (d.ip || '').toLowerCase().includes(q) ||
+            (d.mac || '').toLowerCase().includes(q) ||
+            nick.includes(q)
+          );
+        });
+
+        if (filtered.length === 0) {
+          tbody.innerHTML =
+            '<tr><td colspan="5" class="py-8 text-center text-xs text-slate-400">' +
+              (state.devices.length === 0
+                ? 'No live devices fetched yet. Run `npm start` locally so Playwright can pull your live LAN/WLAN clients.'
+                : 'No devices match the selected filter.') +
+            '</td></tr>';
+        } else {
+          tbody.innerHTML = filtered.map(function (d) {
+            const mac = d.mac.toUpperCase();
+            const nick = state.nicknames[mac] || d.nickname || '';
+            return (
+              '<tr class="hover:bg-white/[0.02]">' +
+                '<td class="py-3 px-3">' +
+                  '<div class="flex items-center gap-2">' +
+                    '<span class="font-semibold text-white">' + escapeHtml(nick || d.hostname) + '</span>' +
+                    '<button type="button" data-edit-nick="' + escapeHtml(mac) + '" class="text-slate-400 hover:text-amber-400" title="Set Friendly Nickname">✎</button>' +
+                  '</div>' +
+                  (nick ? '<p class="text-[10px] text-slate-400">' + escapeHtml(d.hostname) + '</p>' : '') +
+                '</td>' +
+                '<td class="py-3 px-3 font-mono text-slate-200">' + escapeHtml(d.ip) + '</td>' +
+                '<td class="py-3 px-3 font-mono text-slate-300">' + escapeHtml(mac) + '</td>' +
+                '<td class="py-3 px-3"><span class="px-2 py-0.5 rounded bg-white/5 font-mono text-[11px]">' + escapeHtml(d.connectionType) + '</span></td>' +
+                '<td class="py-3 px-3 text-right">' +
+                  (d.blocked
+                    ? '<button type="button" data-toggle-mac="' + escapeHtml(mac) + '" data-block-action="false" class="btn-press px-2.5 py-1 rounded-lg bg-emerald-500/15 text-emerald-300 text-xs font-semibold">Unblock</button>'
+                    : '<button type="button" data-toggle-mac="' + escapeHtml(mac) + '" data-block-action="true" class="btn-press px-2.5 py-1 rounded-lg bg-rose-500/15 text-rose-300 text-xs font-semibold">Block</button>') +
+                '</td>' +
+              '</tr>'
+            );
+          }).join('');
+        }
+      }
+
+      async function syncLiveGatewayData(manual) {
+        const icon = document.getElementById('refreshIcon');
+        icon.classList.add('animate-spin');
+
+        const statusRes = await apiCall('/api/status', 'GET');
+        const alertBanner = document.getElementById('proxyStatusAlert');
+
+        if (statusRes && statusRes.ok && statusRes.data) {
+          alertBanner.classList.add('hidden');
+          state.connectionState = statusRes.data.connectionState || 'CONNECTED';
+          state.lastSyncAt = statusRes.data.lastSyncAt || new Date().toISOString();
+          state.system = statusRes.data.system || state.system;
+
+          const devRes = await apiCall('/api/devices', 'GET');
+          if (devRes && devRes.ok && Array.isArray(devRes.data)) {
+            state.devices = devRes.data;
+          }
+
+          const wifiRes = await apiCall('/api/wifi', 'GET');
+          if (wifiRes && wifiRes.ok && wifiRes.data) {
+            state.wifi = wifiRes.data;
+            document.getElementById('wifi24Ssid').value = state.wifi.band24.ssid || '';
+            document.getElementById('wifi24Pass').value = state.wifi.band24.password || '';
+            document.getElementById('wifi5Ssid').value = state.wifi.band5.ssid || '';
+            document.getElementById('wifi5Pass').value = state.wifi.band5.password || '';
+          }
+
+          if (manual) {
+            showToast('Synced with Router', 'Live telemetry updated from gateway.', 'success');
+          }
+        } else {
+          state.connectionState = statusRes && statusRes.networkError ? 'DISCONNECTED' : 'AUTH_ERROR';
+          alertBanner.classList.remove('hidden');
+          if (statusRes && statusRes.error && !statusRes.networkError) {
+            document.getElementById('proxyStatusMessage').textContent = statusRes.error;
+          }
+          if (manual) {
+            showToast('Backend Proxy Offline', 'Start the local server (`npm start`) to pull live data from your router.', 'warning');
+          }
+        }
+
+        icon.classList.remove('animate-spin');
+        renderDashboard();
+      }
+
+      function showDashboardView() {
+        document.getElementById('loginScreen').classList.add('hidden');
+        document.getElementById('dashboardScreen').classList.remove('hidden');
+        renderAccountsUI();
+        renderDashboard();
+        syncLiveGatewayData(false);
+      }
+
+      function showLoginView(prefillAccount) {
+        document.getElementById('dashboardScreen').classList.add('hidden');
+        document.getElementById('loginScreen').classList.remove('hidden');
+        renderAccountsUI();
+
+        if (prefillAccount) {
+          document.getElementById('loginAccountId').value = prefillAccount.id;
+          document.getElementById('loginLabel').value = prefillAccount.label;
+          document.getElementById('cfgRouterIp').value = prefillAccount.routerIp;
+          document.getElementById('cfgProfile').value = prefillAccount.profile || 'ZTE_H188A';
+          document.getElementById('loginProtocol').value = prefillAccount.protocol || 'http';
+          document.getElementById('cfgUsername').value = prefillAccount.username;
+          document.getElementById('cfgPassword').value = prefillAccount.password || '';
+          document.getElementById('cfgHeadless').checked = prefillAccount.headless !== false;
+        }
+      }
+
+      document.getElementById('gatewayConfigForm').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const existingId = document.getElementById('loginAccountId').value;
+        const accountPayload = {
+          id: existingId || ('acc_' + Date.now()),
+          label: document.getElementById('loginLabel').value.trim(),
+          routerIp: document.getElementById('cfgRouterIp').value.trim(),
+          profile: document.getElementById('cfgProfile').value,
+          protocol: document.getElementById('loginProtocol').value,
+          username: document.getElementById('cfgUsername').value.trim(),
+          password: document.getElementById('cfgPassword').value,
+          headless: document.getElementById('cfgHeadless').checked
+        };
+
+        const idx = state.accounts.findIndex(function (a) { return a.id === accountPayload.id; });
+        if (idx >= 0) {
+          state.accounts[idx] = accountPayload;
+        } else {
+          state.accounts.push(accountPayload);
+        }
+        state.activeAccountId = accountPayload.id;
+        saveLocal('router_saved_accounts_v2', state.accounts);
+        saveLocal('router_active_account_id_v2', state.activeAccountId);
+
+        state.connectionState = 'RECONNECTING';
+        await apiCall('/api/accounts/login', 'POST', accountPayload);
+
+        showToast('Account Saved', 'Signed in with "' + accountPayload.label + '" (' + accountPayload.routerIp + ')', 'success');
+        showDashboardView();
+      });
+
+      document.getElementById('resetLoginFormBtn').addEventListener('click', function () {
+        document.getElementById('loginAccountId').value = '';
+        document.getElementById('loginLabel').value = '';
+        document.getElementById('cfgRouterIp').value = '192.168.1.1';
+        document.getElementById('cfgUsername').value = 'admin';
+        document.getElementById('cfgPassword').value = '';
+      });
+
+      document.getElementById('autoLoginToggle').addEventListener('change', function (e) {
+        state.autoLogin = e.target.checked;
+        saveLocal('router_auto_login_v2', state.autoLogin);
+      });
+
+      document.body.addEventListener('click', async function (e) {
+        const quickBtn = e.target.closest('[data-quick-login]');
+        if (quickBtn) {
+          const id = quickBtn.getAttribute('data-quick-login');
+          const target = state.accounts.find(function (a) { return a.id === id; });
+          if (target) {
+            state.activeAccountId = target.id;
+            saveLocal('router_active_account_id_v2', state.activeAccountId);
+            await apiCall('/api/accounts/switch', 'POST', { accountId: target.id });
+            showToast('Switched Router Account', 'Active router: ' + target.label + ' (' + target.routerIp + ')', 'success');
+            showDashboardView();
+          }
+          return;
+        }
+
+        const editBtn = e.target.closest('[data-edit-account]');
+        if (editBtn) {
+          const id = editBtn.getAttribute('data-edit-account');
+          const target = state.accounts.find(function (a) { return a.id === id; });
+          if (target) showLoginView(target);
+          return;
+        }
+
+        const delBtn = e.target.closest('[data-delete-account]');
+        if (delBtn) {
+          const id = delBtn.getAttribute('data-delete-account');
+          const target = state.accounts.find(function (a) { return a.id === id; });
+          if (!target) return;
+          openConfirmModal(
+            'Delete Saved Router Account?',
+            'Remove "' + target.label + '" (' + target.routerIp + ') from your saved accounts?',
+            async function () {
+              state.accounts = state.accounts.filter(function (a) { return a.id !== id; });
+              if (state.activeAccountId === id) {
+                state.activeAccountId = state.accounts[0] ? state.accounts[0].id : null;
+              }
+              saveLocal('router_saved_accounts_v2', state.accounts);
+              saveLocal('router_active_account_id_v2', state.activeAccountId);
+              await apiCall('/api/accounts/' + encodeURIComponent(id), 'DELETE');
+              renderAccountsUI();
+              showToast('Account Removed', 'Deleted ' + target.label, 'warning');
+              if (state.accounts.length === 0) {
+                showLoginView();
+              }
+            }
+          );
+        }
+      });
+
+      document.getElementById('headerAccountSelect').addEventListener('change', async function (e) {
+        const id = e.target.value;
+        const target = state.accounts.find(function (a) { return a.id === id; });
+        if (!target) return;
+        state.activeAccountId = target.id;
+        saveLocal('router_active_account_id_v2', state.activeAccountId);
+        await apiCall('/api/accounts/switch', 'POST', { accountId: target.id });
+        showToast('Switched Router', 'Connected to ' + target.label + ' (' + target.routerIp + ')', 'success');
+        renderAccountsUI();
+        syncLiveGatewayData(false);
+      });
+
+      document.getElementById('headerLogoutBtn').addEventListener('click', function () { showLoginView(); });
+      document.getElementById('mobileMenuBtn').addEventListener('click', function () { showLoginView(); });
+      document.getElementById('sidebarSwitchAccountBtn').addEventListener('click', function () { showLoginView(); });
+      document.getElementById('addNewAccountBtn').addEventListener('click', function () {
+        document.getElementById('resetLoginFormBtn').click();
+        showLoginView();
+      });
+
+      function switchTab(tabId) {
+        ['overview', 'devices', 'wifi', 'maintenance', 'architecture'].forEach(function (id) {
+          const el = document.getElementById('tab-' + id);
+          if (el) el.classList.toggle('hidden', id !== tabId);
+        });
+        document.querySelectorAll('.nav-tab').forEach(function (btn) {
+          const active = btn.getAttribute('data-tab') === tabId;
+          if (btn.closest('aside')) {
+            btn.className = active
+              ? 'nav-tab w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium bg-amber-500/15 text-amber-400 border border-amber-500/30'
+              : 'nav-tab w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium text-slate-300 hover:bg-white/5 border border-transparent';
+          } else {
+            btn.className = active
+              ? 'nav-tab flex flex-col items-center justify-center py-1 text-amber-400 font-semibold'
+              : 'nav-tab flex flex-col items-center justify-center py-1 text-slate-400';
+          }
+        });
+      }
+
+      document.querySelectorAll('.nav-tab').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          switchTab(btn.getAttribute('data-tab'));
+        });
+      });
+
+      document.querySelectorAll('[data-goto-tab]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          switchTab(btn.getAttribute('data-goto-tab'));
+        });
+      });
+
+      document.querySelectorAll('.dev-filter-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          state.deviceFilter = btn.getAttribute('data-filter');
+          document.querySelectorAll('.dev-filter-btn').forEach(function (b) {
+            const active = b.getAttribute('data-filter') === state.deviceFilter;
+            b.className = active
+              ? 'dev-filter-btn px-2.5 py-1 rounded-lg bg-amber-500 text-slate-950 font-semibold'
+              : 'dev-filter-btn px-2.5 py-1 rounded-lg text-slate-300 hover:text-white';
+          });
+          renderDashboard();
+        });
+      });
+
+      document.querySelectorAll('.toggle-pass-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          const input = document.getElementById(btn.getAttribute('data-toggle-pass'));
+          if (input.type === 'password') {
+            input.type = 'text';
+            btn.textContent = 'Hide';
+          } else {
+            input.type = 'password';
+            btn.textContent = 'Show';
+          }
+        });
+      });
+
+      document.getElementById('deviceSearchInput').addEventListener('input', function (e) {
+        state.searchQuery = e.target.value;
+        renderDashboard();
+      });
+
+      document.getElementById('devicesTableBody').addEventListener('click', function (e) {
+        const nickBtn = e.target.closest('[data-edit-nick]');
+        if (nickBtn) {
+          const mac = nickBtn.getAttribute('data-edit-nick');
+          openInputModal(
+            'Set Device Friendly Nickname',
+            'MAC: ' + mac,
+            state.nicknames[mac] || '',
+            'e.g., Personal Phone',
+            async function (val) {
+              if (val && val.trim()) state.nicknames[mac] = val.trim();
+              else delete state.nicknames[mac];
+              saveLocal('router_nicknames_v2', state.nicknames);
+              await apiCall('/api/devices/nickname', 'POST', { mac: mac, nickname: val });
+              renderDashboard();
+              showToast('Nickname Saved', 'Updated nickname for ' + mac, 'success');
+            }
+          );
+          return;
+        }
+
+        const blockBtn = e.target.closest('[data-toggle-mac]');
+        if (blockBtn) {
+          const mac = blockBtn.getAttribute('data-toggle-mac');
+          const shouldBlock = blockBtn.getAttribute('data-block-action') === 'true';
+          openConfirmModal(
+            shouldBlock ? 'Block MAC Address?' : 'Unblock MAC Address?',
+            (shouldBlock ? 'Add ' : 'Remove ') + mac + ' on the router WLAN MAC Filter?',
+            async function () {
+              const res = await apiCall('/api/block', 'POST', { mac: mac, block: shouldBlock });
+              const dev = state.devices.find(function (d) { return d.mac.toUpperCase() === mac; });
+              if (dev) dev.blocked = shouldBlock;
+              renderDashboard();
+              showToast(
+                res && res.ok ? 'Router MAC Filter Updated' : 'Queued Locally',
+                mac + (shouldBlock ? ' blacklisted.' : ' unblocked.'),
+                shouldBlock ? 'warning' : 'success'
+              );
+            }
+          );
+        }
+      });
+
+      document.getElementById('openAddMacModalBtn').addEventListener('click', function () {
+        openInputModal(
+          'Block Custom MAC Address',
+          'Enter hardware MAC address (XX:XX:XX:XX:XX:XX)',
+          '',
+          'AA:BB:CC:DD:EE:FF',
+          async function (val) {
+            const mac = String(val || '').toUpperCase().trim();
+            if (!/^([0-9A-F]{2}:){5}[0-9A-F]{2}$/.test(mac)) {
+              showToast('Invalid MAC Address', 'Use format AA:BB:CC:11:22:33', 'error');
+              return;
+            }
+            await apiCall('/api/block', 'POST', { mac: mac, block: true });
+            state.devices.push({
+              hostname: 'Blacklisted-MAC',
+              ip: '—',
+              mac: mac,
+              connectionType: '2.4GHz',
+              blocked: true
+            });
+            renderDashboard();
+            showToast('MAC Blacklisted', 'Sent ' + mac + ' to router MAC filter.', 'warning');
+          }
+        );
+      });
+
+      document.getElementById('wifiConfigForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        openConfirmModal(
+          'Save & Apply Wi-Fi Settings?',
+          'Push updated 2.4GHz and 5GHz credentials directly to the router?',
+          async function () {
+            const payload = {
+              band24: {
+                enabled: document.getElementById('wifi24Enabled').checked,
+                ssid: document.getElementById('wifi24Ssid').value.trim(),
+                password: document.getElementById('wifi24Pass').value,
+                txPower: document.getElementById('wifi24TxPower').value,
+                channelWidth: document.getElementById('wifi24Width').value,
+                hideSsid: document.getElementById('wifi24Hide').checked
+              },
+              band5: {
+                enabled: document.getElementById('wifi5Enabled').checked,
+                ssid: document.getElementById('wifi5Ssid').value.trim(),
+                password: document.getElementById('wifi5Pass').value,
+                txPower: document.getElementById('wifi5TxPower').value,
+                channelWidth: document.getElementById('wifi5Width').value,
+                hideSsid: document.getElementById('wifi5Hide').checked
+              }
+            };
+            const res = await apiCall('/api/wifi', 'POST', payload);
+            showToast(
+              res && res.ok ? 'Wi-Fi Settings Applied' : 'Backend Proxy Offline',
+              res && res.ok ? 'Updated wireless configuration on router.' : 'Start local Node.js server to push changes to router.',
+              res && res.ok ? 'success' : 'warning'
+            );
+          }
+        );
+      });
+
+      function promptReboot() {
+        const active = getActiveAccount();
+        openConfirmModal(
+          'Reboot Router (' + (active ? active.routerIp : '192.168.1.1') + ')?',
+          'Are you sure you want to reboot the router? Internet and Wi-Fi will disconnect for ~65 seconds.',
+          async function () {
+            const res = await apiCall('/api/reboot', 'POST');
+            state.connectionState = 'RECONNECTING';
+            renderDashboard();
+            showToast(
+              res && res.ok ? 'Reboot Command Sent' : 'Proxy Offline',
+              res && res.ok ? 'Router is restarting...' : 'Run local backend server to trigger hardware reboot.',
+              'warning'
+            );
+          }
+        );
+      }
+      document.getElementById('sidebarRebootBtn').addEventListener('click', promptReboot);
+      document.getElementById('maintRebootBtn').addEventListener('click', promptReboot);
+
+      document.querySelectorAll('.sim-state-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          state.connectionState = btn.getAttribute('data-sim-state');
+          renderDashboard();
+          showToast('Status Indicator Updated', 'Set connection indicator to ' + state.connectionState, 'warning');
+        });
+      });
+
+      document.getElementById('sessionStatusPill').addEventListener('click', function () {
+        syncLiveGatewayData(true);
+      });
+      document.getElementById('refreshDataBtn').addEventListener('click', function () {
+        syncLiveGatewayData(true);
+      });
+      document.getElementById('customProxyUrlInput').value = state.proxyBaseUrl || '';
+      document.getElementById('saveProxyUrlBtn').addEventListener('click', function () {
+        state.proxyBaseUrl = document.getElementById('customProxyUrlInput').value.trim();
+        saveLocal('router_proxy_base_url_v2', state.proxyBaseUrl);
+        showToast('تم حفظ عنوان البروكسي', state.proxyBaseUrl || 'Default local origin', 'success');
+        syncLiveGatewayData(true);
+      });
+      document.getElementById('retryConnectionBtn').addEventListener('click', function () {
+        syncLiveGatewayData(true);
+      });
+      const directBtn = document.getElementById('openDirectGatewayBtn');
+      if (directBtn) {
+        directBtn.addEventListener('click', function () {
+          const active = getActiveAccount();
+          const url = nativeCache.baseUrl || ((active ? (active.protocol || 'http') + '://' + active.routerIp : 'http://192.168.1.1'));
+          window.open(url, '_blank');
+        });
+      }
+
+      function setupPolling(ms) {
+        if (state.pollTimer) clearInterval(state.pollTimer);
+        if (ms > 0) {
+          state.pollTimer = setInterval(function () {
+            if (!document.getElementById('dashboardScreen').classList.contains('hidden')) {
+              syncLiveGatewayData(false);
+            }
+          }, ms);
+        }
+      }
+
+      document.getElementById('pollIntervalSelect').addEventListener('change', function (e) {
+        setupPolling(Number(e.target.value));
+      });
+
+      (async function initApp() {
+        const backendAcc = await apiCall('/api/accounts', 'GET');
+        if (backendAcc && backendAcc.ok && backendAcc.data && Array.isArray(backendAcc.data.accounts) && backendAcc.data.accounts.length > 0) {
+          state.accounts = backendAcc.data.accounts;
+          state.activeAccountId = backendAcc.data.activeAccountId || state.accounts[0].id;
+          saveLocal('router_saved_accounts_v2', state.accounts);
+          saveLocal('router_active_account_id_v2', state.activeAccountId);
+        }
+
+        setupPolling(30000);
+
+        const active = getActiveAccount();
+        if (active && state.autoLogin) {
+          showDashboardView();
+        } else {
+          showLoginView();
+        }
+      })();
+    })();
+  </script>
+</body>
+</html>

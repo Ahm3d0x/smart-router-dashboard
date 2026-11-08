@@ -1,0 +1,10 @@
+{
+  "name": "Smart Router Control",
+  "short_name": "RouterCtrl",
+  "description": "Direct Local Router Control & Multi-Account Gateway Manager",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#090d16",
+  "theme_color": "#f59e0b",
+  "orientation": "portrait-primary"
+}
