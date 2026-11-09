@@ -60,8 +60,8 @@ import javax.net.ssl.X509TrustManager;
 public class MainActivity extends BridgeActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         trustAllRouterCertificates();
+        super.onCreate(savedInstanceState);
     }
 
     private void trustAllRouterCertificates() {

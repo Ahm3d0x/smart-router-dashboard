@@ -1,0 +1,8 @@
+{
+  "name": "Smart Router Control Dashboard",
+  "description": "Smart Router Control Dashboard for ZTE and Huawei gateways with local proxy and Android APK support",
+  "permissions": [],
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

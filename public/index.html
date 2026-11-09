@@ -598,12 +598,25 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
               <div class="p-3.5 rounded-xl bg-slate-900/80 border border-white/5 space-y-1.5">
                 <p class="font-semibold text-amber-300">1. استخراج الـ APK سحابياً بدون برامج (GitHub Actions)</p>
-                <p class="text-slate-300 leading-relaxed">ارفع ملفات المشروع على GitHub واضغط <strong>Run workflow</strong> في تبويب <strong>Actions (Build Android APK)</strong>، هيطلع لك ملف <code class="text-emerald-300">app-debug.apk</code> جاهز للتحميل والتثبيت على الموبايل في دقيقتين.</p>
+                <p class="text-slate-300 leading-relaxed">ارفع ملفات المشروع على GitHub واضغط <strong>Run workflow</strong> في تبويب <strong>Actions (Build Android APK)</strong>، هيطلع لك ملف <code class="text-emerald-300">app-debug.apk</code> جاهز للتحميل والتثبيت على الموبايل في دقيقتين مع باتش تخطي الـ SSL تلقائياً.</p>
               </div>
               <div class="p-3.5 rounded-xl bg-slate-900/80 border border-white/5 space-y-1.5">
                 <p class="font-semibold text-sky-300">2. بناء الـ APK على جهازك بضغطة واحدة</p>
                 <p class="text-slate-300 leading-relaxed">فك ضغط ملف المشروع وشغّل <code class="text-amber-300">build-apk.bat</code> (على ويندوز) أو <code class="text-amber-300">./build-apk.sh</code>، هيطلع لك ملف الـ APK في <code class="text-emerald-300">android/app/build/outputs/apk/debug/app-debug.apk</code>.</p>
               </div>
+            </div>
+
+            <!-- Mobile Connection Troubleshooting Card -->
+            <div class="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 space-y-2 text-xs" dir="rtl">
+              <h4 class="font-bold text-amber-300 flex items-center gap-2">
+                <span>⚠️</span>
+                <span>حل مشكلة الاتصال على الموبايل (CertPathValidatorException &amp; Failed to connect):</span>
+              </h4>
+              <ul class="list-disc list-inside space-y-1 text-slate-200 leading-relaxed">
+                <li><strong>شهادة الـ SSL الذاتية للراوتر:</strong> راوترات ZTE ZXHN H188A تستخدم شهادة HTTPS داخلية غير موقعة من جهة موثوقة؛ تم حل المشكلة بدمج باتش تخطي الشهادات في <code class="font-mono text-emerald-300">MainActivity.java</code> وتفعيل <code class="font-mono text-emerald-300">network_security_config.xml</code> في GitHub Actions.</li>
+                <li><strong>إغلاق باقة الهاتف (Mobile Data 4G):</strong> الأندرويد عند تفعيل داتا الموبايل والواي فاي معاً يقوم بتوجيه الاتصال لشبكة المحمول فلا يصل إلى IP الشبكة المحلية 192.168.1.1. يرجى إغلاق بيانات الهاتف أثناء استخدام التطبيق.</li>
+                <li><strong>التأكد من عنوان IP الراوتر:</strong> تأكد أن بوابة الراوتر هي 192.168.1.1 (أو قم بتغييرها في الحساب إذا كان راوترك 192.168.0.1 أو 192.168.1.254).</li>
+              </ul>
             </div>
           </div>
 
@@ -1055,6 +1068,7 @@ snrDown:       "#tdDownNoiseMargin"</pre>
         let rootRes = null;
         let activeOrigin = '';
 
+        let lastProbeErr = null;
         for (const proto of protocols) {
           const tryUrl = proto + '://' + account.routerIp + '/';
           try {
@@ -1069,14 +1083,26 @@ snrDown:       "#tdDownNoiseMargin"</pre>
               break;
             }
           } catch (err) {
+            lastProbeErr = err;
             appendDiagLog(proto.toUpperCase() + ' probe error: ' + err.message);
           }
         }
 
         if (!rootRes) {
+          let detailedMsg = 'تعذر الوصول إلى ' + account.routerIp + '. تأكد أن الموبايل متصل بواي فاي الراوتر.';
+          if (lastProbeErr && lastProbeErr.message) {
+            const msg = lastProbeErr.message;
+            if (msg.includes('CertPathValidatorException') || msg.includes('Trust anchor')) {
+              detailedMsg = 'خطأ شهادة أمان الراوتر (SSL Trust Anchor): راوتر ZTE/Huawei يستخدم شهادة ذاتية. تم تحديث MainActivity وسير عمل GitHub Actions لتخطي فحص الشهادة. يرجى إعادة تنزيل الـ APK المحدث.';
+              appendDiagLog('HINT: Router SSL is self-signed. Re-run GitHub Actions APK workflow with the updated MainActivity SSL patch.');
+            } else if (msg.includes('Failed to connect') || msg.includes('ENETUNREACH') || msg.includes('ECONNREFUSED')) {
+              detailedMsg = 'تعذر الاتصال بـ ' + account.routerIp + ': أغلق بيانات الهاتف (4G/LTE) مؤقتاً للتأكد من توجيه الاتصال عبر واي فاي الراوتر، وتأكد من صحة IP الراوتر.';
+              appendDiagLog('HINT: Disable 4G Mobile Data so Android routes directly via local Wi-Fi to ' + account.routerIp);
+            }
+          }
           return {
             ok: false,
-            error: 'تعذر الوصول إلى ' + account.routerIp + '. تأكد أن الموبايل متصل بواي فاي الراوتر.'
+            error: detailedMsg
           };
         }
 

@@ -4,6 +4,9 @@
   "description": "Smart Router Control Dashboard (Android APK via Capacitor + Local Node.js Gateway Automation)",
   "main": "server.js",
   "scripts": {
+    "dev": "node server.js",
+    "build": "echo 'Build ready'",
+    "lint": "node -c server.js services/configStore.js services/routerSelectors.js services/routerService.js",
     "start": "node server.js",
     "debug": "HEADLESS=false node server.js",
     "android:init": "npx cap add android && npx cap sync android",
