@@ -149,65 +149,102 @@ class RouterAdapter {
     }
   }
 
+  async isSessionTimedOut(sel) {
+    if (!this.page || this.page.isClosed()) return true;
+    try {
+      const url = this.page.url() || '';
+      if (/sessiontimeout|login/i.test(url)) return true;
+      const loginInput = await this.page.$(sel.login.usernameInput);
+      if (loginInput && (await loginInput.isVisible().catch(() => false))) {
+        return true;
+      }
+      const bodyText = await this.page.evaluate(() => (document.body ? document.body.innerText : '')).catch(() => '');
+      if (/SessionTimeout/i.test(bodyText)) return true;
+      return false;
+    } catch {
+      return false;
+    }
+  }
+
   async getStatus() {
     const account = await this.ensureAuthenticated();
     const sel = this.getActiveSelectors(account.profile);
 
-    const statusTab = await this.page.$(sel.navigation.statusTab);
-    if (statusTab) await statusTab.click().catch(() => {});
-    await this.page.waitForTimeout(400);
-
-    const model = await this.readText(sel.status.model);
-    const firmware = await this.readText(sel.status.firmware);
-    const uptime = await this.readText(sel.status.uptime);
-    const wanStatus = await this.readText(sel.status.wanStatus);
-    const wanIp = await this.readText(sel.status.wanIp);
-
-    const dslSubTab = await this.page.$(sel.navigation.dslSubTab);
-    if (dslSubTab) await dslSubTab.click().catch(() => {});
-    await this.page.waitForTimeout(400);
-
-    const downSync = await this.readText(sel.status.dslDownSync);
-    const upSync = await this.readText(sel.status.dslUpSync);
-    const snrDown = await this.readText(sel.status.snrDown);
-    const snrUp = await this.readText(sel.status.snrUp);
-    const attenDown = await this.readText(sel.status.attenDown);
-    const attenUp = await this.readText(sel.status.attenUp);
-
-    this.lastSyncAt = new Date().toISOString();
-
-    return {
-      connectionState: this.sessionState,
-      account: {
-        id: account.id,
-        label: account.label,
-        routerIp: account.routerIp,
-        username: account.username,
-        profile: account.profile
-      },
-      lastSyncAt: this.lastSyncAt,
-      system: {
-        model: model || null,
-        firmware: firmware || null,
-        uptime: uptime || null,
-        wanStatus: wanStatus || null,
-        wanIp: wanIp || null,
-        dsl: {
-          downloadSync: downSync || null,
-          uploadSync: upSync || null,
-          snrDown: snrDown || null,
-          snrUp: snrUp || null,
-          attenuationDown: attenDown || null,
-          attenuationUp: attenUp || null
-        }
+    for (let attempt = 0; attempt < 2; attempt++) {
+      if (await this.isSessionTimedOut(sel)) {
+        this.sessionState = 'RECONNECTING';
+        await this.login(account);
       }
-    };
+
+      const statusTab = await this.page.$(sel.navigation.statusTab);
+      if (statusTab) await statusTab.click().catch(() => {});
+      await this.page.waitForTimeout(400);
+
+      const model = await this.readText(sel.status.model);
+      const firmware = await this.readText(sel.status.firmware);
+      const uptime = await this.readText(sel.status.uptime);
+      const wanStatus = await this.readText(sel.status.wanStatus);
+      const wanIp = await this.readText(sel.status.wanIp);
+
+      const dslSubTab = await this.page.$(sel.navigation.dslSubTab);
+      if (dslSubTab) await dslSubTab.click().catch(() => {});
+      await this.page.waitForTimeout(400);
+
+      const downSync = await this.readText(sel.status.dslDownSync);
+      const upSync = await this.readText(sel.status.dslUpSync);
+      const snrDown = await this.readText(sel.status.snrDown);
+      const snrUp = await this.readText(sel.status.snrUp);
+      const attenDown = await this.readText(sel.status.attenDown);
+      const attenUp = await this.readText(sel.status.attenUp);
+
+      const combinedFields = [model, firmware, uptime, wanStatus, wanIp, downSync, upSync].filter(Boolean).join(' ');
+      if (/SessionTimeout/i.test(combinedFields) && attempt === 0) {
+        this.sessionState = 'RECONNECTING';
+        await this.login(account);
+        continue;
+      }
+
+      this.lastSyncAt = new Date().toISOString();
+
+      return {
+        connectionState: this.sessionState,
+        sessionTimeoutDetected: false,
+        account: {
+          id: account.id,
+          label: account.label,
+          routerIp: account.routerIp,
+          username: account.username,
+          profile: account.profile
+        },
+        lastSyncAt: this.lastSyncAt,
+        system: {
+          model: model || null,
+          firmware: firmware || null,
+          uptime: uptime || null,
+          wanStatus: wanStatus || null,
+          wanIp: wanIp || null,
+          dsl: {
+            downloadSync: downSync || null,
+            uploadSync: upSync || null,
+            snrDown: snrDown || null,
+            snrUp: snrUp || null,
+            attenuationDown: attenDown || null,
+            attenuationUp: attenUp || null
+          }
+        }
+      };
+    }
   }
 
   async getDevices() {
     const account = await this.ensureAuthenticated();
     const sel = this.getActiveSelectors(account.profile);
     const nicknames = configStore.getNicknames();
+
+    if (await this.isSessionTimedOut(sel)) {
+      this.sessionState = 'RECONNECTING';
+      await this.login(account);
+    }
 
     const lanTab = await this.page.$(sel.navigation.lanSubTab);
     if (lanTab) await lanTab.click().catch(() => {});

@@ -2012,6 +2012,7 @@
 
           // If opening menuView returned SessionTimeout, re-authenticate immediately and retry once
           if (vStr.includes('SessionTimeout') && account) {
+            nativeCache.sessionTimeoutCount = (nativeCache.sessionTimeoutCount || 0) + 1;
             appendDiagLog('SessionTimeout on menuView [' + viewTag + '] -> re-authenticating...');
             nativeCache.lastAuthTime = 0;
             await zteAuthenticate(capHttp, activeOrigin, account);
@@ -2027,6 +2028,7 @@
           }
 
           if (vStr.includes('SessionTimeout')) {
+            nativeCache.unresolvedTimeouts = (nativeCache.unresolvedTimeouts || 0) + 1;
             appendDiagLog('menuView [' + viewTag + '] not supported or timed out');
             nativeCache.currentView = '';
             return false;
@@ -2069,6 +2071,7 @@
 
           let dStr = typeof dRes.data === 'string' ? dRes.data : JSON.stringify(dRes.data || '');
           if (dStr.includes('SessionTimeout')) {
+            nativeCache.sessionTimeoutCount = (nativeCache.sessionTimeoutCount || 0) + 1;
             appendDiagLog('SessionTimeout on ' + dataTag + (viewTag ? ' [view=' + viewTag + ']' : ''));
             if (account) {
               nativeCache.lastAuthTime = 0;
@@ -2086,11 +2089,13 @@
               });
               dStr = typeof retryRes.data === 'string' ? retryRes.data : JSON.stringify(retryRes.data || '');
               if (dStr.includes('SessionTimeout')) {
+                nativeCache.unresolvedTimeouts = (nativeCache.unresolvedTimeouts || 0) + 1;
                 nativeCache.lastAuthTime = 0;
                 await zteAuthenticate(capHttp, activeOrigin, account);
                 return '';
               }
             } else {
+              nativeCache.unresolvedTimeouts = (nativeCache.unresolvedTimeouts || 0) + 1;
               return '';
             }
           }
@@ -2564,6 +2569,8 @@
 
         nativeCache.vendor = 'ZTE';
         nativeCache.lastScriptXml = {};
+        nativeCache.sessionTimeoutCount = 0;
+        nativeCache.unresolvedTimeouts = 0;
         await zteAuthenticate(capHttp, activeOrigin, account);
 
         const wlanApMap = {};
@@ -2796,10 +2803,16 @@
         state.devices = nativeCache.devices;
         state.wifi = nativeCache.wifi;
 
+        const incompleteDueToTimeout = Boolean(
+          nativeCache.unresolvedTimeouts > 0 && (!downSync || nativeCache.devices.length === 0)
+        );
+
         return {
           ok: true,
           data: {
-            connectionState: 'CONNECTED',
+            connectionState: incompleteDueToTimeout ? 'SESSION_TIMEOUT' : 'CONNECTED',
+            sessionTimeoutDetected: incompleteDueToTimeout,
+            sessionTimeoutCount: nativeCache.sessionTimeoutCount || 0,
             lastSyncAt: new Date().toISOString(),
             system: {
               model: decodeHtmlEntities(detectedModel),
@@ -3629,10 +3642,12 @@
           pill.className = 'flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-[11px] font-medium text-emerald-300 shrink-0 cursor-pointer';
           dot.className = 'w-2 h-2 rounded-full bg-emerald-400 animate-pulse';
           text.textContent = 'Connected';
-        } else if (state.connectionState === 'RECONNECTING') {
+        } else if (state.connectionState === 'RECONNECTING' || state.connectionState === 'SESSION_TIMEOUT') {
           pill.className = 'flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-[11px] font-medium text-amber-300 shrink-0 cursor-pointer';
           dot.className = 'w-2 h-2 rounded-full bg-amber-400 animate-ping';
-          text.textContent = 'Connecting...';
+          text.textContent = state.reSyncAttempt > 0
+            ? ('Re-syncing (' + state.reSyncAttempt + '/3)...')
+            : (state.connectionState === 'SESSION_TIMEOUT' ? 'Session Timeout • Re-syncing...' : 'Connecting...');
         } else if (state.connectionState === 'AUTH_ERROR') {
           pill.className = 'flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-500/15 border border-rose-500/30 text-[11px] font-medium text-rose-300 shrink-0 cursor-pointer';
           dot.className = 'w-2 h-2 rounded-full bg-rose-400';
@@ -3797,15 +3812,77 @@
         }
       }
 
-      async function syncLiveGatewayData(manual) {
+      // Detect whether any router status response or telemetry field indicates a SessionTimeout error
+      function hasSessionTimeoutIndicator(statusRes, devRes, wifiRes) {
+        const timeoutRegex = /session\s*timeout|session_timeout|session\s*expired/i;
+        if (statusRes && statusRes.error && timeoutRegex.test(String(statusRes.error))) return true;
+        if (devRes && devRes.error && timeoutRegex.test(String(devRes.error))) return true;
+        if (wifiRes && wifiRes.error && timeoutRegex.test(String(wifiRes.error))) return true;
+        if (statusRes && statusRes.data) {
+          const d = statusRes.data;
+          if (d.sessionTimeoutDetected === true || d.connectionState === 'SESSION_TIMEOUT') return true;
+          if (d.system && timeoutRegex.test(JSON.stringify(d.system))) return true;
+        }
+        return false;
+      }
+
+      // Automatic Re-Sync Loop triggered when router status indicates SessionTimeout
+      function scheduleSessionTimeoutReSync(currentAttempt) {
+        const maxAttempts = 3;
+        const nextAttempt = (currentAttempt || 0) + 1;
+        if (nextAttempt > maxAttempts) {
+          state.reSyncAttempt = 0;
+          appendDiagLog('[Auto-ReSync] Reached max automatic SessionTimeout retries (' + maxAttempts + '). Waiting for next poll cycle.');
+          return;
+        }
+
+        if (state.reSyncTimer) {
+          clearTimeout(state.reSyncTimer);
+          state.reSyncTimer = null;
+        }
+
+        state.reSyncAttempt = nextAttempt;
+        state.connectionState = 'RECONNECTING';
+        const delayMs = 1200 * nextAttempt;
+
+        appendDiagLog('[Auto-ReSync] SessionTimeout detected -> scheduling automatic re-auth & re-sync (' + nextAttempt + '/' + maxAttempts + ') in ' + delayMs + 'ms...');
+        renderDashboard();
+
+        state.reSyncTimer = setTimeout(async function () {
+          state.reSyncTimer = null;
+          // Reset cached ZTE tokens to force a fresh 3-step login handshake
+          nativeCache.lastAuthTime = 0;
+          nativeCache.sessToken = '';
+          nativeCache.tmpSessionToken = '';
+          nativeCache.currentView = '';
+          nativeCache.unresolvedTimeouts = 0;
+
+          const active = getActiveAccount();
+          if (active && !isCapacitorNative()) {
+            await apiCall('/api/accounts/login', 'POST', active).catch(function () {});
+          }
+          await syncLiveGatewayData(false, nextAttempt);
+        }, delayMs);
+      }
+
+      async function syncLiveGatewayData(manual, retryAttempt) {
+        const currentAttempt = typeof retryAttempt === 'number' ? retryAttempt : 0;
         if (!manual && state.speedTest && state.speedTest.state === 'RUNNING') {
           return;
         }
         if (state.isSyncing) return;
         state.isSyncing = true;
 
+        if (manual && state.reSyncTimer) {
+          clearTimeout(state.reSyncTimer);
+          state.reSyncTimer = null;
+          state.reSyncAttempt = 0;
+        }
+
         const icon = document.getElementById('refreshIcon');
         icon.classList.add('animate-spin');
+
+        let shouldAutoReSync = false;
 
         try {
           const statusRes = await apiCall('/api/status', 'GET');
@@ -3827,23 +3904,39 @@
               state.wifi = wifiRes.data;
             }
 
-            if (manual) {
-              showToast('Synced with Router', 'Live telemetry updated from gateway.', 'success');
+            if (hasSessionTimeoutIndicator(statusRes, devRes, wifiRes)) {
+              shouldAutoReSync = true;
+            } else {
+              state.reSyncAttempt = 0;
+              state.connectionState = 'CONNECTED';
+              if (manual) {
+                showToast('Synced with Router', 'Live telemetry updated from gateway.', 'success');
+              }
             }
           } else {
-            state.connectionState = statusRes && statusRes.networkError ? 'DISCONNECTED' : 'AUTH_ERROR';
-            alertBanner.classList.remove('hidden');
-            if (statusRes && statusRes.error && !statusRes.networkError) {
-              document.getElementById('proxyStatusMessage').textContent = statusRes.error;
-            }
-            if (manual) {
-              showToast('Backend Proxy Offline', 'Start the local server (`npm start`) to pull live data from your router.', 'warning');
+            if (hasSessionTimeoutIndicator(statusRes, null, null)) {
+              shouldAutoReSync = true;
+              alertBanner.classList.add('hidden');
+            } else {
+              state.reSyncAttempt = 0;
+              state.connectionState = statusRes && statusRes.networkError ? 'DISCONNECTED' : 'AUTH_ERROR';
+              alertBanner.classList.remove('hidden');
+              if (statusRes && statusRes.error && !statusRes.networkError) {
+                document.getElementById('proxyStatusMessage').textContent = statusRes.error;
+              }
+              if (manual) {
+                showToast('Backend Proxy Offline', 'Start the local server (`npm start`) to pull live data from your router.', 'warning');
+              }
             }
           }
         } finally {
           state.isSyncing = false;
           icon.classList.remove('animate-spin');
           renderDashboard();
+        }
+
+        if (shouldAutoReSync) {
+          scheduleSessionTimeoutReSync(currentAttempt);
         }
       }
 
