@@ -9,6 +9,21 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <script>
+    (function () {
+      try {
+        var raw = localStorage.getItem('router_theme_v2');
+        var theme = raw ? JSON.parse(raw) : (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+        if (theme === 'light') {
+          document.documentElement.classList.remove('dark');
+          document.documentElement.classList.add('light');
+        } else {
+          document.documentElement.classList.add('dark');
+          document.documentElement.classList.remove('light');
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <script>
     tailwind.config = {
       darkMode: 'class',
       theme: {
@@ -22,27 +37,221 @@
     };
   </script>
   <style>
+    :root {
+      --bg-body: #f8fafc;
+      --text-body: #1e293b;
+      --text-heading: #0f172a;
+      --text-muted: #64748b;
+      --glass-card-bg: rgba(255, 255, 255, 0.92);
+      --glass-card-border: rgba(226, 232, 240, 0.95);
+      --glass-card-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
+      --glass-panel-bg: rgba(255, 255, 255, 0.96);
+      --glass-panel-border: #e2e8f0;
+      --input-bg: #ffffff;
+      --input-border: #cbd5e1;
+      --input-text: #0f172a;
+    }
+
+    html.dark {
+      --bg-body: #090d16;
+      --text-body: #e2e8f0;
+      --text-heading: #ffffff;
+      --text-muted: #94a3b8;
+      --glass-card-bg: rgba(17, 24, 39, 0.78);
+      --glass-card-border: rgba(255, 255, 255, 0.08);
+      --glass-card-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.4);
+      --glass-panel-bg: rgba(11, 15, 25, 0.92);
+      --glass-panel-border: rgba(255, 255, 255, 0.08);
+      --input-bg: rgba(15, 23, 42, 0.9);
+      --input-border: rgba(255, 255, 255, 0.1);
+      --input-text: #ffffff;
+    }
+
     body {
       font-family: 'Inter', sans-serif;
-      background-color: #090d16;
-      color: #e2e8f0;
+      background-color: var(--bg-body);
+      color: var(--text-body);
+      transition: background-color 0.18s ease, color 0.18s ease;
     }
     .glass-card {
-      background: rgba(17, 24, 39, 0.78);
+      background: var(--glass-card-bg);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--glass-card-border);
+      box-shadow: var(--glass-card-shadow);
+      transition: background-color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
     }
     .glass-panel {
-      background: rgba(11, 15, 25, 0.92);
+      background: var(--glass-panel-bg);
       backdrop-filter: blur(18px);
-      border-color: rgba(255, 255, 255, 0.08);
+      border-color: var(--glass-panel-border);
+      transition: background-color 0.18s ease, border-color 0.18s ease;
     }
     .btn-press {
-      transition: transform 0.12s ease, background-color 0.15s ease;
+      transition: transform 0.12s ease, background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
     }
     .btn-press:active {
       transform: scale(0.97);
+    }
+
+    /* Light Mode Comprehensive Typography, Inputs, Badges & Surfaces */
+    html:not(.dark) {
+      color-scheme: light;
+    }
+    html.dark {
+      color-scheme: dark;
+    }
+
+    html:not(.dark) body {
+      background-color: #f8fafc;
+      color: #1e293b;
+    }
+
+    /* Headings and high-contrast texts */
+    html:not(.dark) .text-white {
+      color: #0f172a !important;
+    }
+    html:not(.dark) .text-slate-400 {
+      color: #64748b !important;
+    }
+    html:not(.dark) .text-slate-300 {
+      color: #334155 !important;
+    }
+    html:not(.dark) .text-slate-200 {
+      color: #1e293b !important;
+    }
+
+    /* Form controls, inputs and selects */
+    html:not(.dark) input:not([type="checkbox"]):not([type="radio"]),
+    html:not(.dark) select,
+    html:not(.dark) textarea {
+      background-color: #ffffff !important;
+      color: #0f172a !important;
+      border-color: #cbd5e1 !important;
+    }
+    html:not(.dark) input::placeholder,
+    html:not(.dark) textarea::placeholder {
+      color: #94a3b8 !important;
+    }
+
+    /* Surface and border overrides */
+    html:not(.dark) .bg-slate-900\/90,
+    html:not(.dark) .bg-slate-900,
+    html:not(.dark) .bg-slate-900\/70,
+    html:not(.dark) .bg-slate-900\/60,
+    html:not(.dark) .bg-slate-800 {
+      background-color: #ffffff !important;
+      border-color: #e2e8f0 !important;
+      color: #0f172a !important;
+    }
+
+    html:not(.dark) .border-white\/10,
+    html:not(.dark) .border-white\/15,
+    html:not(.dark) .border-white\/5 {
+      border-color: #e2e8f0 !important;
+    }
+
+    html:not(.dark) .bg-white\/5,
+    html:not(.dark) .bg-white\/10 {
+      background-color: #f1f5f9 !important;
+      color: #334155 !important;
+      border-color: #e2e8f0 !important;
+    }
+    html:not(.dark) .bg-white\/5:hover,
+    html:not(.dark) .bg-white\/10:hover {
+      background-color: #e2e8f0 !important;
+      color: #0f172a !important;
+    }
+
+    /* Solid buttons & badges retention */
+    html:not(.dark) .bg-amber-500 {
+      background-color: #f59e0b !important;
+      color: #0f172a !important;
+    }
+    html:not(.dark) .bg-amber-500:hover {
+      background-color: #d97706 !important;
+    }
+    html:not(.dark) .text-amber-400 {
+      color: #b45309 !important;
+    }
+    html:not(.dark) .text-amber-300 {
+      color: #92400e !important;
+    }
+    html:not(.dark) .text-emerald-400 {
+      color: #047857 !important;
+    }
+    html:not(.dark) .text-sky-400,
+    html:not(.dark) .text-sky-300 {
+      color: #0284c7 !important;
+    }
+    html:not(.dark) .text-rose-400,
+    html:not(.dark) .text-rose-300 {
+      color: #be123c !important;
+    }
+
+    /* Translucent colored badges */
+    html:not(.dark) .bg-amber-500\/15 {
+      background-color: #fef3c7 !important;
+      border-color: #fde68a !important;
+      color: #92400e !important;
+    }
+    html:not(.dark) .bg-sky-500\/15 {
+      background-color: #e0f2fe !important;
+      border-color: #bae6fd !important;
+      color: #0369a1 !important;
+    }
+    html:not(.dark) .bg-rose-500\/15 {
+      background-color: #ffe4e6 !important;
+      border-color: #fecdd3 !important;
+      color: #be123c !important;
+    }
+
+    /* Keep dark developer console background for live diagnostic logs */
+    html:not(.dark) pre#liveDiagnosticLog,
+    html:not(.dark) pre#modalLogsContent {
+      background-color: #0b1120 !important;
+      color: #34d399 !important;
+      border-color: #1e293b !important;
+    }
+
+    /* Alert Banner in Light Mode */
+    html:not(.dark) #proxyStatusAlert {
+      background-color: #fffbeb !important;
+      border-color: #fde68a !important;
+    }
+    html:not(.dark) #proxyStatusAlert .text-amber-200,
+    html:not(.dark) #proxyStatusAlert .text-amber-100\/90 {
+      color: #78350f !important;
+    }
+    html:not(.dark) #proxyStatusAlert .text-amber-300 {
+      color: #92400e !important;
+    }
+
+    /* Modal Backdrop in Light Mode */
+    html:not(.dark) .bg-slate-950\/85,
+    html:not(.dark) .bg-slate-950\/80 {
+      background-color: rgba(15, 23, 42, 0.45) !important;
+    }
+    html:not(.dark) .bg-slate-950 {
+      background-color: #f8fafc !important;
+      color: #0f172a !important;
+    }
+
+    /* Tables */
+    html:not(.dark) table thead {
+      background-color: #f8fafc !important;
+    }
+    html:not(.dark) table tbody tr {
+      border-color: #f1f5f9 !important;
+    }
+    html:not(.dark) table tbody tr:hover {
+      background-color: #f8fafc !important;
+    }
+
+    /* Selection */
+    html:not(.dark) ::selection {
+      background-color: rgba(245, 158, 11, 0.25);
+      color: #78350f;
     }
   </style>
 </head>
@@ -51,7 +260,13 @@
   <!-- ===================================================================== -->
   <!-- VIEW 1: DEDICATED LOGIN & MULTI-ROUTER ACCOUNT MANAGER SCREEN         -->
   <!-- ===================================================================== -->
-  <div id="loginScreen" class="min-h-screen flex items-center justify-center pt-14 pb-6 px-4 sm:p-6">
+  <div id="loginScreen" class="min-h-screen flex flex-col items-center justify-center pt-8 pb-6 px-4 sm:p-6">
+    <div class="w-full max-w-4xl flex justify-end mb-3">
+      <button id="loginThemeToggleBtn" type="button" class="btn-press px-3 py-1.5 rounded-xl glass-panel border border-white/10 text-xs font-medium flex items-center gap-2 text-slate-300" title="Toggle Theme" aria-label="Toggle Theme">
+        <span id="loginThemeToggleIcon" class="w-3.5 h-3.5 flex items-center justify-center"></span>
+        <span id="loginThemeToggleLabel" class="text-xs">Light Mode</span>
+      </button>
+    </div>
     <div class="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 
       <!-- Saved Router Accounts Column (Instant One-Click Auto-Login) -->
@@ -208,6 +423,13 @@
         <button id="sidebarRebootBtn" type="button" class="btn-press w-full py-2 px-3 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 border border-rose-500/30 text-xs font-semibold">
           One-Click Router Reboot
         </button>
+        <button id="sidebarThemeToggleBtn" type="button" class="btn-press w-full py-1.5 px-3 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-medium flex items-center justify-between" title="Toggle Theme" aria-label="Toggle Theme">
+          <span class="flex items-center gap-2">
+            <span id="sidebarThemeIcon" class="w-3.5 h-3.5 flex items-center justify-center"></span>
+            <span>المظهر (Theme)</span>
+          </span>
+          <span id="sidebarThemeBadge" class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-white/10">Dark</span>
+        </button>
         <button id="sidebarSwitchAccountBtn" type="button" class="btn-press w-full py-2 px-3 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-medium">
           Switch / Add Account
         </button>
@@ -258,6 +480,11 @@
             </svg>
             <span class="hidden sm:inline">السجلات</span>
             <span id="headerLogsCountBadge" class="px-1.5 py-0.2 rounded-full text-[10px] bg-sky-500/20 text-sky-200 font-mono">0</span>
+          </button>
+
+          <button id="themeToggleBtn" type="button" class="btn-press p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs text-slate-300 flex items-center gap-1.5 shrink-0" title="تبديل المظهر النهاري / الليلي (Toggle Light / Dark Theme)" aria-label="Toggle Theme">
+            <span id="themeToggleIcon" class="w-3.5 h-3.5 flex items-center justify-center"></span>
+            <span id="themeToggleLabel" class="hidden md:inline font-medium text-xs">Light</span>
           </button>
 
           <button id="headerLogoutBtn" type="button" class="btn-press px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs text-slate-300 shrink-0">
@@ -799,6 +1026,7 @@ snrDown:       "#tdDownNoiseMargin"</pre>
 
       // Clean State — ZERO fake/mock router data
       const state = {
+        theme: loadLocal('router_theme_v2', (document.documentElement.classList.contains('light') ? 'light' : 'dark')),
         proxyBaseUrl: loadLocal('router_proxy_base_url_v2', ''),
         accounts: loadLocal('router_saved_accounts_v2', []),
         activeAccountId: loadLocal('router_active_account_id_v2', null),
@@ -831,12 +1059,59 @@ snrDown:       "#tdDownNoiseMargin"</pre>
         }
       };
 
+      const SUN_SVG = '<svg class="w-3.5 h-3.5 text-amber-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" /></svg>';
+      const MOON_SVG = '<svg class="w-3.5 h-3.5 text-sky-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" /></svg>';
+
+      function applyTheme(theme) {
+        state.theme = theme;
+        saveLocal('router_theme_v2', theme);
+        const isDark = theme === 'dark';
+        if (isDark) {
+          document.documentElement.classList.add('dark');
+          document.documentElement.classList.remove('light');
+        } else {
+          document.documentElement.classList.remove('dark');
+          document.documentElement.classList.add('light');
+        }
+
+        // Header button
+        const hIcon = document.getElementById('themeToggleIcon');
+        if (hIcon) hIcon.innerHTML = isDark ? SUN_SVG : MOON_SVG;
+        const hLabel = document.getElementById('themeToggleLabel');
+        if (hLabel) hLabel.textContent = isDark ? 'Light' : 'Dark';
+        const hBtn = document.getElementById('themeToggleBtn');
+        if (hBtn) hBtn.title = isDark ? 'تبديل إلى المظهر النهاري (Switch to Light Mode)' : 'تبديل إلى المظهر الليلي (Switch to Dark Mode)';
+
+        // Login screen button
+        const lIcon = document.getElementById('loginThemeToggleIcon');
+        if (lIcon) lIcon.innerHTML = isDark ? SUN_SVG : MOON_SVG;
+        const lLabel = document.getElementById('loginThemeToggleLabel');
+        if (lLabel) lLabel.textContent = isDark ? 'Light Mode' : 'Dark Mode';
+
+        // Sidebar button
+        const sIcon = document.getElementById('sidebarThemeIcon');
+        if (sIcon) sIcon.innerHTML = isDark ? SUN_SVG : MOON_SVG;
+        const sBadge = document.getElementById('sidebarThemeBadge');
+        if (sBadge) sBadge.textContent = isDark ? 'Dark' : 'Light';
+      }
+
+      function toggleTheme() {
+        const next = state.theme === 'dark' ? 'light' : 'dark';
+        applyTheme(next);
+        showToast(
+          next === 'light' ? 'Light Theme Activated' : 'Dark Theme Activated',
+          next === 'light' ? 'Switched to clean daytime styling.' : 'Switched to high-contrast dark palette.',
+          'info'
+        );
+      }
+
       // Native Capacitor Android HTTP Engine for ZTE ZXHN H188A / H288A / H168N & Huawei Gateways
       const nativeCache = {
         baseUrl: null,
         cookies: {},
         sessToken: '',
         tmpSessionToken: '',
+        lastAuthTime: 0,
         devices: [],
         wifi: {
           band24: { enabled: true, ssid: '', password: '', txPower: '100%', channelWidth: '20/40MHz', hideSsid: false, instId: '' },
@@ -1064,7 +1339,7 @@ snrDown:       "#tdDownNoiseMargin"</pre>
           } catch (e) {}
         }
 
-        const instRegex = /<(?:Instance|DeviceInfo|Item|Client|Row|WlanDev)>([\s\S]*?)<\/(?:Instance|DeviceInfo|Item|Client|Row|WlanDev)>/gi;
+        const instRegex = /<(?:Instance[a-zA-Z0-9_]*|DeviceInfo|Item|Client|Row|WlanDev|LanDev|SsidDev|AssociatedDevice|Device|Host|Station|TableEntry)>([\s\S]*?)<\/(?:Instance[a-zA-Z0-9_]*|DeviceInfo|Item|Client|Row|WlanDev|LanDev|SsidDev|AssociatedDevice|Device|Host|Station|TableEntry)>/gi;
         let m;
         while ((m = instRegex.exec(raw)) !== null) {
           const block = m[1];
@@ -1080,6 +1355,19 @@ snrDown:       "#tdDownNoiseMargin"</pre>
             while ((dm = directTagRegex.exec(block)) !== null) {
               obj[dm[1].trim()] = decodeHtmlEntities(dm[2].trim());
             }
+          }
+          if (Object.keys(obj).length > 0) {
+            instances.push(obj);
+          }
+        }
+
+        // Fallback: If no wrapped instances were parsed, check for root ParaName/ParaValue pairs
+        if (instances.length === 0 && raw.includes('<ParaName>')) {
+          const obj = {};
+          const pairRegex = /<ParaName>([^<]+)<\/ParaName>\s*<ParaValue>([\s\S]*?)<\/ParaValue>/gi;
+          let pm;
+          while ((pm = pairRegex.exec(raw)) !== null) {
+            obj[pm[1].trim()] = decodeHtmlEntities(pm[2].trim());
           }
           if (Object.keys(obj).length > 0) {
             instances.push(obj);
@@ -1130,8 +1418,16 @@ snrDown:       "#tdDownNoiseMargin"</pre>
         return num + ' ' + unit;
       }
 
-      // Perform Full 3-Step ZTE H188A / H288A Authentication
+      // Perform Full 3-Step ZTE H188A / H288A / H168N Authentication
       async function zteAuthenticate(capHttp, activeOrigin, account) {
+        // Enforce cooldown so we never flood the router gateway with rapid logins
+        const now = Date.now();
+        if (nativeCache.lastAuthTime && (now - nativeCache.lastAuthTime < 4000) && nativeCache.sessToken) {
+          appendDiagLog('Session active (cooldown); reusing authenticated token');
+          return true;
+        }
+        nativeCache.lastAuthTime = now;
+
         try {
           // Step 1: GET /?_type=loginData&_tag=login_entry -> extract sess_token & LockingTime
           const entryRes = await capRequestWithRedirects(capHttp, {
@@ -1150,10 +1446,12 @@ snrDown:       "#tdDownNoiseMargin"</pre>
           if (sessToken) {
             nativeCache.sessToken = sessToken;
             nativeCache.tmpSessionToken = sessToken;
+            nativeCache.cookies['_sessionTOKEN'] = sessToken;
+            nativeCache.cookies['sess_token'] = sessToken;
           }
           appendDiagLog('Step 1 login_entry -> sess_token=' + (sessToken ? sessToken.slice(0, 12) + '...' : 'none'));
 
-          // Step 2: GET /?_type=loginData&_tag=login_token -> extract numeric login_token challenge
+          // Step 2: GET /?_type=loginData&_tag=login_token -> extract numeric challenge
           const tokenRes = await capRequestWithRedirects(capHttp, {
             method: 'GET',
             url: activeOrigin + '/?_type=loginData&_tag=login_token&_=' + Date.now()
@@ -1164,7 +1462,7 @@ snrDown:       "#tdDownNoiseMargin"</pre>
           if (tm && tm[1]) loginToken = tm[1].trim();
           appendDiagLog('Step 2 login_token -> challenge=' + (loginToken || 'empty'));
 
-          // Step 3: Compute SHA256(password + login_token) and POST to login_entry
+          // Step 3: Compute SHA256(password + challenge) and POST to login_entry
           const passwordRaw = String(account.password || '');
           const hashedPass = loginToken ? await sha256Hex(passwordRaw + loginToken) : await sha256Hex(passwordRaw);
 
@@ -1187,52 +1485,33 @@ snrDown:       "#tdDownNoiseMargin"</pre>
           const loginReply = typeof loginRes.data === 'string' ? loginRes.data : JSON.stringify(loginRes.data || {});
           appendDiagLog('Step 3 POST login_entry -> ' + loginReply.slice(0, 120));
 
+          let loginJson = null;
           try {
-            const loginJson = typeof loginRes.data === 'object' ? loginRes.data : JSON.parse(loginReply);
-            if (loginJson && loginJson.sess_token) {
-              const freshTok = String(loginJson.sess_token);
-              nativeCache.sessToken = freshTok;
-              nativeCache.tmpSessionToken = freshTok;
-              nativeCache.cookies['_sessionTOKEN'] = freshTok;
-              nativeCache.cookies['sess_token'] = freshTok;
-            }
-            if (loginJson && (loginJson.login_need_refresh === 1 || loginJson.login_need_refresh === '1' || loginJson.login_need_refresh === true || loginJson.sess_token)) {
-              appendDiagLog('ZTE Login SUCCESS! Authenticated session established.');
-            } else if (loginJson && loginJson.lockingTime && Number(loginJson.lockingTime) > 0) {
-              appendDiagLog('WARNING: Router login locked for ' + loginJson.lockingTime + 's');
-            }
+            loginJson = typeof loginRes.data === 'object' ? loginRes.data : JSON.parse(loginReply);
           } catch (e) {}
 
-          // Prime session by requesting homePage view with active token
-          const tokenForHome = nativeCache.sessToken || sessToken || '';
-          if (tokenForHome) {
-            nativeCache.cookies['_sessionTOKEN'] = tokenForHome;
-            nativeCache.cookies['sess_token'] = tokenForHome;
-          }
-          const homeRes = await capRequestWithRedirects(capHttp, {
-            method: 'GET',
-            url: activeOrigin + '/?_type=menuView&_tag=homePage' + (tokenForHome ? '&_sessionTOKEN=' + encodeURIComponent(tokenForHome) : '') + '&Menu3Location=0'
-          });
-          const homeTok = extractTmpSessionToken(typeof homeRes.data === 'string' ? homeRes.data : '');
-          if (homeTok) {
-            nativeCache.tmpSessionToken = homeTok;
-            nativeCache.cookies['_sessionTOKEN'] = homeTok;
-            appendDiagLog('Home view primed -> sessionToken=' + homeTok.slice(0, 10) + '...');
+          if (loginJson && loginJson.loginErrMsg) {
+            appendDiagLog('ZTE login error from gateway: ' + loginJson.loginErrMsg);
+            return false;
           }
 
-          // In ZTE H188A V2.1, refreshing root completes internal session cookie binding
+          const finalToken = (loginJson && loginJson.sess_token) ? String(loginJson.sess_token) : sessToken;
+          if (finalToken) {
+            nativeCache.sessToken = finalToken;
+            nativeCache.tmpSessionToken = finalToken;
+            nativeCache.cookies['_sessionTOKEN'] = finalToken;
+            nativeCache.cookies['sess_token'] = finalToken;
+          }
+          appendDiagLog('ZTE Login SUCCESS! Authenticated session established (token=' + (finalToken ? finalToken.slice(0, 8) + '...' : 'none') + ')');
+
+          // Prime router session once without overwriting our genuine 24-digit session token
           try {
-            const primeTok = homeTok || tokenForHome;
-            const rootRefresh = await capRequestWithRedirects(capHttp, {
+            await capRequestWithRedirects(capHttp, {
               method: 'GET',
-              url: activeOrigin + '/?' + (primeTok ? '_sessionTOKEN=' + encodeURIComponent(primeTok) : '') + '&_=' + Date.now()
+              url: activeOrigin + '/?' + (finalToken ? '_sessionTOKEN=' + encodeURIComponent(finalToken) : '') + '&_=' + Date.now()
             });
-            const rTok = extractTmpSessionToken(typeof rootRefresh.data === 'string' ? rootRefresh.data : '');
-            if (rTok) {
-              nativeCache.tmpSessionToken = rTok;
-              nativeCache.cookies['_sessionTOKEN'] = rTok;
-            }
           } catch (e) {}
+
           return true;
         } catch (err) {
           appendDiagLog('ZTE Auth exception: ' + err.message);
@@ -1240,89 +1519,28 @@ snrDown:       "#tdDownNoiseMargin"</pre>
         }
       }
 
-      // Helper to fetch ZTE menuData XML with valid session token and automatic reauth recovery
-      async function fetchZteMenuData(capHttp, activeOrigin, viewTag, dataTag, account) {
+      // Helper to fetch ZTE menuData XML with valid authenticated session token
+      async function fetchZteMenuData(capHttp, activeOrigin, dataTag) {
         try {
-          const curToken = nativeCache.tmpSessionToken || nativeCache.sessToken || '';
+          const curToken = nativeCache.sessToken || nativeCache.tmpSessionToken || '';
           const tokenQuery = curToken ? ('&_sessionTOKEN=' + encodeURIComponent(curToken)) : '';
+          const dUrl = activeOrigin + '/?_type=menuData&_tag=' + dataTag + tokenQuery + '&_=' + Date.now();
 
-          if (viewTag) {
-            const vUrl = activeOrigin + '/?_type=menuView&_tag=' + viewTag + tokenQuery + '&Menu3Location=0&_=' + Date.now();
-            const vRes = await capRequestWithRedirects(capHttp, {
-              method: 'GET',
-              url: vUrl,
-              headers: {
-                'Referer': activeOrigin + '/',
-                'X-Requested-With': 'XMLHttpRequest',
-                'X-Session-Token': curToken
-              }
-            });
-            const vStr = typeof vRes.data === 'string' ? vRes.data : '';
-            const newTok = extractTmpSessionToken(vStr);
-            if (newTok) {
-              nativeCache.tmpSessionToken = newTok;
-              nativeCache.cookies['_sessionTOKEN'] = newTok;
-            }
-          }
-
-          const useToken = nativeCache.tmpSessionToken || nativeCache.sessToken || curToken || '';
-          const dataTokenQuery = useToken ? ('&_sessionTOKEN=' + encodeURIComponent(useToken)) : '';
-
-          const dUrl = activeOrigin + '/?_type=menuData&_tag=' + dataTag + dataTokenQuery + '&_=' + Date.now();
           const dRes = await capRequestWithRedirects(capHttp, {
             method: 'GET',
             url: dUrl,
             headers: {
               'Referer': activeOrigin + '/',
               'X-Requested-With': 'XMLHttpRequest',
-              'X-Session-Token': useToken
+              'X-Session-Token': curToken
             }
           });
 
-          let dStr = typeof dRes.data === 'string' ? dRes.data : JSON.stringify(dRes.data || '');
-
-          // Auto-recovery if SessionTimeout occurs
+          const dStr = typeof dRes.data === 'string' ? dRes.data : JSON.stringify(dRes.data || '');
           if (dStr.includes('SessionTimeout')) {
-            appendDiagLog('SessionTimeout on ' + dataTag + ' [retrying with sessToken...]');
-            if (nativeCache.sessToken && nativeCache.sessToken !== useToken) {
-              const retryUrl = activeOrigin + '/?_type=menuData&_tag=' + dataTag + '&_sessionTOKEN=' + encodeURIComponent(nativeCache.sessToken) + '&_=' + Date.now();
-              const rRes = await capRequestWithRedirects(capHttp, {
-                method: 'GET',
-                url: retryUrl,
-                headers: { 'Referer': activeOrigin + '/', 'X-Requested-With': 'XMLHttpRequest' }
-              });
-              const rStr = typeof rRes.data === 'string' ? rRes.data : JSON.stringify(rRes.data || '');
-              if (!rStr.includes('SessionTimeout')) {
-                appendDiagLog('Auto-recovered ' + dataTag + ' with sessToken!');
-                return rStr;
-              }
-            }
-
-            // Transparent re-authentication if session expired
-            if (account && !nativeCache._reauthInProgress) {
-              nativeCache._reauthInProgress = true;
-              appendDiagLog('Auto-reauthenticating session for ' + dataTag + '...');
-              const ok = await zteAuthenticate(capHttp, activeOrigin, account);
-              nativeCache._reauthInProgress = false;
-              if (ok) {
-                const freshTok = nativeCache.tmpSessionToken || nativeCache.sessToken || '';
-                const freshUrl = activeOrigin + '/?_type=menuData&_tag=' + dataTag + (freshTok ? '&_sessionTOKEN=' + encodeURIComponent(freshTok) : '') + '&_=' + Date.now();
-                const freshRes = await capRequestWithRedirects(capHttp, {
-                  method: 'GET',
-                  url: freshUrl,
-                  headers: { 'Referer': activeOrigin + '/', 'X-Requested-With': 'XMLHttpRequest' }
-                });
-                const freshStr = typeof freshRes.data === 'string' ? freshRes.data : JSON.stringify(freshRes.data || '');
-                if (!freshStr.includes('SessionTimeout')) {
-                  appendDiagLog('Re-auth recovery SUCCESS for ' + dataTag + '!');
-                  return freshStr;
-                }
-              }
-            }
-            appendDiagLog('SessionTimeout confirmed on ' + dataTag);
+            appendDiagLog('SessionTimeout on ' + dataTag);
             return '';
           }
-
           return dStr;
         } catch (e) {
           appendDiagLog('Request error on ' + dataTag + ': ' + e.message);
@@ -1385,9 +1603,8 @@ snrDown:       "#tdDownNoiseMargin"</pre>
 
         // 1. Fetch Device Info (Model, Firmware, Uptime)
         const devInfoXml =
-          (await fetchZteMenuData(capHttp, activeOrigin, 'statusMgr', 'devmgr_statusmgr_lua.lua', account)) + '\n' +
-          (await fetchZteMenuData(capHttp, activeOrigin, 'statusMgr', 'status_dev_info_lua.lua', account)) + '\n' +
-          (await fetchZteMenuData(capHttp, activeOrigin, 'homePage', 'status_dev_info_lua.lua', account));
+          (await fetchZteMenuData(capHttp, activeOrigin, 'status_dev_info_lua.lua')) + '\n' +
+          (await fetchZteMenuData(capHttp, activeOrigin, 'devmgr_statusmgr_lua.lua'));
         const devInfoInst = parseZteXmlInstances(devInfoXml);
 
         let firmwareVer = null;
@@ -1400,9 +1617,8 @@ snrDown:       "#tdDownNoiseMargin"</pre>
 
         // 2. Fetch DSL Physical Line Telemetry (Download/Upload Sync, SNR, Attenuation)
         const dslXml =
-          (await fetchZteMenuData(capHttp, activeOrigin, 'dslInterface', 'dsl_interface_status_lua.lua', account)) + '\n' +
-          (await fetchZteMenuData(capHttp, activeOrigin, 'dslInterface', 'dsl_status_lua.lua', account)) + '\n' +
-          (await fetchZteMenuData(capHttp, activeOrigin, 'wanStatus', 'dsl_interface_status_lua.lua', account));
+          (await fetchZteMenuData(capHttp, activeOrigin, 'dsl_interface_status_lua.lua')) + '\n' +
+          (await fetchZteMenuData(capHttp, activeOrigin, 'dsl_status_lua.lua'));
         const dslInst = parseZteXmlInstances(dslXml);
 
         let downSync = null, upSync = null, snrDown = null, snrUp = null, attenDown = null, attenUp = null, dslStatus = null;
@@ -1430,9 +1646,9 @@ snrDown:       "#tdDownNoiseMargin"</pre>
 
         // 3. Fetch WAN Internet IP Status
         const wanXml =
-          (await fetchZteMenuData(capHttp, activeOrigin, 'ethWanStatus', 'wan_internetstatus_lua.lua&TypeUplink=2&pageType=1', account)) + '\n' +
-          (await fetchZteMenuData(capHttp, activeOrigin, 'ethWanStatus', 'wan_internet_lua.lua&TypeUplink=2&pageType=0', account)) + '\n' +
-          (await fetchZteMenuData(capHttp, activeOrigin, 'homePage', 'wan_internetstatus_lua.lua&TypeUplink=2&pageType=1', account));
+          (await fetchZteMenuData(capHttp, activeOrigin, 'wan_internetstatus_lua.lua&TypeUplink=2&pageType=1')) + '\n' +
+          (await fetchZteMenuData(capHttp, activeOrigin, 'wan_internet_lua.lua&TypeUplink=2&pageType=0')) + '\n' +
+          (await fetchZteMenuData(capHttp, activeOrigin, 'wan_internetstatus_lua.lua'));
         const wanInst = parseZteXmlInstances(wanXml);
         let wanIp = null, wanConnStatus = null;
         wanInst.forEach(function (inst) {
@@ -1447,16 +1663,11 @@ snrDown:       "#tdDownNoiseMargin"</pre>
 
         // 4. Fetch Connected LAN & WLAN Devices across all interfaces (WiFi 2.4G/5G and Ethernet)
         const lanXml =
-          (await fetchZteMenuData(capHttp, activeOrigin, 'homePage', 'accessdev_homepage_lua.lua&InstNum=32', account)) + '\n' +
-          (await fetchZteMenuData(capHttp, activeOrigin, 'homePage', 'accessdev_homepage_lua.lua', account)) + '\n' +
-          (await fetchZteMenuData(capHttp, activeOrigin, 'lanDevs', 'accessdev_landev_lua.lua', account)) + '\n' +
-          (await fetchZteMenuData(capHttp, activeOrigin, 'ssidDevs', 'accessdev_ssiddev_lua.lua', account)) + '\n' +
-          (await fetchZteMenuData(capHttp, activeOrigin, 'wlanHome', 'accessdev_ssiddev_lua.lua', account)) + '\n' +
-          (await fetchZteMenuData(capHttp, activeOrigin, 'wlanBasic', 'wlan_assoc_dev_lua.lua', account)) + '\n' +
-          (await fetchZteMenuData(capHttp, activeOrigin, 'wlanHome', 'wlan_statlist_lua.lua', account)) + '\n' +
-          (await fetchZteMenuData(capHttp, activeOrigin, 'lanDevs', 'dhcp_client_table_lua.lua', account)) + '\n' +
-          (await fetchZteMenuData(capHttp, activeOrigin, null, 'accessdev_landev_lua.lua', account)) + '\n' +
-          (await fetchZteMenuData(capHttp, activeOrigin, null, 'accessdev_ssiddev_lua.lua', account));
+          (await fetchZteMenuData(capHttp, activeOrigin, 'accessdev_landev_lua.lua')) + '\n' +
+          (await fetchZteMenuData(capHttp, activeOrigin, 'accessdev_ssiddev_lua.lua')) + '\n' +
+          (await fetchZteMenuData(capHttp, activeOrigin, 'dhcp_client_table_lua.lua')) + '\n' +
+          (await fetchZteMenuData(capHttp, activeOrigin, 'wlan_assoc_dev_lua.lua')) + '\n' +
+          (await fetchZteMenuData(capHttp, activeOrigin, 'accessdev_homepage_lua.lua&InstNum=32'));
 
         const lanInst = parseZteXmlInstances(lanXml);
         const scrapedDevices = [];
@@ -1476,7 +1687,7 @@ snrDown:       "#tdDownNoiseMargin"</pre>
               connType = 'Ethernet';
             } else if (inst.WlanId === '1' || port.includes('2.4') || port.includes('SSID1') || port.includes('WLAN') || port.includes('WIFI') || port.includes('WIRELESS')) {
               connType = '2.4GHz';
-            } else if (port.startsWith('SSID')) {
+            } else if (port.startsWith('SSID') || inst.AssociatedSSID) {
               connType = 'Wi-Fi';
             }
             scrapedDevices.push({
@@ -1497,17 +1708,15 @@ snrDown:       "#tdDownNoiseMargin"</pre>
 
         // 5. Fetch WLAN SSIDs & Configuration
         const wlanXml =
-          (await fetchZteMenuData(capHttp, activeOrigin, 'wlanHome', 'wlan_homepage_lua.lua&InstNum=5', account)) + '\n' +
-          (await fetchZteMenuData(capHttp, activeOrigin, 'wlanBasic', 'wlan_config_lua.lua', account)) + '\n' +
-          (await fetchZteMenuData(capHttp, activeOrigin, 'wlanBasic', 'wlan_ssids_lua.lua', account)) + '\n' +
-          (await fetchZteMenuData(capHttp, activeOrigin, null, 'wlan_config_lua.lua', account)) + '\n' +
-          (await fetchZteMenuData(capHttp, activeOrigin, null, 'wlan_ssids_lua.lua', account));
+          (await fetchZteMenuData(capHttp, activeOrigin, 'wlan_config_lua.lua')) + '\n' +
+          (await fetchZteMenuData(capHttp, activeOrigin, 'wlan_ssids_lua.lua')) + '\n' +
+          (await fetchZteMenuData(capHttp, activeOrigin, 'wlan_homepage_lua.lua&InstNum=5'));
 
         const wlanInst = parseZteXmlInstances(wlanXml);
         wlanInst.forEach(function (inst, idx) {
-          const ssid = inst.ESSID || inst.SSID || inst.WlanSsid;
-          const psk = inst.KeyPassphrase || inst.PreSharedKey || inst.WpaPsk;
-          const instId = inst._InstID || '';
+          const ssid = inst.ESSID || inst.SSID || inst.WlanSsid || inst.Ssid;
+          const psk = inst.KeyPassphrase || inst.PreSharedKey || inst.WpaPsk || inst.Passphrase || inst.Key;
+          const instId = inst._InstID || inst.InstId || '';
           if (ssid) {
             if (instId.includes('AP2') || instId.includes('5') || idx === 1 || ssid.toUpperCase().includes('5G')) {
               nativeCache.wifi.band5.ssid = ssid;
@@ -1520,6 +1729,9 @@ snrDown:       "#tdDownNoiseMargin"</pre>
             }
           }
         });
+
+        state.devices = nativeCache.devices;
+        state.wifi = nativeCache.wifi;
 
         return {
           ok: true,
@@ -1551,11 +1763,7 @@ snrDown:       "#tdDownNoiseMargin"</pre>
         const origin = nativeCache.baseUrl || ('https://' + account.routerIp);
         try {
           await zteAuthenticate(capHttp, origin, account);
-          const vRes = await capRequestWithRedirects(capHttp, {
-            method: 'GET',
-            url: origin + '/?_type=menuView&_tag=rebootAndReset&Menu3Location=0'
-          });
-          const tok = extractTmpSessionToken(typeof vRes.data === 'string' ? vRes.data : '') || nativeCache.tmpSessionToken || nativeCache.sessToken;
+          const tok = nativeCache.sessToken || nativeCache.tmpSessionToken || '';
           const body = 'IF_ACTION=Restart&Btn_restart=&_sessionTOKEN=' + encodeURIComponent(tok);
           const rRes = await capRequestWithRedirects(capHttp, {
             method: 'POST',
@@ -1577,11 +1785,7 @@ snrDown:       "#tdDownNoiseMargin"</pre>
         const origin = nativeCache.baseUrl || ('https://' + account.routerIp);
         try {
           await zteAuthenticate(capHttp, origin, account);
-          const vRes = await capRequestWithRedirects(capHttp, {
-            method: 'GET',
-            url: origin + '/?_type=menuView&_tag=wlanBasic&Menu3Location=0'
-          });
-          const tok = extractTmpSessionToken(typeof vRes.data === 'string' ? vRes.data : '') || nativeCache.tmpSessionToken || nativeCache.sessToken;
+          const tok = nativeCache.sessToken || nativeCache.tmpSessionToken || '';
           if (payload.band24) {
             nativeCache.wifi.band24 = Object.assign({}, nativeCache.wifi.band24, payload.band24);
             const body24 =
@@ -1615,11 +1819,7 @@ snrDown:       "#tdDownNoiseMargin"</pre>
         const origin = nativeCache.baseUrl || ('https://' + account.routerIp);
         try {
           await zteAuthenticate(capHttp, origin, account);
-          const vRes = await capRequestWithRedirects(capHttp, {
-            method: 'GET',
-            url: origin + '/?_type=menuView&_tag=wlanMacFilter&Menu3Location=0'
-          });
-          const tok = extractTmpSessionToken(typeof vRes.data === 'string' ? vRes.data : '') || nativeCache.tmpSessionToken || nativeCache.sessToken;
+          const tok = nativeCache.sessToken || nativeCache.tmpSessionToken || '';
           const body =
             'IF_ACTION=' + (block ? 'Apply' : 'Delete') +
             '&MACAddress=' + encodeURIComponent(mac) +
@@ -2423,6 +2623,16 @@ snrDown:       "#tdDownNoiseMargin"</pre>
         syncLiveGatewayData(true);
       });
 
+      // Theme Toggle Buttons
+      const themeToggleBtn = document.getElementById('themeToggleBtn');
+      if (themeToggleBtn) themeToggleBtn.addEventListener('click', toggleTheme);
+
+      const loginThemeToggleBtn = document.getElementById('loginThemeToggleBtn');
+      if (loginThemeToggleBtn) loginThemeToggleBtn.addEventListener('click', toggleTheme);
+
+      const sidebarThemeToggleBtn = document.getElementById('sidebarThemeToggleBtn');
+      if (sidebarThemeToggleBtn) sidebarThemeToggleBtn.addEventListener('click', toggleTheme);
+
       function setupPolling(ms) {
         if (state.pollTimer) clearInterval(state.pollTimer);
         if (ms > 0) {
@@ -2439,6 +2649,8 @@ snrDown:       "#tdDownNoiseMargin"</pre>
       });
 
       (async function initApp() {
+        applyTheme(state.theme);
+
         const backendAcc = await apiCall('/api/accounts', 'GET');
         if (backendAcc && backendAcc.ok && backendAcc.data && Array.isArray(backendAcc.data.accounts) && backendAcc.data.accounts.length > 0) {
           state.accounts = backendAcc.data.accounts;
