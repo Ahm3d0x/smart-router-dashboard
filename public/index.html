@@ -252,6 +252,14 @@
             <span class="hidden sm:inline">Sync Gateway</span>
           </button>
 
+          <button id="headerLogsBtn" type="button" class="btn-press px-2 sm:px-2.5 py-1.5 rounded-lg bg-sky-500/15 hover:bg-sky-500/25 border border-sky-500/30 text-xs font-semibold text-sky-300 flex items-center gap-1 shrink-0" title="عرض ونسخ سجلات الاتصال والتشخيص">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+            </svg>
+            <span class="hidden sm:inline">السجلات</span>
+            <span id="headerLogsCountBadge" class="px-1.5 py-0.2 rounded-full text-[10px] bg-sky-500/20 text-sky-200 font-mono">0</span>
+          </button>
+
           <button id="headerLogoutBtn" type="button" class="btn-press px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs text-slate-300 shrink-0">
             Accounts
           </button>
@@ -577,14 +585,28 @@
           <div class="glass-card rounded-xl p-5 space-y-3 border border-emerald-500/30">
             <div class="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3">
               <div dir="rtl" class="text-right">
-                <h3 class="text-sm font-bold text-white">فحص استجابة الراوتر المباشرة (Live Gateway Diagnostic Log)</h3>
-                <p class="text-xs text-slate-400">يعرض حالة تسجيل الدخول الفعلي في راوتر ZTE H188A واستخراج البيانات من مسارات XML/Lua</p>
+                <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                  <span>سجل تشخيص وفحص الراوتر المباشر (Diagnostic &amp; Error Log)</span>
+                  <span id="tabDiagCountBadge" class="px-2 py-0.5 rounded-full text-[10px] bg-emerald-500/20 text-emerald-300 font-mono">0 events</span>
+                </h3>
+                <p class="text-xs text-slate-400">يعرض كل اتصال وطلب XML/Lua لحل أي مشكلة ونسخ التقرير بضغطة واحدة</p>
               </div>
-              <button id="openDirectGatewayBtn" type="button" class="btn-press px-3 py-1.5 rounded-xl bg-amber-500 text-slate-950 font-semibold text-xs">
-                فتح لوحة الراوتر المباشرة
-              </button>
+              <div class="flex flex-wrap items-center gap-2">
+                <button id="copyTabLogsBtn" type="button" class="btn-press px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs flex items-center gap-1.5">
+                  <span>📋 نسخ كل السجلات</span>
+                </button>
+                <button id="exportTabReportBtn" type="button" class="btn-press px-3 py-1.5 rounded-xl bg-sky-500/15 hover:bg-sky-500/25 border border-sky-500/30 text-sky-300 font-semibold text-xs flex items-center gap-1.5">
+                  <span>📊 نسخ تقرير شامل (JSON)</span>
+                </button>
+                <button id="clearTabLogsBtn" type="button" class="btn-press px-2.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 text-xs">
+                  مسح
+                </button>
+                <button id="openDirectGatewayBtn" type="button" class="btn-press px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 text-white font-medium text-xs">
+                  فتح لوحة الراوتر
+                </button>
+              </div>
             </div>
-            <pre id="liveDiagnosticLog" class="p-3 rounded-xl bg-slate-950 border border-white/10 font-mono text-[11px] text-emerald-300 overflow-x-auto max-h-48 leading-relaxed">Waiting for first router probe...</pre>
+            <pre id="liveDiagnosticLog" class="p-3.5 rounded-xl bg-slate-950 border border-white/10 font-mono text-[11px] text-emerald-300 overflow-y-auto max-h-64 whitespace-pre-wrap break-all leading-relaxed select-all">Waiting for first router probe...</pre>
           </div>
 
           <div class="glass-card rounded-xl p-5 space-y-3 border border-amber-500/30">
@@ -663,7 +685,7 @@ snrDown:       "#tdDownNoiseMargin"</pre>
           <span>Accounts</span>
         </button>
         <button type="button" data-tab="architecture" class="nav-tab flex flex-col items-center justify-center py-1 text-slate-400">
-          <span>Selectors</span>
+          <span>Logs &amp; Info</span>
         </button>
       </nav>
 
@@ -698,6 +720,51 @@ snrDown:       "#tdDownNoiseMargin"</pre>
       <div class="flex items-center justify-end gap-2">
         <button id="inputModalCancel" type="button" class="btn-press px-3.5 py-1.5 rounded-xl bg-white/5 text-xs text-slate-300">Cancel</button>
         <button id="inputModalSave" type="button" class="btn-press px-4 py-1.5 rounded-xl bg-amber-500 text-slate-950 text-xs font-semibold">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Diagnostic Logs & Full Reports Modal -->
+  <div id="logsModal" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md hidden items-center justify-center p-3 sm:p-5">
+    <div class="glass-card rounded-2xl max-w-2xl w-full p-4 sm:p-5 space-y-3.5 border border-white/15 flex flex-col max-h-[90vh]">
+      <div class="flex items-center justify-between border-b border-white/10 pb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400 shrink-0">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-white">سجلات وتشخيص الراوتر (Live Diagnostics &amp; Reports)</h3>
+            <p class="text-[11px] text-slate-400">سجل مفصل لكل اتصال ومسار Lua مع إمكانية نسخ التقارير لحل أي عائق</p>
+          </div>
+        </div>
+        <button id="closeLogsModalBtn" type="button" class="btn-press px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white text-xs">✕ إغلاق</button>
+      </div>
+
+      <div class="flex flex-wrap items-center justify-between gap-2 text-[11px] bg-slate-900/70 p-2.5 rounded-xl border border-white/5">
+        <div class="flex flex-wrap items-center gap-3">
+          <span>الحالة: <strong id="modalDiagStatus" class="font-mono text-amber-300">Awaiting</strong></span>
+          <span>الراوتر: <strong id="modalDiagGateway" class="font-mono text-white">192.168.1.1</strong></span>
+          <span>الأجهزة: <strong id="modalDiagDevCount" class="font-mono text-emerald-300">0</strong></span>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="modalSyncNowBtn" type="button" class="btn-press px-2.5 py-1 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-semibold text-[11px]">فحص فوري</button>
+          <button id="modalClearLogsBtn" type="button" class="btn-press px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 text-[11px]">مسح</button>
+        </div>
+      </div>
+
+      <div class="flex-1 min-h-0 relative">
+        <pre id="modalLogsContent" class="h-64 sm:h-80 w-full p-3 rounded-xl bg-slate-950 border border-white/10 font-mono text-[11px] text-emerald-300 overflow-y-auto whitespace-pre-wrap break-all leading-relaxed select-all">Waiting for logs...</pre>
+      </div>
+
+      <div class="flex flex-wrap items-center justify-end gap-2 pt-2 border-t border-white/10">
+        <button id="modalCopyReportBtn" type="button" class="btn-press px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-sky-300 border border-sky-500/30 text-xs font-semibold flex items-center gap-1.5">
+          <span>📊 نسخ تقرير شامل (JSON Report)</span>
+        </button>
+        <button id="modalCopyLogsBtn" type="button" class="btn-press px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold flex items-center gap-1.5">
+          <span>📋 نسخ السجل بالكامل (Copy Logs)</span>
+        </button>
       </div>
     </div>
   </div>
@@ -801,9 +868,79 @@ snrDown:       "#tdDownNoiseMargin"</pre>
       function appendDiagLog(msg) {
         const line = '[' + new Date().toLocaleTimeString() + '] ' + msg;
         nativeCache.logs.unshift(line);
-        if (nativeCache.logs.length > 35) nativeCache.logs.pop();
-        const el = document.getElementById('liveDiagnosticLog');
-        if (el) el.textContent = nativeCache.logs.join('\n');
+        if (nativeCache.logs.length > 150) nativeCache.logs.pop();
+        const fullText = nativeCache.logs.join('\n');
+        const el1 = document.getElementById('liveDiagnosticLog');
+        if (el1) el1.textContent = fullText;
+        const el2 = document.getElementById('modalLogsContent');
+        if (el2) el2.textContent = fullText;
+        const b1 = document.getElementById('headerLogsCountBadge');
+        if (b1) b1.textContent = String(nativeCache.logs.length);
+        const b2 = document.getElementById('tabDiagCountBadge');
+        if (b2) b2.textContent = nativeCache.logs.length + ' events';
+        const st = document.getElementById('modalDiagStatus');
+        if (st) st.textContent = state.connectionState;
+        const dc = document.getElementById('modalDiagDevCount');
+        if (dc) dc.textContent = String(state.devices.length);
+      }
+
+      async function copyTextToClipboard(text, successTitle, successMsg) {
+        try {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            await navigator.clipboard.writeText(text);
+          } else {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+          }
+          showToast(successTitle, successMsg, 'success');
+          return true;
+        } catch (e) {
+          showToast('تعذر النسخ التلقائي', 'يرجى تحديد النص ونسخه يدوياً: ' + e.message, 'warning');
+          return false;
+        }
+      }
+
+      function generateDiagnosticReport() {
+        const active = getActiveAccount();
+        const report = {
+          reportTitle: 'Smart Router Control Diagnostic Report',
+          generatedAt: new Date().toISOString(),
+          runtimeMode: isCapacitorNative() ? 'Capacitor Android Native (Direct Gateway Client)' : 'Web Browser (Local/Cloud Proxy)',
+          connectionState: state.connectionState,
+          lastSyncAt: state.lastSyncAt,
+          activeRouter: active ? {
+            name: active.label,
+            ip: active.routerIp,
+            protocol: active.protocol,
+            hardwareProfile: active.profile,
+            username: active.username
+          } : null,
+          tokens: {
+            sessTokenPreview: nativeCache.sessToken ? (nativeCache.sessToken.slice(0, 8) + '...') : 'none',
+            tmpSessionTokenPreview: nativeCache.tmpSessionToken ? (nativeCache.tmpSessionToken.slice(0, 8) + '...') : 'none'
+          },
+          systemTelemetry: state.system,
+          wifiStatus: {
+            band24: { ssid: state.wifi.band24.ssid, txPower: state.wifi.band24.txPower, width: state.wifi.band24.channelWidth, hide: state.wifi.band24.hideSsid },
+            band5: { ssid: state.wifi.band5.ssid, txPower: state.wifi.band5.txPower, width: state.wifi.band5.channelWidth, hide: state.wifi.band5.hideSsid }
+          },
+          devicesSummary: {
+            totalDevices: state.devices.length,
+            wifi5GHz: state.devices.filter(function (d) { return d.connectionType === '5GHz'; }).length,
+            wifi24GHz: state.devices.filter(function (d) { return d.connectionType === '2.4GHz'; }).length,
+            ethernet: state.devices.filter(function (d) { return d.connectionType === 'Ethernet'; }).length,
+            blocked: state.devices.filter(function (d) { return d.blocked; }).length
+          },
+          devicesList: state.devices,
+          eventLogs: nativeCache.logs
+        };
+        return JSON.stringify(report, null, 2);
       }
 
       function isCapacitorNative() {
@@ -834,19 +971,32 @@ snrDown:       "#tdDownNoiseMargin"</pre>
 
       function storeSetCookies(setCookieHeader) {
         if (!setCookieHeader) return;
-        const parts = String(setCookieHeader).split(/,(?=\s*[A-Za-z0-9_\-]+=)/);
-        parts.forEach(function (part) {
-          const kv = part.split(';')[0].trim();
-          const eq = kv.indexOf('=');
-          if (eq > 0) {
-            const name = kv.slice(0, eq).trim();
-            const val = kv.slice(eq + 1).trim();
-            nativeCache.cookies[name] = val;
-          }
+        const items = Array.isArray(setCookieHeader) ? setCookieHeader : String(setCookieHeader).split(/,\s*(?=[A-Za-z0-9_\-]+=)/);
+        items.forEach(function (item) {
+          const parts = String(item).split(';');
+          parts.forEach(function (part) {
+            const kv = part.trim();
+            const eq = kv.indexOf('=');
+            if (eq > 0) {
+              const name = kv.slice(0, eq).trim();
+              const val = kv.slice(eq + 1).trim();
+              const lower = name.toLowerCase();
+              if (!['path', 'expires', 'domain', 'samesite', 'httponly', 'max-age'].includes(lower)) {
+                if (name && val) {
+                  nativeCache.cookies[name] = val;
+                }
+              }
+            }
+          });
         });
       }
 
       function getCookieString() {
+        const tok = nativeCache.tmpSessionToken || nativeCache.sessToken;
+        if (tok) {
+          if (!nativeCache.cookies['_sessionTOKEN']) nativeCache.cookies['_sessionTOKEN'] = tok;
+          if (!nativeCache.cookies['sess_token']) nativeCache.cookies['sess_token'] = tok;
+        }
         return Object.keys(nativeCache.cookies).map(function (k) {
           return k + '=' + nativeCache.cookies[k];
         }).join('; ');
@@ -897,8 +1047,24 @@ snrDown:       "#tdDownNoiseMargin"</pre>
       // Parse ZTE XML <Instance><ParaName>K</ParaName><ParaValue>V</ParaValue></Instance> blocks into JS objects
       function parseZteXmlInstances(xmlText) {
         const instances = [];
-        const raw = String(xmlText || '');
-        const instRegex = /<Instance>([\s\S]*?)<\/Instance>/gi;
+        const raw = String(xmlText || '').trim();
+        if (!raw) return instances;
+
+        // In case response is a JSON array or object
+        if (raw.startsWith('[') || raw.startsWith('{')) {
+          try {
+            const parsed = JSON.parse(raw);
+            if (Array.isArray(parsed)) return parsed;
+            if (parsed && typeof parsed === 'object') {
+              if (Array.isArray(parsed.data)) return parsed.data;
+              if (Array.isArray(parsed.instances)) return parsed.instances;
+              if (Array.isArray(parsed.list)) return parsed.list;
+              return [parsed];
+            }
+          } catch (e) {}
+        }
+
+        const instRegex = /<(?:Instance|DeviceInfo|Item|Client|Row|WlanDev)>([\s\S]*?)<\/(?:Instance|DeviceInfo|Item|Client|Row|WlanDev)>/gi;
         let m;
         while ((m = instRegex.exec(raw)) !== null) {
           const block = m[1];
@@ -908,6 +1074,13 @@ snrDown:       "#tdDownNoiseMargin"</pre>
           while ((pm = pairRegex.exec(block)) !== null) {
             obj[pm[1].trim()] = decodeHtmlEntities(pm[2].trim());
           }
+          if (Object.keys(obj).length === 0) {
+            const directTagRegex = /<([a-zA-Z0-9_\-]+)>([^<]+)<\/\1>/gi;
+            let dm;
+            while ((dm = directTagRegex.exec(block)) !== null) {
+              obj[dm[1].trim()] = decodeHtmlEntities(dm[2].trim());
+            }
+          }
           if (Object.keys(obj).length > 0) {
             instances.push(obj);
           }
@@ -915,10 +1088,16 @@ snrDown:       "#tdDownNoiseMargin"</pre>
         return instances;
       }
 
-      // Extract _sessionTmpToken from ZTE menuView HTML/JS response
+      // Extract _sessionTmpToken / _sessionTOKEN from ZTE HTML/JS/DOM response
       function extractTmpSessionToken(htmlText) {
         const raw = String(htmlText || '');
-        const m = raw.match(/_sessionTmpToken\s*=\s*["']([^"']+)["']/i) || raw.match(/_sessionTOKEN\s*=\s*["']([^"']+)["']/i);
+        const m = raw.match(/_sessionTmpToken\s*=\s*["']([^"']+)["']/i) ||
+                  raw.match(/_sessionTOKEN\s*=\s*["']([^"']+)["']/i) ||
+                  raw.match(/id=["']_sessionTOKEN["'][^>]*value=["']([^"']+)["']/i) ||
+                  raw.match(/value=["']([^"']+)["'][^>]*id=["']_sessionTOKEN["']/i) ||
+                  raw.match(/name=["']_sessionTOKEN["'][^>]*value=["']([^"']+)["']/i) ||
+                  raw.match(/sess_token["':\s]+([0-9a-zA-Z_\-]+)/i) ||
+                  raw.match(/sessionTOKEN["':\s=]+([0-9a-zA-Z_\-]+)/i);
         if (m && m[1]) {
           return decodeHexEscapes(m[1]).trim();
         }
@@ -968,7 +1147,10 @@ snrDown:       "#tdDownNoiseMargin"</pre>
             const sm = entryStr.match(/sess_token["'\s:>]+([^"'<,\s}]+)/i);
             if (sm) sessToken = sm[1];
           }
-          if (sessToken) nativeCache.sessToken = sessToken;
+          if (sessToken) {
+            nativeCache.sessToken = sessToken;
+            nativeCache.tmpSessionToken = sessToken;
+          }
           appendDiagLog('Step 1 login_entry -> sess_token=' + (sessToken ? sessToken.slice(0, 12) + '...' : 'none'));
 
           // Step 2: GET /?_type=loginData&_tag=login_token -> extract numeric login_token challenge
@@ -1008,22 +1190,49 @@ snrDown:       "#tdDownNoiseMargin"</pre>
           try {
             const loginJson = typeof loginRes.data === 'object' ? loginRes.data : JSON.parse(loginReply);
             if (loginJson && loginJson.sess_token) {
-              nativeCache.sessToken = String(loginJson.sess_token);
+              const freshTok = String(loginJson.sess_token);
+              nativeCache.sessToken = freshTok;
+              nativeCache.tmpSessionToken = freshTok;
+              nativeCache.cookies['_sessionTOKEN'] = freshTok;
+              nativeCache.cookies['sess_token'] = freshTok;
             }
-            if (loginJson && (loginJson.login_need_refresh === 1 || loginJson.login_need_refresh === '1' || loginJson.sess_token)) {
-              appendDiagLog('ZTE Login SUCCESS! Refreshing main view...');
+            if (loginJson && (loginJson.login_need_refresh === 1 || loginJson.login_need_refresh === '1' || loginJson.login_need_refresh === true || loginJson.sess_token)) {
+              appendDiagLog('ZTE Login SUCCESS! Authenticated session established.');
             } else if (loginJson && loginJson.lockingTime && Number(loginJson.lockingTime) > 0) {
               appendDiagLog('WARNING: Router login locked for ' + loginJson.lockingTime + 's');
             }
           } catch (e) {}
 
-          // Prime session by requesting main page & homePage view
+          // Prime session by requesting homePage view with active token
+          const tokenForHome = nativeCache.sessToken || sessToken || '';
+          if (tokenForHome) {
+            nativeCache.cookies['_sessionTOKEN'] = tokenForHome;
+            nativeCache.cookies['sess_token'] = tokenForHome;
+          }
           const homeRes = await capRequestWithRedirects(capHttp, {
             method: 'GET',
-            url: activeOrigin + '/?_type=menuView&_tag=homePage&Menu3Location=0'
+            url: activeOrigin + '/?_type=menuView&_tag=homePage' + (tokenForHome ? '&_sessionTOKEN=' + encodeURIComponent(tokenForHome) : '') + '&Menu3Location=0'
           });
           const homeTok = extractTmpSessionToken(typeof homeRes.data === 'string' ? homeRes.data : '');
-          if (homeTok) nativeCache.tmpSessionToken = homeTok;
+          if (homeTok) {
+            nativeCache.tmpSessionToken = homeTok;
+            nativeCache.cookies['_sessionTOKEN'] = homeTok;
+            appendDiagLog('Home view primed -> sessionToken=' + homeTok.slice(0, 10) + '...');
+          }
+
+          // In ZTE H188A V2.1, refreshing root completes internal session cookie binding
+          try {
+            const primeTok = homeTok || tokenForHome;
+            const rootRefresh = await capRequestWithRedirects(capHttp, {
+              method: 'GET',
+              url: activeOrigin + '/?' + (primeTok ? '_sessionTOKEN=' + encodeURIComponent(primeTok) : '') + '&_=' + Date.now()
+            });
+            const rTok = extractTmpSessionToken(typeof rootRefresh.data === 'string' ? rootRefresh.data : '');
+            if (rTok) {
+              nativeCache.tmpSessionToken = rTok;
+              nativeCache.cookies['_sessionTOKEN'] = rTok;
+            }
+          } catch (e) {}
           return true;
         } catch (err) {
           appendDiagLog('ZTE Auth exception: ' + err.message);
@@ -1031,31 +1240,92 @@ snrDown:       "#tdDownNoiseMargin"</pre>
         }
       }
 
-      // Helper to fetch a ZTE menuView first (if provided) to prime the Lua controller & extract _sessionTmpToken, then fetch menuData XML
-      async function fetchZteMenuData(capHttp, activeOrigin, viewTag, dataTag) {
+      // Helper to fetch ZTE menuData XML with valid session token and automatic reauth recovery
+      async function fetchZteMenuData(capHttp, activeOrigin, viewTag, dataTag, account) {
         try {
+          const curToken = nativeCache.tmpSessionToken || nativeCache.sessToken || '';
+          const tokenQuery = curToken ? ('&_sessionTOKEN=' + encodeURIComponent(curToken)) : '';
+
           if (viewTag) {
+            const vUrl = activeOrigin + '/?_type=menuView&_tag=' + viewTag + tokenQuery + '&Menu3Location=0&_=' + Date.now();
             const vRes = await capRequestWithRedirects(capHttp, {
               method: 'GET',
-              url: activeOrigin + '/?_type=menuView&_tag=' + viewTag + '&Menu3Location=0&_=' + Date.now(),
-              headers: { 'Referer': activeOrigin + '/' }
+              url: vUrl,
+              headers: {
+                'Referer': activeOrigin + '/',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-Session-Token': curToken
+              }
             });
             const vStr = typeof vRes.data === 'string' ? vRes.data : '';
-            const tok = extractTmpSessionToken(vStr);
-            if (tok) nativeCache.tmpSessionToken = tok;
+            const newTok = extractTmpSessionToken(vStr);
+            if (newTok) {
+              nativeCache.tmpSessionToken = newTok;
+              nativeCache.cookies['_sessionTOKEN'] = newTok;
+            }
           }
+
+          const useToken = nativeCache.tmpSessionToken || nativeCache.sessToken || curToken || '';
+          const dataTokenQuery = useToken ? ('&_sessionTOKEN=' + encodeURIComponent(useToken)) : '';
+
+          const dUrl = activeOrigin + '/?_type=menuData&_tag=' + dataTag + dataTokenQuery + '&_=' + Date.now();
           const dRes = await capRequestWithRedirects(capHttp, {
             method: 'GET',
-            url: activeOrigin + '/?_type=menuData&_tag=' + dataTag + '&_=' + Date.now(),
-            headers: { 'Referer': activeOrigin + '/' }
+            url: dUrl,
+            headers: {
+              'Referer': activeOrigin + '/',
+              'X-Requested-With': 'XMLHttpRequest',
+              'X-Session-Token': useToken
+            }
           });
-          const dStr = typeof dRes.data === 'string' ? dRes.data : JSON.stringify(dRes.data || '');
+
+          let dStr = typeof dRes.data === 'string' ? dRes.data : JSON.stringify(dRes.data || '');
+
+          // Auto-recovery if SessionTimeout occurs
           if (dStr.includes('SessionTimeout')) {
-            appendDiagLog('SessionTimeout on ' + dataTag);
+            appendDiagLog('SessionTimeout on ' + dataTag + ' [retrying with sessToken...]');
+            if (nativeCache.sessToken && nativeCache.sessToken !== useToken) {
+              const retryUrl = activeOrigin + '/?_type=menuData&_tag=' + dataTag + '&_sessionTOKEN=' + encodeURIComponent(nativeCache.sessToken) + '&_=' + Date.now();
+              const rRes = await capRequestWithRedirects(capHttp, {
+                method: 'GET',
+                url: retryUrl,
+                headers: { 'Referer': activeOrigin + '/', 'X-Requested-With': 'XMLHttpRequest' }
+              });
+              const rStr = typeof rRes.data === 'string' ? rRes.data : JSON.stringify(rRes.data || '');
+              if (!rStr.includes('SessionTimeout')) {
+                appendDiagLog('Auto-recovered ' + dataTag + ' with sessToken!');
+                return rStr;
+              }
+            }
+
+            // Transparent re-authentication if session expired
+            if (account && !nativeCache._reauthInProgress) {
+              nativeCache._reauthInProgress = true;
+              appendDiagLog('Auto-reauthenticating session for ' + dataTag + '...');
+              const ok = await zteAuthenticate(capHttp, activeOrigin, account);
+              nativeCache._reauthInProgress = false;
+              if (ok) {
+                const freshTok = nativeCache.tmpSessionToken || nativeCache.sessToken || '';
+                const freshUrl = activeOrigin + '/?_type=menuData&_tag=' + dataTag + (freshTok ? '&_sessionTOKEN=' + encodeURIComponent(freshTok) : '') + '&_=' + Date.now();
+                const freshRes = await capRequestWithRedirects(capHttp, {
+                  method: 'GET',
+                  url: freshUrl,
+                  headers: { 'Referer': activeOrigin + '/', 'X-Requested-With': 'XMLHttpRequest' }
+                });
+                const freshStr = typeof freshRes.data === 'string' ? freshRes.data : JSON.stringify(freshRes.data || '');
+                if (!freshStr.includes('SessionTimeout')) {
+                  appendDiagLog('Re-auth recovery SUCCESS for ' + dataTag + '!');
+                  return freshStr;
+                }
+              }
+            }
+            appendDiagLog('SessionTimeout confirmed on ' + dataTag);
             return '';
           }
+
           return dStr;
         } catch (e) {
+          appendDiagLog('Request error on ' + dataTag + ': ' + e.message);
           return '';
         }
       }
@@ -1115,8 +1385,9 @@ snrDown:       "#tdDownNoiseMargin"</pre>
 
         // 1. Fetch Device Info (Model, Firmware, Uptime)
         const devInfoXml =
-          (await fetchZteMenuData(capHttp, activeOrigin, 'statusMgr', 'devmgr_statusmgr_lua.lua')) + '\n' +
-          (await fetchZteMenuData(capHttp, activeOrigin, 'devInfo', 'status_dev_info_lua.lua'));
+          (await fetchZteMenuData(capHttp, activeOrigin, 'statusMgr', 'devmgr_statusmgr_lua.lua', account)) + '\n' +
+          (await fetchZteMenuData(capHttp, activeOrigin, 'statusMgr', 'status_dev_info_lua.lua', account)) + '\n' +
+          (await fetchZteMenuData(capHttp, activeOrigin, 'homePage', 'status_dev_info_lua.lua', account));
         const devInfoInst = parseZteXmlInstances(devInfoXml);
 
         let firmwareVer = null;
@@ -1129,8 +1400,9 @@ snrDown:       "#tdDownNoiseMargin"</pre>
 
         // 2. Fetch DSL Physical Line Telemetry (Download/Upload Sync, SNR, Attenuation)
         const dslXml =
-          (await fetchZteMenuData(capHttp, activeOrigin, 'dslInterface', 'dsl_interface_status_lua.lua')) + '\n' +
-          (await fetchZteMenuData(capHttp, activeOrigin, 'wanStatus', 'dsl_interface_status_lua.lua'));
+          (await fetchZteMenuData(capHttp, activeOrigin, 'dslInterface', 'dsl_interface_status_lua.lua', account)) + '\n' +
+          (await fetchZteMenuData(capHttp, activeOrigin, 'dslInterface', 'dsl_status_lua.lua', account)) + '\n' +
+          (await fetchZteMenuData(capHttp, activeOrigin, 'wanStatus', 'dsl_interface_status_lua.lua', account));
         const dslInst = parseZteXmlInstances(dslXml);
 
         let downSync = null, upSync = null, snrDown = null, snrUp = null, attenDown = null, attenUp = null, dslStatus = null;
@@ -1158,8 +1430,9 @@ snrDown:       "#tdDownNoiseMargin"</pre>
 
         // 3. Fetch WAN Internet IP Status
         const wanXml =
-          (await fetchZteMenuData(capHttp, activeOrigin, 'ethWanStatus', 'wan_internetstatus_lua.lua&TypeUplink=2&pageType=1')) + '\n' +
-          (await fetchZteMenuData(capHttp, activeOrigin, null, 'wan_internet_lua.lua&TypeUplink=2&pageType=0'));
+          (await fetchZteMenuData(capHttp, activeOrigin, 'ethWanStatus', 'wan_internetstatus_lua.lua&TypeUplink=2&pageType=1', account)) + '\n' +
+          (await fetchZteMenuData(capHttp, activeOrigin, 'ethWanStatus', 'wan_internet_lua.lua&TypeUplink=2&pageType=0', account)) + '\n' +
+          (await fetchZteMenuData(capHttp, activeOrigin, 'homePage', 'wan_internetstatus_lua.lua&TypeUplink=2&pageType=1', account));
         const wanInst = parseZteXmlInstances(wanXml);
         let wanIp = null, wanConnStatus = null;
         wanInst.forEach(function (inst) {
@@ -1172,40 +1445,64 @@ snrDown:       "#tdDownNoiseMargin"</pre>
           }
         });
 
-        // 4. Fetch Connected LAN & WLAN Devices
+        // 4. Fetch Connected LAN & WLAN Devices across all interfaces (WiFi 2.4G/5G and Ethernet)
         const lanXml =
-          (await fetchZteMenuData(capHttp, activeOrigin, 'homePage', 'accessdev_homepage_lua.lua&InstNum=5')) + '\n' +
-          (await fetchZteMenuData(capHttp, activeOrigin, 'lanDevs', 'accessdev_landev_lua.lua')) + '\n' +
-          (await fetchZteMenuData(capHttp, activeOrigin, 'ssidDevs', 'accessdev_ssiddev_lua.lua'));
+          (await fetchZteMenuData(capHttp, activeOrigin, 'homePage', 'accessdev_homepage_lua.lua&InstNum=32', account)) + '\n' +
+          (await fetchZteMenuData(capHttp, activeOrigin, 'homePage', 'accessdev_homepage_lua.lua', account)) + '\n' +
+          (await fetchZteMenuData(capHttp, activeOrigin, 'lanDevs', 'accessdev_landev_lua.lua', account)) + '\n' +
+          (await fetchZteMenuData(capHttp, activeOrigin, 'ssidDevs', 'accessdev_ssiddev_lua.lua', account)) + '\n' +
+          (await fetchZteMenuData(capHttp, activeOrigin, 'wlanHome', 'accessdev_ssiddev_lua.lua', account)) + '\n' +
+          (await fetchZteMenuData(capHttp, activeOrigin, 'wlanBasic', 'wlan_assoc_dev_lua.lua', account)) + '\n' +
+          (await fetchZteMenuData(capHttp, activeOrigin, 'wlanHome', 'wlan_statlist_lua.lua', account)) + '\n' +
+          (await fetchZteMenuData(capHttp, activeOrigin, 'lanDevs', 'dhcp_client_table_lua.lua', account)) + '\n' +
+          (await fetchZteMenuData(capHttp, activeOrigin, null, 'accessdev_landev_lua.lua', account)) + '\n' +
+          (await fetchZteMenuData(capHttp, activeOrigin, null, 'accessdev_ssiddev_lua.lua', account));
+
         const lanInst = parseZteXmlInstances(lanXml);
         const scrapedDevices = [];
         const seenMac = {};
         lanInst.forEach(function (inst) {
-          const mac = (inst.MACAddress || inst.MacAddr || inst.HostMac || '').toUpperCase().trim();
+          const rawMac = inst.MACAddress || inst.MacAddr || inst.HostMac || inst.Mac || inst.MAC || inst.devMac || '';
+          const mac = String(rawMac).toUpperCase().replace(/-/g, ':').trim();
           if (mac && /^([0-9A-F]{2}:){5}[0-9A-F]{2}$/.test(mac) && !seenMac[mac]) {
             seenMac[mac] = true;
-            const ip = inst.IPAddress || inst.IpAddr || inst.HostIp || '—';
-            const host = inst.HostName || inst.DeviceName || ('Device-' + mac.slice(-5));
-            const port = (inst.Port || inst.InterfaceType || inst.AliasName || '').toUpperCase();
+            const ip = inst.IPAddress || inst.IpAddr || inst.HostIp || inst.Ip || inst.IPv4Address || inst.devIp || '—';
+            const host = inst.HostName || inst.DeviceName || inst.DevName || inst.AliasName || inst.devName || ('Device-' + mac.slice(-5));
+            const port = (inst.Port || inst.InterfaceType || inst.AssociatedSSID || inst.Ssid || inst.SSID || inst.Band || inst.AliasName || inst.Interface || inst.WlanId || '').toUpperCase();
+            let connType = '2.4GHz';
+            if (inst.WlanId === '2' || inst.WlanId === '5' || port.includes('5G') || port.includes('SSID5') || port.includes('5GHZ') || port.includes('5.0') || port.includes('SSID2')) {
+              connType = '5GHz';
+            } else if (port.includes('ETH') || port.includes('LAN') || port.includes('CABLE') || port.includes('PORT') || port.includes('WIRED')) {
+              connType = 'Ethernet';
+            } else if (inst.WlanId === '1' || port.includes('2.4') || port.includes('SSID1') || port.includes('WLAN') || port.includes('WIFI') || port.includes('WIRELESS')) {
+              connType = '2.4GHz';
+            } else if (port.startsWith('SSID')) {
+              connType = 'Wi-Fi';
+            }
             scrapedDevices.push({
               hostname: decodeHtmlEntities(host),
               ip: ip,
               mac: mac,
-              connectionType: port.includes('5G') || port.includes('SSID5') ? '5GHz' : (port.includes('ETH') || port.includes('LAN') ? 'Ethernet' : '2.4GHz'),
+              connectionType: connType,
               blocked: false
             });
           }
         });
         if (scrapedDevices.length > 0) {
           nativeCache.devices = scrapedDevices;
-          appendDiagLog('Scraped ' + scrapedDevices.length + ' live connected devices');
+          appendDiagLog('Scraped ' + scrapedDevices.length + ' live connected devices across LAN/WLAN');
+        } else {
+          appendDiagLog('Device scan complete (0 devices parsed)');
         }
 
-        // 5. Fetch WLAN SSIDs & Configuration (including wizard/loginData getPassword fallback)
+        // 5. Fetch WLAN SSIDs & Configuration
         const wlanXml =
-          (await fetchZteMenuData(capHttp, activeOrigin, 'wlanHome', 'wlan_homepage_lua.lua&InstNum=5')) + '\n' +
-          (await fetchZteMenuData(capHttp, activeOrigin, 'wlanBasic', 'wlan_config_lua.lua')) + '\n' +
-          (await fetchZteMenuData(capHttp, activeOrigin, null, 'wlan_ssids_lua.lua'));
+          (await fetchZteMenuData(capHttp, activeOrigin, 'wlanHome', 'wlan_homepage_lua.lua&InstNum=5', account)) + '\n' +
+          (await fetchZteMenuData(capHttp, activeOrigin, 'wlanBasic', 'wlan_config_lua.lua', account)) + '\n' +
+          (await fetchZteMenuData(capHttp, activeOrigin, 'wlanBasic', 'wlan_ssids_lua.lua', account)) + '\n' +
+          (await fetchZteMenuData(capHttp, activeOrigin, null, 'wlan_config_lua.lua', account)) + '\n' +
+          (await fetchZteMenuData(capHttp, activeOrigin, null, 'wlan_ssids_lua.lua', account));
+
         const wlanInst = parseZteXmlInstances(wlanXml);
         wlanInst.forEach(function (inst, idx) {
           const ssid = inst.ESSID || inst.SSID || inst.WlanSsid;
@@ -2037,6 +2334,94 @@ snrDown:       "#tdDownNoiseMargin"</pre>
           window.open(url, '_blank');
         });
       }
+
+      // Diagnostics & Logs Modal Event Handlers
+      function openLogsModal() {
+        const modal = document.getElementById('logsModal');
+        if (modal) {
+          modal.classList.remove('hidden');
+          modal.classList.add('flex');
+          const logsEl = document.getElementById('modalLogsContent');
+          if (logsEl) {
+            logsEl.textContent = nativeCache.logs.length > 0 ? nativeCache.logs.join('\n') : 'لا توجد سجلات حالياً. اضغط "فحص فوري" للبدء.';
+          }
+          const active = getActiveAccount();
+          const gwEl = document.getElementById('modalDiagGateway');
+          if (gwEl) gwEl.textContent = active ? active.routerIp : '192.168.1.1';
+          const stEl = document.getElementById('modalDiagStatus');
+          if (stEl) stEl.textContent = state.connectionState;
+          const dcEl = document.getElementById('modalDiagDevCount');
+          if (dcEl) dcEl.textContent = String(state.devices.length);
+        }
+      }
+
+      function closeLogsModal() {
+        const modal = document.getElementById('logsModal');
+        if (modal) {
+          modal.classList.add('hidden');
+          modal.classList.remove('flex');
+        }
+      }
+
+      const headerLogsBtn = document.getElementById('headerLogsBtn');
+      if (headerLogsBtn) headerLogsBtn.addEventListener('click', openLogsModal);
+
+      const closeLogsModalBtn = document.getElementById('closeLogsModalBtn');
+      if (closeLogsModalBtn) closeLogsModalBtn.addEventListener('click', closeLogsModal);
+
+      const logsModal = document.getElementById('logsModal');
+      if (logsModal) {
+        logsModal.addEventListener('click', function (e) {
+          if (e.target === logsModal) closeLogsModal();
+        });
+      }
+
+      async function copyAllLogsAction() {
+        const content = nativeCache.logs.length > 0 ? nativeCache.logs.join('\n') : 'No logs recorded yet.';
+        await copyTextToClipboard(content, 'تم نسخ السجل بالكامل', 'تم نسخ جميع أحداث وسجلات التشخيص (' + nativeCache.logs.length + ' حدث) بنجاح.');
+      }
+
+      async function copyDiagnosticReportAction() {
+        const report = generateDiagnosticReport();
+        const content = JSON.stringify(report, null, 2);
+        await copyTextToClipboard(content, 'تم نسخ تقرير التشخيص', 'تم نسخ تقرير JSON التشخيصي الشامل بنجاح.');
+      }
+
+      function clearLogsAction() {
+        nativeCache.logs = [];
+        const l1 = document.getElementById('liveDiagnosticLog');
+        if (l1) l1.textContent = 'Diagnostic logs cleared.';
+        const l2 = document.getElementById('modalLogsContent');
+        if (l2) l2.textContent = 'Diagnostic logs cleared.';
+        const b1 = document.getElementById('headerLogsCountBadge');
+        if (b1) b1.textContent = '0';
+        const b2 = document.getElementById('tabDiagCountBadge');
+        if (b2) b2.textContent = '0 events';
+        showToast('تم مسح السجلات', 'تم تفريغ ذاكرة السجلات المؤقتة بنجاح.', 'info');
+      }
+
+      const modalCopyLogsBtn = document.getElementById('modalCopyLogsBtn');
+      if (modalCopyLogsBtn) modalCopyLogsBtn.addEventListener('click', copyAllLogsAction);
+
+      const copyTabLogsBtn = document.getElementById('copyTabLogsBtn');
+      if (copyTabLogsBtn) copyTabLogsBtn.addEventListener('click', copyAllLogsAction);
+
+      const modalCopyReportBtn = document.getElementById('modalCopyReportBtn');
+      if (modalCopyReportBtn) modalCopyReportBtn.addEventListener('click', copyDiagnosticReportAction);
+
+      const exportTabReportBtn = document.getElementById('exportTabReportBtn');
+      if (exportTabReportBtn) exportTabReportBtn.addEventListener('click', copyDiagnosticReportAction);
+
+      const modalClearLogsBtn = document.getElementById('modalClearLogsBtn');
+      if (modalClearLogsBtn) modalClearLogsBtn.addEventListener('click', clearLogsAction);
+
+      const clearTabLogsBtn = document.getElementById('clearTabLogsBtn');
+      if (clearTabLogsBtn) clearTabLogsBtn.addEventListener('click', clearLogsAction);
+
+      const modalSyncNowBtn = document.getElementById('modalSyncNowBtn');
+      if (modalSyncNowBtn) modalSyncNowBtn.addEventListener('click', function () {
+        syncLiveGatewayData(true);
+      });
 
       function setupPolling(ms) {
         if (state.pollTimer) clearInterval(state.pollTimer);
