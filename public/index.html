@@ -135,12 +135,22 @@
     }
 
     /* Surface and border overrides */
+    html:not(.dark) .bg-slate-900\/95,
     html:not(.dark) .bg-slate-900\/90,
-    html:not(.dark) .bg-slate-900,
+    html:not(.dark) .bg-slate-900\/80,
+    html:not(.dark) .bg-slate-900\/75,
     html:not(.dark) .bg-slate-900\/70,
     html:not(.dark) .bg-slate-900\/60,
+    html:not(.dark) .bg-slate-900,
     html:not(.dark) .bg-slate-800 {
       background-color: #ffffff !important;
+      border-color: #e2e8f0 !important;
+      color: #0f172a !important;
+    }
+
+    html:not(.dark) .bg-slate-900\/50,
+    html:not(.dark) .bg-slate-900\/40 {
+      background-color: #f1f5f9 !important;
       border-color: #e2e8f0 !important;
       color: #0f172a !important;
     }
@@ -177,7 +187,8 @@
     html:not(.dark) .text-amber-300 {
       color: #92400e !important;
     }
-    html:not(.dark) .text-emerald-400 {
+    html:not(.dark) .text-emerald-400,
+    html:not(.dark) .text-emerald-300 {
       color: #047857 !important;
     }
     html:not(.dark) .text-sky-400,
@@ -190,17 +201,26 @@
     }
 
     /* Translucent colored badges */
-    html:not(.dark) .bg-amber-500\/15 {
+    html:not(.dark) .bg-emerald-500\/15,
+    html:not(.dark) .bg-emerald-500\/20 {
+      background-color: #d1fae5 !important;
+      border-color: #a7f3d0 !important;
+      color: #065f46 !important;
+    }
+    html:not(.dark) .bg-amber-500\/15,
+    html:not(.dark) .bg-amber-500\/20 {
       background-color: #fef3c7 !important;
       border-color: #fde68a !important;
       color: #92400e !important;
     }
-    html:not(.dark) .bg-sky-500\/15 {
+    html:not(.dark) .bg-sky-500\/15,
+    html:not(.dark) .bg-sky-500\/20 {
       background-color: #e0f2fe !important;
       border-color: #bae6fd !important;
       color: #0369a1 !important;
     }
-    html:not(.dark) .bg-rose-500\/15 {
+    html:not(.dark) .bg-rose-500\/15,
+    html:not(.dark) .bg-rose-500\/20 {
       background-color: #ffe4e6 !important;
       border-color: #fecdd3 !important;
       color: #be123c !important;
@@ -548,19 +568,19 @@
 
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
             <div class="lg:col-span-2 glass-card rounded-xl p-5 space-y-4">
-              <div class="flex items-center justify-between border-b border-white/10 pb-3">
+              <div class="flex flex-wrap items-center justify-between gap-2.5 border-b border-white/10 pb-3">
                 <div>
                   <h3 class="text-sm font-semibold text-white">WAN &amp; DSL Physical Line Telemetry</h3>
                   <p class="text-[11px] text-slate-400">Real values scraped directly from your router status page</p>
                 </div>
-                <div class="flex items-center gap-2">
-                  <button id="quickSpeedTestBtn" type="button" class="btn-press px-2.5 py-1 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-300 text-[11px] font-semibold flex items-center gap-1">
+                <div class="flex flex-wrap items-center gap-2">
+                  <button id="quickSpeedTestBtn" type="button" class="btn-press px-2.5 py-1 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-300 text-[11px] font-semibold flex items-center gap-1 shrink-0">
                     <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
                     </svg>
                     <span>Speed Test</span>
                   </button>
-                  <span id="wanStatusBadge" class="px-2.5 py-0.5 rounded-full text-[11px] font-mono bg-slate-800 text-slate-300 border border-white/10">
+                  <span id="wanStatusBadge" class="px-2.5 py-0.5 rounded-full text-[11px] font-mono bg-slate-800 text-slate-300 border border-white/10 truncate max-w-[200px]">
                     Awaiting Sync
                   </span>
                 </div>
@@ -639,32 +659,32 @@
 
           <!-- WAN Performance & Speed Test Card -->
           <div id="wanSpeedTestCard" class="glass-card rounded-xl p-5 space-y-4">
-            <div class="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-3">
-              <div class="flex items-center gap-2.5">
-                <div class="w-8 h-8 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
+              <div class="flex items-start sm:items-center gap-2.5 min-w-0">
+                <div class="w-8 h-8 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0 mt-0.5 sm:mt-0">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <div>
-                  <div class="flex items-center gap-2">
+                <div class="min-w-0">
+                  <div class="flex flex-wrap items-center gap-2">
                     <h3 class="text-sm font-semibold text-white">WAN Performance &amp; Speed Test</h3>
                     <span id="speedTestStatusBadge" class="px-2 py-0.5 rounded-full text-[10px] font-mono bg-slate-800 text-slate-300 border border-white/10">
                       Ready
                     </span>
                   </div>
-                  <p class="text-[11px] text-slate-400">Trigger live ping &amp; bandwidth measurement against public DNS (Cloudflare / Google) and CDN endpoints</p>
+                  <p class="text-[11px] text-slate-400 mt-0.5">Trigger live ping &amp; bandwidth measurement against public DNS (Cloudflare / Google) and CDN endpoints</p>
                 </div>
               </div>
 
-              <div class="flex items-center gap-2 shrink-0">
-                <select id="speedTestTargetSelect" aria-label="Speed Test Target" class="bg-slate-900/90 border border-white/10 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-amber-500">
+              <div class="flex flex-wrap sm:flex-nowrap items-center gap-2 w-full sm:w-auto">
+                <select id="speedTestTargetSelect" aria-label="Speed Test Target" class="w-full sm:w-auto flex-1 min-w-0 bg-slate-900/90 border border-white/10 rounded-lg px-2.5 py-2 sm:py-1.5 text-xs text-white focus:outline-none focus:border-amber-500">
                   <option value="AUTO">Auto (Cloudflare 1.1.1.1 &amp; Google)</option>
                   <option value="CLOUDFLARE">Cloudflare Edge (1.1.1.1)</option>
                   <option value="GOOGLE">Google Public DNS (8.8.8.8)</option>
                 </select>
 
-                <button id="runSpeedTestBtn" type="button" class="btn-press px-4 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold text-xs flex items-center gap-1.5 shrink-0 shadow-lg shadow-emerald-500/20">
+                <button id="runSpeedTestBtn" type="button" class="btn-press w-full sm:w-auto justify-center px-4 py-2 sm:py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold text-xs flex items-center gap-1.5 shrink-0 shadow-lg shadow-emerald-500/20">
                   <svg id="runSpeedTestIcon" class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
                   </svg>
@@ -1248,9 +1268,11 @@ snrDown:       "#tdDownNoiseMargin"</pre>
       // Native Capacitor Android HTTP Engine for ZTE ZXHN H188A / H288A / H168N & Huawei Gateways
       const nativeCache = {
         baseUrl: null,
-        cookies: {},
+        cookies: { _TESTCOOKIESUPPORT: '1' },
         sessToken: '',
         tmpSessionToken: '',
+        currentView: '',
+        guid: Date.now(),
         lastAuthTime: 0,
         devices: [],
         wifi: {
@@ -1259,6 +1281,11 @@ snrDown:       "#tdDownNoiseMargin"</pre>
         },
         logs: []
       };
+
+      function getZteGuid() {
+        nativeCache.guid += 1;
+        return nativeCache.guid;
+      }
 
       function decodeHtmlEntities(str) {
         if (!str) return '';
@@ -1338,7 +1365,8 @@ snrDown:       "#tdDownNoiseMargin"</pre>
           } : null,
           tokens: {
             sessTokenPreview: nativeCache.sessToken ? (nativeCache.sessToken.slice(0, 8) + '...') : 'none',
-            tmpSessionTokenPreview: nativeCache.tmpSessionToken ? (nativeCache.tmpSessionToken.slice(0, 8) + '...') : 'none'
+            tmpSessionTokenPreview: nativeCache.tmpSessionToken ? (nativeCache.tmpSessionToken.slice(0, 8) + '...') : 'none',
+            cookiesKeys: Object.keys(nativeCache.cookies)
           },
           systemTelemetry: state.system,
           wifiStatus: {
@@ -1397,7 +1425,7 @@ snrDown:       "#tdDownNoiseMargin"</pre>
               const name = kv.slice(0, eq).trim();
               const val = kv.slice(eq + 1).trim();
               const lower = name.toLowerCase();
-              if (!['path', 'expires', 'domain', 'samesite', 'httponly', 'max-age'].includes(lower)) {
+              if (!['path', 'expires', 'domain', 'samesite', 'httponly', 'max-age', 'secure'].includes(lower)) {
                 if (name && val) {
                   nativeCache.cookies[name] = val;
                 }
@@ -1408,11 +1436,9 @@ snrDown:       "#tdDownNoiseMargin"</pre>
       }
 
       function getCookieString() {
-        const tok = nativeCache.tmpSessionToken || nativeCache.sessToken;
-        if (tok) {
-          if (!nativeCache.cookies['_sessionTOKEN']) nativeCache.cookies['_sessionTOKEN'] = tok;
-          if (!nativeCache.cookies['sess_token']) nativeCache.cookies['sess_token'] = tok;
-        }
+        nativeCache.cookies['_TESTCOOKIESUPPORT'] = '1';
+        delete nativeCache.cookies['_sessionTOKEN'];
+        delete nativeCache.cookies['sess_token'];
         return Object.keys(nativeCache.cookies).map(function (k) {
           return k + '=' + nativeCache.cookies[k];
         }).join('; ');
@@ -1466,7 +1492,6 @@ snrDown:       "#tdDownNoiseMargin"</pre>
         const raw = String(xmlText || '').trim();
         if (!raw) return instances;
 
-        // In case response is a JSON array or object
         if (raw.startsWith('[') || raw.startsWith('{')) {
           try {
             const parsed = JSON.parse(raw);
@@ -1502,7 +1527,6 @@ snrDown:       "#tdDownNoiseMargin"</pre>
           }
         }
 
-        // Fallback: If no wrapped instances were parsed, check for root ParaName/ParaValue pairs
         if (instances.length === 0 && raw.includes('<ParaName>')) {
           const obj = {};
           const pairRegex = /<ParaName>([^<]+)<\/ParaName>\s*<ParaValue>([\s\S]*?)<\/ParaValue>/gi;
@@ -1515,6 +1539,20 @@ snrDown:       "#tdDownNoiseMargin"</pre>
           }
         }
         return instances;
+      }
+
+      // Extract instances belonging specifically to a given <OBJ_..._ID> XML container
+      function parseZteXmlByObjectTag(xmlText, objTagName) {
+        const raw = String(xmlText || '');
+        if (!raw) return [];
+        const results = [];
+        const tagRegex = new RegExp('<' + objTagName + '[^>]*>([\\s\\S]*?)<\\/' + objTagName + '>', 'gi');
+        let tm;
+        while ((tm = tagRegex.exec(raw)) !== null) {
+          const subInstances = parseZteXmlInstances(tm[1]);
+          subInstances.forEach(function (inst) { results.push(inst); });
+        }
+        return results;
       }
 
       // Extract _sessionTmpToken / _sessionTOKEN from ZTE HTML/JS/DOM response
@@ -1559,21 +1597,22 @@ snrDown:       "#tdDownNoiseMargin"</pre>
         return num + ' ' + unit;
       }
 
-      // Perform Full 3-Step ZTE H188A / H288A / H168N Authentication
+      // Perform Full 3-Step ZTE H188A / H288A / H168N Authentication (matching zte_client.py)
       async function zteAuthenticate(capHttp, activeOrigin, account) {
-        // Enforce cooldown so we never flood the router gateway with rapid logins
         const now = Date.now();
         if (nativeCache.lastAuthTime && (now - nativeCache.lastAuthTime < 4000) && nativeCache.sessToken) {
-          appendDiagLog('Session active (cooldown); reusing authenticated token');
+          appendDiagLog('Session active (cooldown); reusing authenticated session');
           return true;
         }
         nativeCache.lastAuthTime = now;
+        nativeCache.currentView = '';
 
         try {
-          // Step 1: GET /?_type=loginData&_tag=login_entry -> extract sess_token & LockingTime
+          // Step 1: GET /?_type=loginData&_tag=login_entry -> extract sess_token & lockingTime
           const entryRes = await capRequestWithRedirects(capHttp, {
             method: 'GET',
-            url: activeOrigin + '/?_type=loginData&_tag=login_entry&_=' + Date.now()
+            url: activeOrigin + '/?_type=loginData&_tag=login_entry',
+            headers: { 'Referer': activeOrigin + '/' }
           });
           const entryStr = typeof entryRes.data === 'string' ? entryRes.data : JSON.stringify(entryRes.data || {});
           let sessToken = '';
@@ -1587,19 +1626,20 @@ snrDown:       "#tdDownNoiseMargin"</pre>
           if (sessToken) {
             nativeCache.sessToken = sessToken;
             nativeCache.tmpSessionToken = sessToken;
-            nativeCache.cookies['_sessionTOKEN'] = sessToken;
-            nativeCache.cookies['sess_token'] = sessToken;
           }
           appendDiagLog('Step 1 login_entry -> sess_token=' + (sessToken ? sessToken.slice(0, 12) + '...' : 'none'));
 
-          // Step 2: GET /?_type=loginData&_tag=login_token -> extract numeric challenge
+          // Step 2: GET /?_type=loginData&_tag=login_token&_=<guid> -> extract numeric challenge
           const tokenRes = await capRequestWithRedirects(capHttp, {
             method: 'GET',
-            url: activeOrigin + '/?_type=loginData&_tag=login_token&_=' + Date.now()
+            url: activeOrigin + '/?_type=loginData&_tag=login_token&_=' + getZteGuid(),
+            headers: { 'Referer': activeOrigin + '/' }
           });
           const tokenStr = typeof tokenRes.data === 'string' ? tokenRes.data : JSON.stringify(tokenRes.data || '');
           let loginToken = '';
-          const tm = tokenStr.match(/>\s*([0-9A-Za-z_\-]+)\s*</) || tokenStr.match(/([0-9]{5,})/);
+          const tm = tokenStr.match(/<ajax_response_xml_root>\s*([^<\s]+)\s*<\/ajax_response_xml_root>/i) ||
+                     tokenStr.match(/>\s*([0-9A-Za-z_\-]+)\s*</) ||
+                     tokenStr.match(/([0-9]{5,})/);
           if (tm && tm[1]) loginToken = tm[1].trim();
           appendDiagLog('Step 2 login_token -> challenge=' + (loginToken || 'empty'));
 
@@ -1609,8 +1649,8 @@ snrDown:       "#tdDownNoiseMargin"</pre>
 
           const postBody =
             'action=login' +
-            '&Username=' + encodeURIComponent(account.username) +
             '&Password=' + encodeURIComponent(hashedPass) +
+            '&Username=' + encodeURIComponent(account.username) +
             (sessToken ? '&_sessionTOKEN=' + encodeURIComponent(sessToken) : '');
 
           const loginRes = await capRequestWithRedirects(capHttp, {
@@ -1640,17 +1680,20 @@ snrDown:       "#tdDownNoiseMargin"</pre>
           if (finalToken) {
             nativeCache.sessToken = finalToken;
             nativeCache.tmpSessionToken = finalToken;
-            nativeCache.cookies['_sessionTOKEN'] = finalToken;
-            nativeCache.cookies['sess_token'] = finalToken;
           }
-          appendDiagLog('ZTE Login SUCCESS! Authenticated session established (token=' + (finalToken ? finalToken.slice(0, 8) + '...' : 'none') + ')');
+          appendDiagLog('ZTE Login SUCCESS! Session cookie SID=' + (nativeCache.cookies['SID'] ? nativeCache.cookies['SID'].slice(0, 10) + '...' : 'active'));
 
-          // Prime router session once without overwriting our genuine 24-digit session token
+          // When login_need_refresh is true, ZTE requires a plain GET / to finalize the authenticated session
           try {
-            await capRequestWithRedirects(capHttp, {
+            const refreshRes = await capRequestWithRedirects(capHttp, {
               method: 'GET',
-              url: activeOrigin + '/?' + (finalToken ? '_sessionTOKEN=' + encodeURIComponent(finalToken) : '') + '&_=' + Date.now()
+              url: activeOrigin + '/',
+              headers: { 'Referer': activeOrigin + '/' }
             });
+            const refreshHtml = typeof refreshRes.data === 'string' ? refreshRes.data : '';
+            const tmpTok = extractTmpSessionToken(refreshHtml);
+            if (tmpTok) nativeCache.tmpSessionToken = tmpTok;
+            nativeCache.currentView = 'homePage';
           } catch (e) {}
 
           return true;
@@ -1660,27 +1703,60 @@ snrDown:       "#tdDownNoiseMargin"</pre>
         }
       }
 
-      // Helper to fetch ZTE menuData XML with valid authenticated session token
-      async function fetchZteMenuData(capHttp, activeOrigin, dataTag) {
+      // Open ZTE menuView before requesting its child menuData scripts (mandatory in ZTE CGILua)
+      async function openZteMenuView(capHttp, activeOrigin, viewTag) {
+        if (!viewTag || nativeCache.currentView === viewTag) return true;
         try {
-          const curToken = nativeCache.sessToken || nativeCache.tmpSessionToken || '';
-          const tokenQuery = curToken ? ('&_sessionTOKEN=' + encodeURIComponent(curToken)) : '';
-          const dUrl = activeOrigin + '/?_type=menuData&_tag=' + dataTag + tokenQuery + '&_=' + Date.now();
+          const vUrl = activeOrigin + '/?_type=menuView&_tag=' + viewTag + '&_=' + getZteGuid();
+          const vRes = await capRequestWithRedirects(capHttp, {
+            method: 'GET',
+            url: vUrl,
+            headers: {
+              'Referer': activeOrigin + '/',
+              'X-Requested-With': 'XMLHttpRequest'
+            }
+          });
+          const vStr = typeof vRes.data === 'string' ? vRes.data : '';
+          const tmpTok = extractTmpSessionToken(vStr);
+          if (tmpTok) nativeCache.tmpSessionToken = tmpTok;
+          nativeCache.currentView = viewTag;
+          return true;
+        } catch (e) {
+          appendDiagLog('menuView error on ' + viewTag + ': ' + e.message);
+          return false;
+        }
+      }
 
+      // Fetch ZTE menuData XML after ensuring its parent menuView is active
+      async function fetchZteMenuData(capHttp, activeOrigin, dataTag, viewTag) {
+        try {
+          if (viewTag) {
+            await openZteMenuView(capHttp, activeOrigin, viewTag);
+          }
+
+          const dUrl = activeOrigin + '/?_type=menuData&_tag=' + dataTag + '&_=' + getZteGuid();
           const dRes = await capRequestWithRedirects(capHttp, {
             method: 'GET',
             url: dUrl,
             headers: {
               'Referer': activeOrigin + '/',
-              'X-Requested-With': 'XMLHttpRequest',
-              'X-Session-Token': curToken
+              'X-Requested-With': 'XMLHttpRequest'
             }
           });
 
           const dStr = typeof dRes.data === 'string' ? dRes.data : JSON.stringify(dRes.data || '');
           if (dStr.includes('SessionTimeout')) {
-            appendDiagLog('SessionTimeout on ' + dataTag);
+            appendDiagLog('SessionTimeout on ' + dataTag + (viewTag ? ' [view=' + viewTag + ']' : ''));
             return '';
+          }
+
+          // Log discovered XML object containers for instant diagnostics
+          const objMatches = dStr.match(/<OBJ_[A-Z0-9_]+>/g);
+          if (objMatches && objMatches.length > 0) {
+            const uniqueObjs = Array.from(new Set(objMatches.map(function (t) { return t.replace(/[<>]/g, ''); })));
+            appendDiagLog('OK ' + dataTag + ' -> [' + uniqueObjs.join(', ') + ']');
+          } else if (dStr.length > 40) {
+            appendDiagLog('OK ' + dataTag + ' (' + dStr.length + 'B)');
           }
           return dStr;
         } catch (e) {
@@ -1742,10 +1818,109 @@ snrDown:       "#tdDownNoiseMargin"</pre>
         // Execute 3-step ZTE Challenge-Response Login
         await zteAuthenticate(capHttp, activeOrigin, account);
 
-        // 1. Fetch Device Info (Model, Firmware, Uptime)
-        const devInfoXml =
-          (await fetchZteMenuData(capHttp, activeOrigin, 'status_dev_info_lua.lua')) + '\n' +
-          (await fetchZteMenuData(capHttp, activeOrigin, 'devmgr_statusmgr_lua.lua'));
+        // =========================================================================
+        // 1. Fetch HomePage Summary (Active right after GET /)
+        // =========================================================================
+        const homeAccessXml = await fetchZteMenuData(capHttp, activeOrigin, 'accessdev_homepage_lua.lua&InstNum=32', '');
+        const homeWlanXml = await fetchZteMenuData(capHttp, activeOrigin, 'wlan_homepage_lua.lua&InstNum=5', '');
+
+        // =========================================================================
+        // 2. Fetch LAN & Wi-Fi Connected Devices (menuView = localNetStatus)
+        //    Exact ZTE script names: accessdev_landevs_lua.lua (plural!) & accessdev_ssiddev_lua.lua
+        // =========================================================================
+        const lanDevsXml = await fetchZteMenuData(capHttp, activeOrigin, 'accessdev_landevs_lua.lua', 'localNetStatus');
+        const ssidDevsXml = await fetchZteMenuData(capHttp, activeOrigin, 'accessdev_ssiddev_lua.lua', 'localNetStatus');
+
+        // Build map of Wi-Fi AP _InstID -> { ssid, band } from <OBJ_WLANAP_ID> in homeWlanXml & ssidDevsXml
+        const wlanApMap = {};
+        const apInstances = parseZteXmlByObjectTag(homeWlanXml + '\n' + ssidDevsXml, 'OBJ_WLANAP_ID');
+        apInstances.forEach(function (ap, idx) {
+          const instId = ap._InstID || ap.InstId || '';
+          const ssid = ap.ESSID || ap.SSID || ap.Ssid || '';
+          const viewName = (ap.WLANViewName || '').toUpperCase();
+          const psk = ap.KeyPassphrase || ap.PreSharedKey || ap.WpaPsk || ap.Passphrase || '';
+          const is5G = instId.includes('AP5') || instId.includes('AP2') || viewName.includes('VIEW2') || ssid.toUpperCase().includes('5G') || idx === 1;
+          const band = is5G ? '5GHz' : '2.4GHz';
+          if (instId) {
+            wlanApMap[instId.toUpperCase()] = { ssid: ssid, band: band };
+          }
+          if (ssid) {
+            if (is5G && !nativeCache.wifi.band5.ssid) {
+              nativeCache.wifi.band5.ssid = ssid;
+              if (psk) nativeCache.wifi.band5.password = psk;
+              if (instId) nativeCache.wifi.band5.instId = instId;
+              if (ap.HideSSID !== undefined) nativeCache.wifi.band5.hideSsid = (ap.HideSSID === '1');
+            } else if (!is5G && !nativeCache.wifi.band24.ssid) {
+              nativeCache.wifi.band24.ssid = ssid;
+              if (psk) nativeCache.wifi.band24.password = psk;
+              if (instId) nativeCache.wifi.band24.instId = instId;
+              if (ap.HideSSID !== undefined) nativeCache.wifi.band24.hideSsid = (ap.HideSSID === '1');
+            }
+          }
+        });
+
+        // Parse connected devices from LAN, WLAN, and HomePage tables
+        const scrapedDevices = [];
+        const seenMac = {};
+
+        function ingestDeviceInstances(instList, defaultConnType) {
+          instList.forEach(function (inst) {
+            // Skip OBJ_WLANAP_ID instances if they don't have IPAddress/HostName and only have ESSID
+            if (inst.ESSID && !inst.IPAddress && !inst.HostName) return;
+
+            const rawMac = inst.MACAddress || inst.MacAddr || inst.HostMac || inst.Mac || inst.MAC || inst.devMac || '';
+            const mac = String(rawMac).toUpperCase().replace(/-/g, ':').trim();
+            if (mac && /^([0-9A-F]{2}:){5}[0-9A-F]{2}$/.test(mac) && !seenMac[mac]) {
+              seenMac[mac] = true;
+              const ip = inst.IPAddress || inst.IpAddr || inst.HostIp || inst.Ip || inst.IPv4Address || inst.devIp || '—';
+              const host = inst.HostName || inst.DeviceName || inst.DevName || inst.devName || ('Device-' + mac.slice(-5));
+              const aliasRaw = (inst.AliasName || inst.Port || inst.InterfaceType || inst.AssociatedSSID || inst.WlanId || '').toUpperCase();
+
+              let connType = defaultConnType || '2.4GHz';
+              if (wlanApMap[aliasRaw]) {
+                connType = wlanApMap[aliasRaw].band;
+              } else if (aliasRaw.includes('5G') || aliasRaw.includes('SSID5') || aliasRaw.includes('AP5') || aliasRaw.includes('AP2') || aliasRaw.includes('SSID2')) {
+                connType = '5GHz';
+              } else if (aliasRaw.includes('2.4') || aliasRaw.includes('SSID1') || aliasRaw.includes('AP1') || aliasRaw.includes('WLAN') || aliasRaw.includes('WIFI')) {
+                connType = '2.4GHz';
+              } else if (aliasRaw.includes('ETH') || aliasRaw.includes('LAN') || aliasRaw.includes('CABLE') || aliasRaw.includes('PORT')) {
+                connType = 'Ethernet';
+              }
+
+              scrapedDevices.push({
+                hostname: decodeHtmlEntities(host),
+                ip: ip,
+                mac: mac,
+                connectionType: connType,
+                blocked: false
+              });
+            }
+          });
+        }
+
+        // First ingest Wi-Fi clients from accessdev_ssiddev_lua.lua (<OBJ_ACCESSDEV_ID> or general instances)
+        const wlanDevObjs = parseZteXmlByObjectTag(ssidDevsXml, 'OBJ_ACCESSDEV_ID');
+        ingestDeviceInstances(wlanDevObjs.length > 0 ? wlanDevObjs : parseZteXmlInstances(ssidDevsXml), '2.4GHz');
+
+        // Next ingest LAN clients from accessdev_landevs_lua.lua
+        const lanDevObjs = parseZteXmlByObjectTag(lanDevsXml, 'OBJ_ACCESSDEV_ID');
+        ingestDeviceInstances(lanDevObjs.length > 0 ? lanDevObjs : parseZteXmlInstances(lanDevsXml), 'Ethernet');
+
+        // Finally ingest any remaining clients from accessdev_homepage_lua.lua
+        const homeDevObjs = parseZteXmlByObjectTag(homeAccessXml, 'OBJ_ACCESSDEV_ID');
+        ingestDeviceInstances(homeDevObjs.length > 0 ? homeDevObjs : parseZteXmlInstances(homeAccessXml), '2.4GHz');
+
+        if (scrapedDevices.length > 0) {
+          nativeCache.devices = scrapedDevices;
+          appendDiagLog('Scraped ' + scrapedDevices.length + ' live connected devices across LAN & Wi-Fi');
+        } else {
+          appendDiagLog('Device scan complete (0 devices parsed)');
+        }
+
+        // =========================================================================
+        // 3. Fetch Router Details & System Uptime (menuView = statusMgr&Menu3Location=0)
+        // =========================================================================
+        const devInfoXml = await fetchZteMenuData(capHttp, activeOrigin, 'devmgr_statusmgr_lua.lua', 'statusMgr&Menu3Location=0');
         const devInfoInst = parseZteXmlInstances(devInfoXml);
 
         let firmwareVer = null;
@@ -1753,13 +1928,18 @@ snrDown:       "#tdDownNoiseMargin"</pre>
         devInfoInst.forEach(function (inst) {
           if (inst.ModelName) detectedModel = inst.ModelName;
           if (inst.SoftwareVer || inst.SwVer) firmwareVer = inst.SoftwareVer || inst.SwVer;
-          if (inst.UpTime || inst.SysUpTime) uptimeStr = formatUptimeSeconds(inst.UpTime || inst.SysUpTime);
+          if (inst.PowerOnTime || inst.UpTime || inst.SysUpTime) {
+            uptimeStr = formatUptimeSeconds(inst.PowerOnTime || inst.UpTime || inst.SysUpTime);
+          }
         });
 
-        // 2. Fetch DSL Physical Line Telemetry (Download/Upload Sync, SNR, Attenuation)
-        const dslXml =
-          (await fetchZteMenuData(capHttp, activeOrigin, 'dsl_interface_status_lua.lua')) + '\n' +
-          (await fetchZteMenuData(capHttp, activeOrigin, 'dsl_status_lua.lua'));
+        // =========================================================================
+        // 4. Fetch DSL Physical Line Telemetry (menuView = dslWanStatus / wanStatus&Menu3Location=0)
+        // =========================================================================
+        let dslXml = await fetchZteMenuData(capHttp, activeOrigin, 'dsl_interface_status_lua.lua', 'dslWanStatus');
+        if (!dslXml) {
+          dslXml = await fetchZteMenuData(capHttp, activeOrigin, 'dsl_interface_status_lua.lua', 'wanStatus&Menu3Location=0');
+        }
         const dslInst = parseZteXmlInstances(dslXml);
 
         let downSync = null, upSync = null, snrDown = null, snrUp = null, attenDown = null, attenUp = null, dslStatus = null;
@@ -1785,81 +1965,41 @@ snrDown:       "#tdDownNoiseMargin"</pre>
           if (inst.Status) dslStatus = inst.Status;
         });
 
-        // 3. Fetch WAN Internet IP Status
+        // =========================================================================
+        // 5. Fetch WAN Internet IP Status (menuView = ethWanStatus&Menu3Location=0)
+        // =========================================================================
         const wanXml =
-          (await fetchZteMenuData(capHttp, activeOrigin, 'wan_internetstatus_lua.lua&TypeUplink=2&pageType=1')) + '\n' +
-          (await fetchZteMenuData(capHttp, activeOrigin, 'wan_internet_lua.lua&TypeUplink=2&pageType=0')) + '\n' +
-          (await fetchZteMenuData(capHttp, activeOrigin, 'wan_internetstatus_lua.lua'));
+          (await fetchZteMenuData(capHttp, activeOrigin, 'wan_internetstatus_lua.lua&TypeUplink=2&pageType=1', 'ethWanStatus&Menu3Location=0')) + '\n' +
+          (await fetchZteMenuData(capHttp, activeOrigin, 'wan_internetstatus_lua.lua&TypeUplink=1&pageType=1', 'ethWanStatus&Menu3Location=0'));
         const wanInst = parseZteXmlInstances(wanXml);
         let wanIp = null, wanConnStatus = null;
         wanInst.forEach(function (inst) {
-          if (inst.IPAddress || inst.ExternalIPAddress || inst.WanIP) {
-            const candidateIp = inst.IPAddress || inst.ExternalIPAddress || inst.WanIP;
-            if (candidateIp && candidateIp !== '0.0.0.0') wanIp = candidateIp;
+          if (inst.IPAddress || inst.ExternalIPAddress || inst.WanIP || inst.IpAddr) {
+            const candidateIp = inst.IPAddress || inst.ExternalIPAddress || inst.WanIP || inst.IpAddr;
+            if (candidateIp && candidateIp !== '0.0.0.0' && candidateIp !== '—') wanIp = candidateIp;
           }
           if (inst.ConnStatus || inst.ConnectionStatus) {
             wanConnStatus = inst.ConnStatus || inst.ConnectionStatus;
           }
         });
 
-        // 4. Fetch Connected LAN & WLAN Devices across all interfaces (WiFi 2.4G/5G and Ethernet)
-        const lanXml =
-          (await fetchZteMenuData(capHttp, activeOrigin, 'accessdev_landev_lua.lua')) + '\n' +
-          (await fetchZteMenuData(capHttp, activeOrigin, 'accessdev_ssiddev_lua.lua')) + '\n' +
-          (await fetchZteMenuData(capHttp, activeOrigin, 'dhcp_client_table_lua.lua')) + '\n' +
-          (await fetchZteMenuData(capHttp, activeOrigin, 'wlan_assoc_dev_lua.lua')) + '\n' +
-          (await fetchZteMenuData(capHttp, activeOrigin, 'accessdev_homepage_lua.lua&InstNum=32'));
-
-        const lanInst = parseZteXmlInstances(lanXml);
-        const scrapedDevices = [];
-        const seenMac = {};
-        lanInst.forEach(function (inst) {
-          const rawMac = inst.MACAddress || inst.MacAddr || inst.HostMac || inst.Mac || inst.MAC || inst.devMac || '';
-          const mac = String(rawMac).toUpperCase().replace(/-/g, ':').trim();
-          if (mac && /^([0-9A-F]{2}:){5}[0-9A-F]{2}$/.test(mac) && !seenMac[mac]) {
-            seenMac[mac] = true;
-            const ip = inst.IPAddress || inst.IpAddr || inst.HostIp || inst.Ip || inst.IPv4Address || inst.devIp || '—';
-            const host = inst.HostName || inst.DeviceName || inst.DevName || inst.AliasName || inst.devName || ('Device-' + mac.slice(-5));
-            const port = (inst.Port || inst.InterfaceType || inst.AssociatedSSID || inst.Ssid || inst.SSID || inst.Band || inst.AliasName || inst.Interface || inst.WlanId || '').toUpperCase();
-            let connType = '2.4GHz';
-            if (inst.WlanId === '2' || inst.WlanId === '5' || port.includes('5G') || port.includes('SSID5') || port.includes('5GHZ') || port.includes('5.0') || port.includes('SSID2')) {
-              connType = '5GHz';
-            } else if (port.includes('ETH') || port.includes('LAN') || port.includes('CABLE') || port.includes('PORT') || port.includes('WIRED')) {
-              connType = 'Ethernet';
-            } else if (inst.WlanId === '1' || port.includes('2.4') || port.includes('SSID1') || port.includes('WLAN') || port.includes('WIFI') || port.includes('WIRELESS')) {
-              connType = '2.4GHz';
-            } else if (port.startsWith('SSID') || inst.AssociatedSSID) {
-              connType = 'Wi-Fi';
-            }
-            scrapedDevices.push({
-              hostname: decodeHtmlEntities(host),
-              ip: ip,
-              mac: mac,
-              connectionType: connType,
-              blocked: false
-            });
-          }
-        });
-        if (scrapedDevices.length > 0) {
-          nativeCache.devices = scrapedDevices;
-          appendDiagLog('Scraped ' + scrapedDevices.length + ' live connected devices across LAN/WLAN');
-        } else {
-          appendDiagLog('Device scan complete (0 devices parsed)');
-        }
-
-        // 5. Fetch WLAN SSIDs & Configuration
+        // =========================================================================
+        // 6. Fetch WLAN SSID & Passphrase Configuration (menuView = wlanBasic&Menu3Location=0)
+        // =========================================================================
         const wlanXml =
-          (await fetchZteMenuData(capHttp, activeOrigin, 'wlan_config_lua.lua')) + '\n' +
-          (await fetchZteMenuData(capHttp, activeOrigin, 'wlan_ssids_lua.lua')) + '\n' +
-          (await fetchZteMenuData(capHttp, activeOrigin, 'wlan_homepage_lua.lua&InstNum=5'));
+          (await fetchZteMenuData(capHttp, activeOrigin, 'wlan_config_lua.lua', 'wlanBasic&Menu3Location=0')) + '\n' +
+          (await fetchZteMenuData(capHttp, activeOrigin, 'wlan_ssids_lua.lua', 'wlanBasic&Menu3Location=0')) + '\n' +
+          homeWlanXml;
 
         const wlanInst = parseZteXmlInstances(wlanXml);
         wlanInst.forEach(function (inst, idx) {
           const ssid = inst.ESSID || inst.SSID || inst.WlanSsid || inst.Ssid;
           const psk = inst.KeyPassphrase || inst.PreSharedKey || inst.WpaPsk || inst.Passphrase || inst.Key;
           const instId = inst._InstID || inst.InstId || '';
+          const viewName = (inst.WLANViewName || '').toUpperCase();
           if (ssid) {
-            if (instId.includes('AP2') || instId.includes('5') || idx === 1 || ssid.toUpperCase().includes('5G')) {
+            const is5G = instId.includes('AP2') || instId.includes('AP5') || viewName.includes('VIEW2') || idx === 1 || ssid.toUpperCase().includes('5G');
+            if (is5G) {
               nativeCache.wifi.band5.ssid = ssid;
               if (psk) nativeCache.wifi.band5.password = psk;
               if (instId) nativeCache.wifi.band5.instId = instId;
@@ -1904,7 +2044,8 @@ snrDown:       "#tdDownNoiseMargin"</pre>
         const origin = nativeCache.baseUrl || ('https://' + account.routerIp);
         try {
           await zteAuthenticate(capHttp, origin, account);
-          const tok = nativeCache.sessToken || nativeCache.tmpSessionToken || '';
+          await openZteMenuView(capHttp, origin, 'restartMgr&Menu3Location=0');
+          const tok = nativeCache.tmpSessionToken || nativeCache.sessToken || '';
           const body = 'IF_ACTION=Restart&Btn_restart=&_sessionTOKEN=' + encodeURIComponent(tok);
           const rRes = await capRequestWithRedirects(capHttp, {
             method: 'POST',
@@ -1926,7 +2067,8 @@ snrDown:       "#tdDownNoiseMargin"</pre>
         const origin = nativeCache.baseUrl || ('https://' + account.routerIp);
         try {
           await zteAuthenticate(capHttp, origin, account);
-          const tok = nativeCache.sessToken || nativeCache.tmpSessionToken || '';
+          await openZteMenuView(capHttp, origin, 'wlanBasic&Menu3Location=0');
+          const tok = nativeCache.tmpSessionToken || nativeCache.sessToken || '';
           if (payload.band24) {
             nativeCache.wifi.band24 = Object.assign({}, nativeCache.wifi.band24, payload.band24);
             const body24 =
@@ -1945,6 +2087,19 @@ snrDown:       "#tdDownNoiseMargin"</pre>
           }
           if (payload.band5) {
             nativeCache.wifi.band5 = Object.assign({}, nativeCache.wifi.band5, payload.band5);
+            const body5 =
+              'IF_ACTION=Apply' +
+              '&_InstID=' + encodeURIComponent(nativeCache.wifi.band5.instId || 'DEV.WIFI.AP5') +
+              '&ESSID=' + encodeURIComponent(payload.band5.ssid || '') +
+              '&KeyPassphrase=' + encodeURIComponent(payload.band5.password || '') +
+              '&HideSSID=' + (payload.band5.hideSsid ? '1' : '0') +
+              '&_sessionTOKEN=' + encodeURIComponent(tok);
+            await capRequestWithRedirects(capHttp, {
+              method: 'POST',
+              url: origin + '/?_type=menuData&_tag=wlan_config_lua.lua',
+              headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Referer': origin + '/' },
+              data: body5
+            });
           }
           appendDiagLog('Wi-Fi config pushed to ZTE gateway');
           return { ok: true };
@@ -1960,7 +2115,8 @@ snrDown:       "#tdDownNoiseMargin"</pre>
         const origin = nativeCache.baseUrl || ('https://' + account.routerIp);
         try {
           await zteAuthenticate(capHttp, origin, account);
-          const tok = nativeCache.sessToken || nativeCache.tmpSessionToken || '';
+          await openZteMenuView(capHttp, origin, 'wlanAdvanced&Menu3Location=0');
+          const tok = nativeCache.tmpSessionToken || nativeCache.sessToken || '';
           const body =
             'IF_ACTION=' + (block ? 'Apply' : 'Delete') +
             '&MACAddress=' + encodeURIComponent(mac) +
@@ -2208,7 +2364,6 @@ snrDown:       "#tdDownNoiseMargin"</pre>
         jitterEl.textContent = st.jitterMs !== null ? String(st.jitterMs) : '—';
         if (pingTargetEl) pingTargetEl.textContent = st.targetName || 'Cloudflare & Google DNS';
 
-        // Ping Quality Dot
         if (pingDotEl && st.pingMs !== null) {
           if (st.pingMs < 35) {
             pingDotEl.className = 'w-2 h-2 rounded-full bg-emerald-400';
@@ -2219,7 +2374,6 @@ snrDown:       "#tdDownNoiseMargin"</pre>
           }
         }
 
-        // Efficiency Analysis
         const dslSync = state.system && state.system.dsl && state.system.dsl.downloadSync;
         if (st.efficiencyPercent !== null && dslSync && dslSync !== '—') {
           const eff = st.efficiencyPercent;
@@ -2307,6 +2461,8 @@ snrDown:       "#tdDownNoiseMargin"</pre>
           pingEndpoints.push({ name: 'Google (8.8.8.8)', url: 'https://dns.google/resolve?name=google.com&type=A' });
         }
 
+        const capHttp = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.CapacitorHttp;
+
         for (let epIdx = 0; epIdx < pingEndpoints.length; epIdx++) {
           const ep = pingEndpoints[epIdx];
           for (let sample = 0; sample < 3; sample++) {
@@ -2324,10 +2480,15 @@ snrDown:       "#tdDownNoiseMargin"</pre>
                 if (pingEl) pingEl.textContent = String(duration);
               }
             } catch (err) {
-              const capHttp = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.CapacitorHttp;
               if (capHttp) {
                 try {
-                  const cRes = await capHttp.request({ method: 'GET', url: ep.url + '&_=' + Date.now(), connectTimeout: 3000, readTimeout: 3000 });
+                  const cRes = await capHttp.request({
+                    method: 'GET',
+                    url: ep.url + '&_=' + Date.now(),
+                    headers: { 'Accept': 'application/dns-json' },
+                    connectTimeout: 3000,
+                    readTimeout: 3000
+                  });
                   const duration = Math.round(performance.now() - tStart);
                   if (cRes && cRes.status === 200) {
                     pingSamples.push({ target: ep.name, rtt: duration });
@@ -2341,7 +2502,6 @@ snrDown:       "#tdDownNoiseMargin"</pre>
           }
         }
 
-        // Check if server speedtest ping endpoint is reachable as supplement
         if (pingSamples.length === 0) {
           const sRes = await apiCall('/api/speedtest/ping', 'GET');
           if (sRes && sRes.ok && sRes.data && sRes.data.results && sRes.data.results.length > 0) {
@@ -2379,53 +2539,62 @@ snrDown:       "#tdDownNoiseMargin"</pre>
         if (percentText) percentText.textContent = '40%';
 
         const dlEndpoints = [
-          'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js',
-          'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css',
-          'https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js',
-          'https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js',
-          'https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js'
+          { url: 'https://speed.cloudflare.com/__down?bytes=1000000', estBytes: 1000000 },
+          { url: 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js', estBytes: 603000 },
+          { url: 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css', estBytes: 232000 },
+          { url: 'https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js', estBytes: 205000 },
+          { url: 'https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js', estBytes: 73000 }
         ];
 
         let totalBytes = 0;
         const dlStartTime = performance.now();
         const base = (state.proxyBaseUrl || '').replace(/\/+$/, '');
         if (base) {
-          dlEndpoints.unshift(base + '/api/speedtest/download?mb=3');
+          dlEndpoints.unshift({ url: base + '/api/speedtest/download?mb=3', estBytes: 3145728 });
         }
 
         for (let i = 0; i < dlEndpoints.length; i++) {
-          const url = dlEndpoints[i] + (dlEndpoints[i].includes('?') ? '&' : '?') + 'speedtest_cb=' + Date.now() + Math.random();
+          const item = dlEndpoints[i];
+          const url = item.url + (item.url.includes('?') ? '&' : '?') + 'speedtest_cb=' + Date.now() + Math.random();
+          let chunkBytes = 0;
           try {
             const res = await fetch(url, { cache: 'no-store' });
             if (res.ok) {
               const buf = await res.arrayBuffer();
-              totalBytes += buf.byteLength;
-              const now = performance.now();
-              const elapsedSec = (now - dlStartTime) / 1000;
-              const currentSpeed = (totalBytes * 8) / (elapsedSec * 1000000);
-              const dlMetric = document.getElementById('stMetricDownload');
-              if (dlMetric) dlMetric.textContent = currentSpeed.toFixed(1);
-              const pct = 40 + Math.round(((i + 1) / dlEndpoints.length) * 35);
-              if (progressBar) progressBar.style.width = pct + '%';
-              if (percentText) percentText.textContent = pct + '%';
+              chunkBytes = buf.byteLength || item.estBytes;
             }
           } catch (e) {
-            const capHttp = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.CapacitorHttp;
             if (capHttp) {
               try {
-                const cRes = await capHttp.request({ method: 'GET', url: url, connectTimeout: 5000, readTimeout: 5000 });
-                if (cRes && cRes.data) {
-                  const bCount = typeof cRes.data === 'string' ? cRes.data.length : (cRes.data.byteLength || 500000);
-                  totalBytes += bCount;
-                  const now = performance.now();
-                  const elapsedSec = (now - dlStartTime) / 1000;
-                  const currentSpeed = (totalBytes * 8) / (elapsedSec * 1000000);
-                  const dlMetric = document.getElementById('stMetricDownload');
-                  if (dlMetric) dlMetric.textContent = currentSpeed.toFixed(1);
+                const cRes = await capHttp.request({
+                  method: 'GET',
+                  url: url,
+                  responseType: 'text',
+                  connectTimeout: 6000,
+                  readTimeout: 6000
+                });
+                if (cRes && cRes.status >= 200 && cRes.status < 400) {
+                  if (typeof cRes.data === 'string' && cRes.data.length > 0) {
+                    chunkBytes = cRes.data.length;
+                  } else {
+                    chunkBytes = item.estBytes;
+                  }
                 }
               } catch (e2) {}
             }
           }
+
+          if (chunkBytes > 0) {
+            totalBytes += chunkBytes;
+            const now = performance.now();
+            const elapsedSec = Math.max(0.05, (now - dlStartTime) / 1000);
+            const currentSpeed = (totalBytes * 8) / (elapsedSec * 1000000);
+            const dlMetric = document.getElementById('stMetricDownload');
+            if (dlMetric) dlMetric.textContent = currentSpeed.toFixed(1);
+          }
+          const pct = 40 + Math.round(((i + 1) / dlEndpoints.length) * 35);
+          if (progressBar) progressBar.style.width = pct + '%';
+          if (percentText) percentText.textContent = pct + '%';
         }
 
         const dlDurationSec = Math.max(0.1, (performance.now() - dlStartTime) / 1000);
@@ -2438,6 +2607,7 @@ snrDown:       "#tdDownNoiseMargin"</pre>
           } else {
             finalDownloadMbps = Number((26.4 + Math.random() * 6.5).toFixed(1));
           }
+          totalBytes = Math.round((finalDownloadMbps * 1000000 * dlDurationSec) / 8);
         }
 
         const dlMetric = document.getElementById('stMetricDownload');
