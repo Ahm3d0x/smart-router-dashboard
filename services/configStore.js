@@ -75,6 +75,7 @@ function listAccounts() {
     activeAccountId: state.activeAccountId,
     accounts: state.accounts.map(a => ({
       id: a.id,
+      isp: a.isp || 'WE',
       label: a.label,
       routerIp: a.routerIp,
       protocol: a.protocol || 'http',
@@ -92,6 +93,7 @@ function getActiveAccount() {
   if (!found) return null;
   return {
     id: found.id,
+    isp: found.isp || 'WE',
     label: found.label,
     routerIp: found.routerIp,
     protocol: found.protocol || 'http',
@@ -102,7 +104,7 @@ function getActiveAccount() {
   };
 }
 
-function saveAccount({ id, label, routerIp, protocol, username, password, profile, headless }) {
+function saveAccount({ id, isp, label, routerIp, protocol, username, password, profile, headless }) {
   const state = loadAccountsState();
   const cleanIp = String(routerIp || '192.168.1.1').trim();
   const cleanUser = String(username || 'admin').trim();
@@ -114,6 +116,7 @@ function saveAccount({ id, label, routerIp, protocol, username, password, profil
 
   const record = {
     id: accountId,
+    isp: isp || (existing && existing.isp) || 'WE',
     label: cleanLabel,
     routerIp: cleanIp,
     protocol: protocol || (existing && existing.protocol) || 'http',
