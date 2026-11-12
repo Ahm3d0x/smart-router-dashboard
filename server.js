@@ -14,18 +14,13 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Auto-login on startup if a saved account exists
-(async () => {
-  const active = configStore.getActiveAccount();
-  if (active && active.password) {
-    try {
-      await routerService.connectWithAccount(active);
-      console.log(`[Startup] Auto-logged into router ${active.routerIp} (${active.label})`);
-    } catch (err) {
-      console.warn(`[Startup] Auto-login failed for ${active.routerIp}: ${err.message}`);
-    }
-  }
-})();
+process.on('uncaughtException', (err) => {
+  console.warn('[Server Warning] Uncaught exception:', err && err.message ? err.message : err);
+});
+
+process.on('unhandledRejection', (reason) => {
+  console.warn('[Server Warning] Unhandled rejection:', reason && reason.message ? reason.message : reason);
+});
 
 // GET /api/accounts - List all saved router accounts & active account ID
 app.get('/api/accounts', (req, res) => {

@@ -1,0 +1,17 @@
+{
+  "activeAccountId": "acc_1794461307585",
+  "accounts": [
+    {
+      "id": "acc_1794461307585",
+      "isp": "WE",
+      "label": "ORANGE Home Router",
+      "routerIp": "192.168.1.1",
+      "protocol": "https",
+      "username": "user",
+      "passwordEnc": "c08f9cca0563ae29eaf0d905fd7e2d55:21c9875f58453b443ea7b9008bc6f6ca",
+      "profile": "AUTO_DETECT",
+      "headless": true,
+      "updatedAt": "2026-11-12T05:28:27.596Z"
+    }
+  ]
+}

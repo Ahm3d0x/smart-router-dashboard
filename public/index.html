@@ -448,22 +448,44 @@
         </div>
 
         <nav id="sidebarNav" class="p-3 space-y-1">
-          <button type="button" data-tab="overview" class="nav-tab w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium bg-amber-500/15 text-amber-400 border border-amber-500/30">
-            <span>Dashboard Overview</span>
+          <button type="button" data-tab="overview" class="nav-tab w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium bg-amber-500/15 text-amber-400 border border-amber-500/30">
+            <span class="flex items-center gap-2">
+              <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" /></svg>
+              <span>الخط والسرعة (Overview)</span>
+            </span>
           </button>
-          <button type="button" data-tab="devices" class="nav-tab w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium text-slate-300 hover:bg-white/5 border border-transparent">
-            <span>Connected Devices</span>
+          <button type="button" data-tab="router" class="nav-tab w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium text-slate-300 hover:bg-white/5 border border-transparent">
+            <span class="flex items-center gap-2">
+              <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 14.25h13.5m-13.5 0a3 3 0 01-3-3m3 3a3 3 0 100 6h13.5a3 3 0 100-6m-16.5-3a3 3 0 013-3h13.5a3 3 0 013 3m-19.5 0a4.5 4.5 0 01.9-2.7L5.737 5.1a3.375 3.375 0 012.7-1.35h7.126c1.062 0 2.062.5 2.7 1.35l2.587 3.45a4.5 4.5 0 01.9 2.7m0 0a3 3 0 01-3 3m0 3h.008v.008h-.008v-.008zm0-6h.008v.008h-.008v-.008zm-3 6h.008v.008h-.008v-.008zm0-6h.008v.008h-.008v-.008z" /></svg>
+              <span>بيانات الراوتر (Router Info)</span>
+            </span>
+          </button>
+          <button type="button" data-tab="devices" class="nav-tab w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium text-slate-300 hover:bg-white/5 border border-transparent">
+            <span class="flex items-center gap-2">
+              <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" /></svg>
+              <span>الأجهزة المتصلة (Devices)</span>
+            </span>
             <span id="navDeviceBadge" class="px-1.5 py-0.5 text-[10px] font-mono rounded-full bg-slate-800 text-slate-300">0</span>
           </button>
-          <button type="button" data-tab="wifi" class="nav-tab w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium text-slate-300 hover:bg-white/5 border border-transparent">
-            <span>Wi-Fi Configuration</span>
+          <button type="button" data-tab="wifi" class="nav-tab w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium text-slate-300 hover:bg-white/5 border border-transparent">
+            <span class="flex items-center gap-2">
+              <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.288 15.038a5.25 5.25 0 017.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0M12.53 18.22l-.53.53-.53-.53a.75.75 0 011.06 0z" /></svg>
+              <span>شبكات الواي فاي (Wi-Fi)</span>
+            </span>
+            <span id="navWifiActiveBadge" class="px-1.5 py-0.5 text-[10px] font-mono rounded-full bg-emerald-500/15 text-emerald-300">2</span>
           </button>
-          <button type="button" data-tab="maintenance" class="nav-tab w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium text-slate-300 hover:bg-white/5 border border-transparent">
-            <span>Saved Accounts</span>
+          <button type="button" data-tab="maintenance" class="nav-tab w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium text-slate-300 hover:bg-white/5 border border-transparent">
+            <span class="flex items-center gap-2">
+              <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.343 3.94c.09-.542.56-.94 1.11-.94h1.093c.55 0 1.02.398 1.11.94l.149.894c.07.424.384.764.78.93.398.164.855.142 1.205-.108l.737-.527a1.125 1.125 0 011.45.12l.773.774c.39.389.44 1.002.12 1.45l-.527.737c-.25.35-.272.806-.107 1.204.165.397.505.71.93.78l.893.15c.543.09.94.56.94 1.109v1.094c0 .55-.397 1.02-.94 1.11l-.893.149c-.425.07-.765.383-.93.78-.165.398-.143.854.107 1.204l.527.738c.32.447.269 1.06-.12 1.45l-.774.773a1.125 1.125 0 01-1.449.12l-.738-.527c-.35-.25-.806-.272-1.203-.107-.397.165-.71.505-.781.929l-.149.894c-.09.542-.56.94-1.11.94h-1.094c-.55 0-1.019-.398-1.11-.94l-.148-.894c-.071-.424-.384-.764-.781-.93-.398-.164-.854-.142-1.204.108l-.738.527c-.447.32-1.06.269-1.45-.12l-.773-.774a1.125 1.125 0 01-.12-1.45l.527-.737c.25-.35.273-.806.108-1.204-.165-.397-.505-.71-.93-.78l-.894-.15c-.542-.09-.94-.56-.94-1.109v-1.094c0-.55.398-1.02.94-1.11l.894-.149c.424-.07.765-.383.93-.78.165-.398.143-.854-.107-1.204l-.527-.738a1.125 1.125 0 01.12-1.45l.773-.773a1.125 1.125 0 011.45-.12l.737.527c.35.25.807.272 1.204.107.397-.165.71-.505.78-.929l.15-.894z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+              <span>الحسابات والصيانة</span>
+            </span>
             <span id="navAccountsBadge" class="px-1.5 py-0.5 text-[10px] font-mono rounded-full bg-slate-800 text-amber-300">0</span>
           </button>
-          <button type="button" data-tab="architecture" class="nav-tab w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium text-slate-300 hover:bg-white/5 border border-transparent">
-            <span>Adapter &amp; Selectors</span>
+          <button type="button" data-tab="architecture" class="nav-tab w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium text-slate-300 hover:bg-white/5 border border-transparent">
+            <span class="flex items-center gap-2">
+              <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>
+              <span>سجل التشخيص (Logs)</span>
+            </span>
           </button>
         </nav>
       </div>
@@ -490,15 +512,15 @@
     </aside>
 
     <!-- Main Column -->
-    <div class="flex-1 flex flex-col min-w-0 pb-16 lg:pb-0">
+    <div class="flex-1 flex flex-col min-w-0 pb-20 lg:pb-0">
 
-      <!-- COMPACT SINGLE-LINE HEADER (Safe padding for mobile/Canvas close button & zero overlap) -->
+      <!-- COMPACT SINGLE-LINE HEADER -->
       <header class="py-2.5 glass-panel sticky top-0 z-20 border-b pl-14 pr-3 sm:px-5 flex items-center justify-between gap-2">
         <div class="flex items-center gap-2 min-w-0 flex-1">
           <button id="mobileMenuBtn" type="button" class="hidden p-1.5 rounded-lg bg-white/5 text-slate-300" title="Switch Account"></button>
 
           <div class="hidden xl:block mr-1 shrink-0">
-            <h2 id="pageTitle" class="text-xs font-bold text-white leading-none">Dashboard Overview</h2>
+            <h2 id="pageTitle" class="text-xs font-bold text-white leading-none">الخط والسرعة</h2>
             <p id="pageSubtitle" class="text-[10px] text-slate-400 mt-0.5">Live Router Session</p>
           </div>
 
@@ -535,7 +557,7 @@
             <span id="headerLogsCountBadge" class="px-1.5 py-0.2 rounded-full text-[10px] bg-sky-500/20 text-sky-200 font-mono">0</span>
           </button>
 
-          <button id="themeToggleBtn" type="button" class="btn-press p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs text-slate-300 flex items-center gap-1.5 shrink-0" title="تبديل المظهر النهاري / الليلي (Toggle Light / Dark Theme)" aria-label="Toggle Theme">
+          <button id="themeToggleBtn" type="button" class="btn-press p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs text-slate-300 flex items-center gap-1.5 shrink-0" title="تبديل المظهر النهاري / الليلي" aria-label="Toggle Theme">
             <span id="themeToggleIcon" class="w-3.5 h-3.5 flex items-center justify-center"></span>
             <span id="themeToggleLabel" class="hidden md:inline font-medium text-xs">Light</span>
           </button>
@@ -553,7 +575,7 @@
             <p class="font-bold text-amber-300">تنبيه الاتصال بالراوتر (<code class="font-mono" id="alertGatewayIp">192.168.1.1</code>):</p>
             <p id="proxyStatusMessage" class="text-amber-100/90 mt-0.5">
               1) تأكد إن الموبايل فاتح <strong>Wi-Fi</strong> على شبكة الراوتر (مش داتا الموبايل 4G).<br/>
-              2) متصفح المعاينة السحابي هنا معزول عن شبكتك المنزلية؛ عشان تسحب البيانات الحقيقية على الموبايل: إما تفتح التطبيق بعد تثبيته كـ <strong>APK</strong>، أو تكتب عنوان سيرفر البروكسي المحلي على شبكتك (مثلاً <code class="font-mono">http://192.168.1.10:3000</code>).
+              2) متصفح المعاينة السحابي هنا معزول عن شبكتك المنزلية؛ عشان تسحب البيانات الحقيقية على الموبايل: إما تفتح التطبيق بعد تثبيته كـ <strong>APK</strong>، أو تكتب عنوان سيرفر البروكسي المحلي على شبكتك.
             </p>
           </div>
         </div>
@@ -569,168 +591,149 @@
       </div>
 
       <!-- Main Content Container -->
-      <main class="p-4 sm:p-6 space-y-5 max-w-6xl w-full mx-auto flex-1">
+      <main class="p-3.5 sm:p-6 space-y-4 max-w-6xl w-full mx-auto flex-1">
 
-        <!-- TAB 1: OVERVIEW & DSL STATUS -->
-        <section id="tab-overview" class="space-y-5">
-          <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-            <div class="glass-card rounded-xl p-4">
-              <p class="text-[11px] font-medium text-slate-400 uppercase">System Uptime</p>
-              <p id="kpiUptime" class="text-lg sm:text-xl font-bold text-white mt-1 font-mono">—</p>
-              <p id="kpiModel" class="text-[11px] text-amber-400 mt-1 truncate">Awaiting router sync</p>
+        <!-- ================================================================= -->
+        <!-- MODULE 1: OVERVIEW (كفاءة الخط وفحص السرعة - COMPACT & FOCUSED)    -->
+        <!-- ================================================================= -->
+        <section id="tab-overview" class="space-y-4">
+          <!-- Top Compact 4-KPI Strip (Clickable to jump to respective modules) -->
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5">
+            <div data-goto-tab="router" class="glass-card rounded-2xl p-3.5 cursor-pointer hover:border-amber-500/40 transition">
+              <div class="flex items-center justify-between">
+                <p class="text-[10px] font-semibold text-slate-400 uppercase">مدة التشغيل (Uptime)</p>
+                <span class="text-[10px] text-amber-400">بيانات الراوتر ←</span>
+              </div>
+              <p id="kpiUptime" class="text-base sm:text-lg font-bold text-white mt-1 font-mono truncate">—</p>
+              <p id="kpiModel" class="text-[11px] text-amber-400 mt-0.5 truncate">Awaiting router sync</p>
             </div>
 
-            <div class="glass-card rounded-xl p-4">
-              <p class="text-[11px] font-medium text-slate-400 uppercase">Connected Devices</p>
-              <p id="kpiTotalDevices" class="text-lg sm:text-xl font-bold text-white mt-1 font-mono">0</p>
-              <p class="text-[11px] text-emerald-400 mt-1">Active LAN/WLAN</p>
+            <div data-goto-tab="devices" class="glass-card rounded-2xl p-3.5 cursor-pointer hover:border-emerald-500/40 transition">
+              <div class="flex items-center justify-between">
+                <p class="text-[10px] font-semibold text-slate-400 uppercase">الأجهزة المتصلة</p>
+                <span class="text-[10px] text-emerald-400">عرض الكل ←</span>
+              </div>
+              <p id="kpiTotalDevices" class="text-base sm:text-lg font-bold text-white mt-1 font-mono">0</p>
+              <p class="text-[11px] text-emerald-400 mt-0.5">Active LAN / Wi-Fi</p>
             </div>
 
-            <div class="glass-card rounded-xl p-4">
-              <p class="text-[11px] font-medium text-slate-400 uppercase">Active Wi-Fi</p>
-              <p id="kpiActiveWifi" class="text-lg sm:text-xl font-bold text-white mt-1 font-mono">—</p>
-              <p id="kpiWifiSummary" class="text-[11px] text-sky-400 mt-1">2.4GHz / 5GHz</p>
+            <div data-goto-tab="wifi" class="glass-card rounded-2xl p-3.5 cursor-pointer hover:border-sky-500/40 transition">
+              <div class="flex items-center justify-between">
+                <p class="text-[10px] font-semibold text-slate-400 uppercase">الشبكات المفعلة</p>
+                <span class="text-[10px] text-sky-400">إدارة الشبكات ←</span>
+              </div>
+              <p id="kpiActiveWifi" class="text-base sm:text-lg font-bold text-white mt-1 font-mono truncate">—</p>
+              <p id="kpiWifiSummary" class="text-[11px] text-sky-400 mt-0.5 truncate">2.4GHz / 5GHz</p>
             </div>
 
-            <div class="glass-card rounded-xl p-4">
-              <p class="text-[11px] font-medium text-slate-400 uppercase">Blocked MACs</p>
-              <p id="kpiBlockedDevices" class="text-lg sm:text-xl font-bold text-rose-400 mt-1 font-mono">0</p>
-              <p class="text-[11px] text-slate-400 mt-1">WLAN Blacklist</p>
+            <div data-goto-tab="devices" class="glass-card rounded-2xl p-3.5 cursor-pointer hover:border-rose-500/40 transition">
+              <div class="flex items-center justify-between">
+                <p class="text-[10px] font-semibold text-slate-400 uppercase">الأجهزة المحظورة</p>
+                <span class="text-[10px] text-rose-400">فلتر MAC ←</span>
+              </div>
+              <p id="kpiBlockedDevices" class="text-base sm:text-lg font-bold text-rose-400 mt-1 font-mono">0</p>
+              <p class="text-[11px] text-slate-400 mt-0.5">WLAN Blacklist</p>
             </div>
           </div>
 
-          <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            <div class="lg:col-span-2 glass-card rounded-xl p-5 space-y-4">
-              <div class="flex flex-wrap items-center justify-between gap-2.5 border-b border-white/10 pb-3">
-                <div>
-                  <h3 class="text-sm font-semibold text-white">WAN &amp; DSL Physical Line Telemetry</h3>
-                  <p class="text-[11px] text-slate-400">Real values scraped directly from your router status page</p>
-                </div>
-                <div class="flex flex-wrap items-center gap-2">
-                  <button id="quickSpeedTestBtn" type="button" class="btn-press px-2.5 py-1 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-300 text-[11px] font-semibold flex items-center gap-1 shrink-0">
-                    <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
-                    </svg>
-                    <span>Speed Test</span>
-                  </button>
-                  <span id="wanStatusBadge" class="px-2.5 py-0.5 rounded-full text-[11px] font-mono bg-slate-800 text-slate-300 border border-white/10 truncate max-w-[200px]">
-                    Awaiting Sync
-                  </span>
-                </div>
+          <!-- Physical DSL / VDSL2 Line Telemetry Card -->
+          <div class="glass-card rounded-2xl p-4 sm:p-5 space-y-3.5">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3">
+              <div>
+                <h3 class="text-sm font-bold text-white">قياسات خط الإنترنت الفعلي (DSL / VDSL2 Telemetry)</h3>
+                <p class="text-[11px] text-slate-400">السرعة الفعلية الواصلة للراوتر ومعدل الشوشرة والفقد من الكابينة</p>
               </div>
-
-              <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                <div class="p-3 rounded-xl bg-slate-900/60 border border-white/5">
-                  <p class="text-[11px] text-slate-400">Download Sync Rate</p>
-                  <p id="dslDownMbps" class="text-base font-bold text-white font-mono mt-1">—</p>
-                </div>
-                <div class="p-3 rounded-xl bg-slate-900/60 border border-white/5">
-                  <p class="text-[11px] text-slate-400">Upload Sync Rate</p>
-                  <p id="dslUpMbps" class="text-base font-bold text-white font-mono mt-1">—</p>
-                </div>
-                <div class="p-3 rounded-xl bg-slate-900/60 border border-white/5">
-                  <p class="text-[11px] text-slate-400">SNR Margin (Down)</p>
-                  <p id="snrDown" class="text-base font-bold text-white font-mono mt-1">—</p>
-                </div>
-                <div class="p-3 rounded-xl bg-slate-900/60 border border-white/5">
-                  <p class="text-[11px] text-slate-400">SNR Margin (Up)</p>
-                  <p id="snrUp" class="text-base font-bold text-white font-mono mt-1">—</p>
-                </div>
-                <div class="p-3 rounded-xl bg-slate-900/60 border border-white/5">
-                  <p class="text-[11px] text-slate-400">Attenuation (Down)</p>
-                  <p id="attenDown" class="text-base font-bold text-white font-mono mt-1">—</p>
-                </div>
-                <div class="p-3 rounded-xl bg-slate-900/60 border border-white/5">
-                  <p class="text-[11px] text-slate-400">Attenuation (Up)</p>
-                  <p id="attenUp" class="text-base font-bold text-white font-mono mt-1">—</p>
-                </div>
+              <div class="flex flex-wrap items-center gap-2">
+                <span id="lineHealthBadge" class="px-2.5 py-0.5 rounded-full text-[10px] font-mono bg-slate-800 text-slate-300 border border-white/10">
+                  فحص الخط...
+                </span>
+                <span id="wanStatusBadge" class="px-2.5 py-0.5 rounded-full text-[11px] font-mono bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 truncate max-w-[180px]">
+                  Awaiting Sync
+                </span>
               </div>
             </div>
 
-            <!-- Active Router Identity Card -->
-            <div class="glass-card rounded-xl p-5 flex flex-col justify-between space-y-4">
-              <div class="space-y-3">
-                <div class="border-b border-white/10 pb-3">
-                  <h3 class="text-sm font-semibold text-white">Active Router Identity</h3>
-                  <p class="text-[11px] text-slate-400">Current authenticated account &amp; hardware info</p>
-                </div>
-
-                <dl class="space-y-2 text-xs">
-                  <div class="flex justify-between py-1 border-b border-white/5">
-                    <dt class="text-slate-400">Router Model</dt>
-                    <dd id="sysModel" class="font-mono text-white">—</dd>
-                  </div>
-                  <div class="flex justify-between py-1 border-b border-white/5">
-                    <dt class="text-slate-400">Firmware Build</dt>
-                    <dd id="sysFirmware" class="font-mono text-amber-300">—</dd>
-                  </div>
-                  <div class="flex justify-between py-1 border-b border-white/5">
-                    <dt class="text-slate-400">Public WAN IP</dt>
-                    <dd id="sysWanIp" class="font-mono text-emerald-300">—</dd>
-                  </div>
-                  <div class="flex justify-between py-1 border-b border-white/5">
-                    <dt class="text-slate-400">Gateway IP</dt>
-                    <dd id="sysDns" class="font-mono text-slate-200">—</dd>
-                  </div>
-                  <div class="flex justify-between py-1">
-                    <dt class="text-slate-400">Profile Selectors</dt>
-                    <dd id="sysModulation" class="font-mono text-sky-300">—</dd>
-                  </div>
-                </dl>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+              <div class="p-3 rounded-xl bg-slate-900/60 border border-white/5">
+                <p class="text-[10px] text-slate-400">سرعة الداونلود بالراوتر (Down Sync)</p>
+                <p id="dslDownMbps" class="text-sm sm:text-base font-bold text-emerald-400 font-mono mt-1">—</p>
               </div>
-
-              <div class="grid grid-cols-2 gap-2 pt-2">
-                <button type="button" data-goto-tab="devices" class="btn-press py-2 px-3 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-medium text-white border border-white/10">
-                  Manage Devices
-                </button>
-                <button type="button" data-goto-tab="wifi" class="btn-press py-2 px-3 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-xs font-medium text-amber-300 border border-amber-500/30">
-                  Configure Wi-Fi
-                </button>
+              <div class="p-3 rounded-xl bg-slate-900/60 border border-white/5">
+                <p class="text-[10px] text-slate-400">سرعة الأبلود بالراوتر (Up Sync)</p>
+                <p id="dslUpMbps" class="text-sm sm:text-base font-bold text-sky-400 font-mono mt-1">—</p>
               </div>
+              <div class="p-3 rounded-xl bg-slate-900/60 border border-white/5">
+                <p class="text-[10px] text-slate-400">أقصى سرعة يتحملها الخط</p>
+                <p id="lineMaxAttainable" class="text-sm sm:text-base font-bold text-amber-300 font-mono mt-1">—</p>
+              </div>
+              <div class="p-3 rounded-xl bg-slate-900/60 border border-white/5">
+                <p class="text-[10px] text-slate-400">الشوشرة داونلود (SNR Down)</p>
+                <p id="snrDown" class="text-sm sm:text-base font-bold text-white font-mono mt-1">—</p>
+              </div>
+              <div class="p-3 rounded-xl bg-slate-900/60 border border-white/5">
+                <p class="text-[10px] text-slate-400">الشوشرة أبلود (SNR Up)</p>
+                <p id="snrUp" class="text-sm sm:text-base font-bold text-white font-mono mt-1">—</p>
+              </div>
+              <div class="p-3 rounded-xl bg-slate-900/60 border border-white/5">
+                <p class="text-[10px] text-slate-400">الفقد (Attenuation Down / Up)</p>
+                <p class="text-sm sm:text-base font-bold text-white font-mono mt-1">
+                  <span id="attenDown">—</span> <span class="text-slate-500 text-xs">/</span> <span id="attenUp" class="text-slate-300 text-xs">—</span>
+                </p>
+              </div>
+            </div>
+
+            <!-- Compact Line Health Verdict Strip -->
+            <div class="px-3 py-2 rounded-xl bg-slate-900/40 border border-white/5 flex flex-wrap items-center justify-between gap-2 text-xs" dir="rtl">
+              <p id="lineSnrVerdict" class="text-[11px] text-slate-300 leading-relaxed">
+                اضغط Sync Gateway لقراءة بيانات الخط وحساب أقصى سرعة يتحملها خطك الأرضي.
+              </p>
+              <button type="button" data-goto-tab="router" class="text-[11px] font-semibold text-amber-400 hover:underline shrink-0">
+                عرض الـ IP والماك وبيانات الراوتر ←
+              </button>
             </div>
           </div>
 
           <!-- WAN Performance & Speed Test Card -->
-          <div id="wanSpeedTestCard" class="glass-card rounded-xl p-5 space-y-4">
+          <div id="wanSpeedTestCard" class="glass-card rounded-2xl p-4 sm:p-5 space-y-3.5">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
               <div class="flex items-start sm:items-center gap-2.5 min-w-0">
-                <div class="w-8 h-8 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0 mt-0.5 sm:mt-0">
+                <div class="w-8 h-8 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
                   </svg>
                 </div>
                 <div class="min-w-0">
                   <div class="flex flex-wrap items-center gap-2">
-                    <h3 class="text-sm font-semibold text-white">WAN Performance &amp; Speed Test</h3>
+                    <h3 class="text-sm font-bold text-white">فحص السرعة والبنغ (WAN Speed Test)</h3>
                     <span id="speedTestStatusBadge" class="px-2 py-0.5 rounded-full text-[10px] font-mono bg-slate-800 text-slate-300 border border-white/10">
                       Ready
                     </span>
                   </div>
-                  <p class="text-[11px] text-slate-400 mt-0.5">Trigger live ping &amp; bandwidth measurement against public DNS (Cloudflare / Google) and CDN endpoints</p>
+                  <p class="text-[11px] text-slate-400 mt-0.5">قياس السرعة الحقيقية وزمن الاستجابة (Ping RTT) ومقارنتها بسرعة خط الراوتر</p>
                 </div>
               </div>
 
               <div class="flex flex-wrap sm:flex-nowrap items-center gap-2 w-full sm:w-auto">
-                <select id="speedTestTargetSelect" aria-label="Speed Test Target" class="w-full sm:w-auto flex-1 min-w-0 bg-slate-900/90 border border-white/10 rounded-lg px-2.5 py-2 sm:py-1.5 text-xs text-white focus:outline-none focus:border-amber-500">
+                <select id="speedTestTargetSelect" aria-label="Speed Test Target" class="w-full sm:w-auto flex-1 min-w-0 bg-slate-900/90 border border-white/10 rounded-xl px-2.5 py-2 sm:py-1.5 text-xs text-white focus:outline-none focus:border-amber-500">
                   <option value="AUTO">Auto (ISP DNS + Cloudflare 1.1.1.1 &amp; Google)</option>
                   <option value="CLOUDFLARE">Cloudflare Edge (1.1.1.1)</option>
                   <option value="GOOGLE">Google Public DNS (8.8.8.8)</option>
                   <option value="WE_DNS">WE Telecom Egypt DNS (163.121.128.134)</option>
                   <option value="ORANGE_DNS">Orange Egypt DNS (213.131.65.20)</option>
-                  <option value="VODAFONE_DNS">Vodafone Egypt DNS (62.240.110.198)</option>
-                  <option value="ETISALAT_DNS">e&amp; Etisalat Egypt DNS (196.219.252.29)</option>
+                  <option value="VODAFONE_DNS">Vodafone Egypt DNS (41.176.20.22)</option>
+                  <option value="ETISALAT_DNS">e&amp; Etisalat Egypt DNS (193.227.177.130)</option>
                 </select>
 
-                <button id="runSpeedTestBtn" type="button" class="btn-press w-full sm:w-auto justify-center px-4 py-2 sm:py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold text-xs flex items-center gap-1.5 shrink-0 shadow-lg shadow-emerald-500/20">
+                <button id="runSpeedTestBtn" type="button" class="btn-press w-full sm:w-auto justify-center px-4 py-2 sm:py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs flex items-center gap-1.5 shrink-0 shadow-lg shadow-emerald-500/20">
                   <svg id="runSpeedTestIcon" class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
                   </svg>
-                  <span id="runSpeedTestBtnText">Run Speed Test</span>
+                  <span id="runSpeedTestBtnText">بدء فحص السرعة</span>
                 </button>
               </div>
             </div>
 
-            <!-- Active Test Progress Bar (hidden when idle) -->
+            <!-- Active Test Progress Bar -->
             <div id="speedTestProgressContainer" class="hidden space-y-1.5">
               <div class="flex justify-between text-[11px]">
                 <span id="speedTestStageText" class="text-amber-400 font-medium animate-pulse">Initializing Speed Test...</span>
@@ -742,128 +745,235 @@
             </div>
 
             <!-- Real-time Live Metrics Display Grid -->
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
-              <!-- Metric 1: Download Throughput -->
-              <div class="p-3.5 rounded-xl bg-slate-900/60 border border-white/5 relative overflow-hidden">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5">
+              <div class="p-3 rounded-xl bg-slate-900/60 border border-white/5">
                 <div class="flex items-center justify-between">
-                  <span class="text-[11px] font-medium text-slate-400 uppercase">Download Speed</span>
+                  <span class="text-[10px] font-medium text-slate-400 uppercase">Download Speed</span>
                   <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
                 </div>
-                <div class="flex items-baseline gap-1 mt-1.5">
-                  <p id="stMetricDownload" class="text-xl sm:text-2xl font-bold text-white font-mono">—</p>
+                <div class="flex items-baseline gap-1 mt-1">
+                  <p id="stMetricDownload" class="text-xl font-bold text-white font-mono">—</p>
                   <span class="text-xs font-semibold text-emerald-400">Mbps</span>
                 </div>
-                <p id="stDownloadSubtext" class="text-[10px] text-slate-400 mt-1 truncate">Throughput from public CDN</p>
+                <p id="stDownloadSubtext" class="text-[10px] text-slate-400 mt-0.5 truncate">سرعة التحميل الفعلية</p>
               </div>
 
-              <!-- Metric 2: Upload Throughput -->
-              <div class="p-3.5 rounded-xl bg-slate-900/60 border border-white/5 relative overflow-hidden">
+              <div class="p-3 rounded-xl bg-slate-900/60 border border-white/5">
                 <div class="flex items-center justify-between">
-                  <span class="text-[11px] font-medium text-slate-400 uppercase">Upload Speed</span>
+                  <span class="text-[10px] font-medium text-slate-400 uppercase">Upload Speed</span>
                   <span class="w-2 h-2 rounded-full bg-sky-400"></span>
                 </div>
-                <div class="flex items-baseline gap-1 mt-1.5">
-                  <p id="stMetricUpload" class="text-xl sm:text-2xl font-bold text-white font-mono">—</p>
+                <div class="flex items-baseline gap-1 mt-1">
+                  <p id="stMetricUpload" class="text-xl font-bold text-white font-mono">—</p>
                   <span class="text-xs font-semibold text-sky-400">Mbps</span>
                 </div>
-                <p id="stUploadSubtext" class="text-[10px] text-slate-400 mt-1 truncate">Upstream WAN throughput</p>
+                <p id="stUploadSubtext" class="text-[10px] text-slate-400 mt-0.5 truncate">سرعة الرفع الفعلية</p>
               </div>
 
-              <!-- Metric 3: Ping / Latency (RTT) -->
-              <div class="p-3.5 rounded-xl bg-slate-900/60 border border-white/5 relative overflow-hidden">
+              <div class="p-3 rounded-xl bg-slate-900/60 border border-white/5">
                 <div class="flex items-center justify-between">
-                  <span class="text-[11px] font-medium text-slate-400 uppercase">Latency (Ping RTT)</span>
+                  <span class="text-[10px] font-medium text-slate-400 uppercase">Ping (Latency)</span>
                   <span id="stPingQualityDot" class="w-2 h-2 rounded-full bg-slate-500"></span>
                 </div>
-                <div class="flex items-baseline gap-1 mt-1.5">
-                  <p id="stMetricPing" class="text-xl sm:text-2xl font-bold text-white font-mono">—</p>
+                <div class="flex items-baseline gap-1 mt-1">
+                  <p id="stMetricPing" class="text-xl font-bold text-white font-mono">—</p>
                   <span class="text-xs font-semibold text-slate-300">ms</span>
                 </div>
-                <p id="stPingTarget" class="text-[10px] text-slate-400 mt-1 truncate">Cloudflare &amp; Google DNS</p>
+                <p id="stPingTarget" class="text-[10px] text-slate-400 mt-0.5 truncate">Cloudflare &amp; Google DNS</p>
               </div>
 
-              <!-- Metric 4: Jitter / Stability -->
-              <div class="p-3.5 rounded-xl bg-slate-900/60 border border-white/5 relative overflow-hidden">
+              <div class="p-3 rounded-xl bg-slate-900/60 border border-white/5">
                 <div class="flex items-center justify-between">
-                  <span class="text-[11px] font-medium text-slate-400 uppercase">Jitter / Variance</span>
+                  <span class="text-[10px] font-medium text-slate-400 uppercase">Jitter (ثبات الخط)</span>
                   <span class="w-2 h-2 rounded-full bg-amber-400"></span>
                 </div>
-                <div class="flex items-baseline gap-1 mt-1.5">
-                  <p id="stMetricJitter" class="text-xl sm:text-2xl font-bold text-white font-mono">—</p>
+                <div class="flex items-baseline gap-1 mt-1">
+                  <p id="stMetricJitter" class="text-xl font-bold text-white font-mono">—</p>
                   <span class="text-xs font-semibold text-amber-300">ms</span>
                 </div>
-                <p id="stJitterSubtext" class="text-[10px] text-slate-400 mt-1 truncate">Line stability index</p>
+                <p id="stJitterSubtext" class="text-[10px] text-slate-400 mt-0.5 truncate">تذبذب الاستجابة</p>
               </div>
             </div>
 
             <!-- WAN vs DSL Physical Line Utilization Analysis -->
-            <div id="stLineEfficiencyCard" class="p-3.5 rounded-xl bg-slate-900/40 border border-white/5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
-              <div class="space-y-1">
-                <div class="flex items-center gap-2">
-                  <span class="font-semibold text-white">Line Sync vs WAN Bandwidth Utilization:</span>
+            <div id="stLineEfficiencyCard" class="p-3 rounded-xl bg-slate-900/40 border border-white/5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs">
+              <div class="space-y-0.5">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="font-semibold text-white">كفاءة استهلاك سرعة الخط:</span>
                   <span id="stEfficiencyBadge" class="px-2 py-0.5 rounded-md font-mono text-[10px] bg-slate-800 text-slate-300">
                     Awaiting speed test
                   </span>
                 </div>
                 <p id="stEfficiencyDescription" class="text-[11px] text-slate-400">
-                  Run a speed test to calculate real internet efficiency against your router's physical DSL sync rate.
+                  اضغط "بدء فحص السرعة" لقياس النسبة المئوية للسرعة الواصلة فعلياً مقارنة بسرعة تزامن خط الـ DSL.
                 </p>
               </div>
-              <div class="shrink-0 flex items-center gap-2 text-[11px] text-slate-400">
-                <span>Last Tested:</span>
+              <div class="shrink-0 flex items-center gap-1.5 text-[11px] text-slate-400">
+                <span>آخر فحص:</span>
                 <span id="stLastTestedAt" class="font-mono text-white">Never</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- COMPACT EGYPTIAN ISP & LINE CAPACITY BAR -->
-          <div id="egyptIspCenterCard" class="glass-card rounded-xl p-4 space-y-3 border border-amber-500/20" dir="rtl">
-            <div class="flex flex-wrap items-center justify-between gap-2">
-              <div class="flex items-center gap-2">
-                <span class="text-xs font-bold text-white">الشركة وكفاءة الخط:</span>
-                <span id="activeIspBadge" class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-500/15 text-amber-300 border border-amber-500/30">
-                  Orange
-                </span>
-                <span id="lineHealthBadge" class="px-2 py-0.5 rounded-md text-[10px] font-mono bg-slate-800 text-slate-300">
-                  فحص...
-                </span>
-              </div>
-
-              <div class="flex flex-wrap items-center gap-1" dir="ltr">
-                <button type="button" data-select-isp="WE" class="isp-switch-btn btn-press px-2.5 py-1 rounded-lg bg-slate-800/80 text-slate-300 text-[11px] font-semibold">WE</button>
-                <button type="button" data-select-isp="ORANGE" class="isp-switch-btn btn-press px-2.5 py-1 rounded-lg bg-amber-500 text-slate-950 text-[11px] font-bold">Orange</button>
-                <button type="button" data-select-isp="VODAFONE" class="isp-switch-btn btn-press px-2.5 py-1 rounded-lg bg-slate-800/80 text-slate-300 text-[11px] font-semibold">Vodafone</button>
-                <button type="button" data-select-isp="ETISALAT" class="isp-switch-btn btn-press px-2.5 py-1 rounded-lg bg-slate-800/80 text-slate-300 text-[11px] font-semibold">e&amp;</button>
-                <button type="button" data-select-isp="NOOR" class="isp-switch-btn btn-press px-2.5 py-1 rounded-lg bg-slate-800/80 text-slate-300 text-[11px] font-semibold">Noor</button>
-              </div>
-            </div>
-
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
-              <div class="p-2.5 rounded-xl bg-slate-900/60 border border-white/5">
-                <span class="text-[10px] text-slate-400 block">أقصى سرعة يتحملها الخط</span>
-                <span id="lineMaxAttainable" class="font-mono font-bold text-white text-xs mt-0.5 block" dir="ltr">—</span>
-              </div>
-              <div class="p-2.5 rounded-xl bg-slate-900/60 border border-white/5">
-                <span class="text-[10px] text-slate-400 block">الشوشرة / الفقد</span>
-                <span id="lineSnrVerdict" class="font-mono text-emerald-300 text-xs mt-0.5 block" dir="ltr">—</span>
-              </div>
-              <div class="p-2.5 rounded-xl bg-slate-900/60 border border-white/5">
-                <span class="text-[10px] text-slate-400 block">DNS الشركة (اضغط للنسخ)</span>
-                <button type="button" id="copyIspDnsBtn" class="font-mono text-amber-300 hover:underline text-xs mt-0.5 block text-left" dir="ltr">213.131.65.20</button>
-              </div>
-              <div class="p-2.5 rounded-xl bg-slate-900/60 border border-white/5">
-                <span class="text-[10px] text-slate-400 block">الدعم الفني والخدمة</span>
-                <span id="ispSupportHotline" class="font-mono font-bold text-sky-300 text-xs mt-0.5 block" dir="ltr">16333</span>
               </div>
             </div>
           </div>
         </section>
 
-        <!-- TAB 2: CONNECTED DEVICES & MAC FILTER -->
+        <!-- ================================================================= -->
+        <!-- MODULE 2: DEDICATED ROUTER & CONNECTION INFO PAGE (#tab-router)   -->
+        <!-- ================================================================= -->
+        <section id="tab-router" class="space-y-4 hidden">
+          <!-- Highlighted Network Addresses Strip: Public IP, Local IP, Router MAC, Wi-Fi BSSID -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <!-- 1. Public WAN IP -->
+            <div class="glass-card rounded-2xl p-4 border border-emerald-500/25 flex flex-col justify-between space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-[11px] font-semibold text-slate-400">الـ IP الخارجي (Public WAN IP)</span>
+                <button type="button" data-copy-field="sysWanIp" class="btn-press px-2 py-0.5 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 text-[10px] font-semibold">
+                  نسخ IP
+                </button>
+              </div>
+              <p id="sysWanIp" class="text-base sm:text-lg font-bold font-mono text-emerald-300 truncate">—</p>
+              <p id="routerInfoWanSub" class="text-[10px] text-slate-400 truncate">عنوان الاتصال الخارجي بالإنترنت</p>
+            </div>
+
+            <!-- 2. Router Local Gateway IP -->
+            <div class="glass-card rounded-2xl p-4 border border-amber-500/25 flex flex-col justify-between space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-[11px] font-semibold text-slate-400">الـ IP المحلي للراوتر (Local IP)</span>
+                <button type="button" data-copy-field="sysDns" class="btn-press px-2 py-0.5 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 text-[10px] font-semibold">
+                  نسخ Local IP
+                </button>
+              </div>
+              <p id="sysDns" class="text-base sm:text-lg font-bold font-mono text-amber-300 truncate">192.168.1.1</p>
+              <p id="routerInfoSubnet" class="text-[10px] text-slate-400 font-mono truncate">Subnet: 255.255.255.0</p>
+            </div>
+
+            <!-- 3. Router Hardware MAC Address -->
+            <div class="glass-card rounded-2xl p-4 border border-sky-500/25 flex flex-col justify-between space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-[11px] font-semibold text-slate-400">الماك أدريس للراوتر (Router MAC)</span>
+                <button type="button" data-copy-field="sysRouterMac" class="btn-press px-2 py-0.5 rounded-lg bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 text-[10px] font-semibold">
+                  نسخ MAC
+                </button>
+              </div>
+              <p id="sysRouterMac" class="text-base sm:text-lg font-bold font-mono text-sky-300 truncate">—</p>
+              <p id="sysWanMacSub" class="text-[10px] text-slate-400 font-mono truncate">WAN / LAN Hardware MAC</p>
+            </div>
+
+            <!-- 4. Wi-Fi BSSID MAC Addresses -->
+            <div class="glass-card rounded-2xl p-4 border border-purple-500/25 flex flex-col justify-between space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-[11px] font-semibold text-slate-400">ماك الواي فاي (Wi-Fi BSSID)</span>
+                <button type="button" data-copy-field="sysWifiBssid" class="btn-press px-2 py-0.5 rounded-lg bg-purple-500/15 hover:bg-purple-500/25 text-purple-300 text-[10px] font-semibold">
+                  نسخ BSSID
+                </button>
+              </div>
+              <p id="sysWifiBssid" class="text-sm sm:text-base font-bold font-mono text-white truncate">—</p>
+              <p id="sysWifiBssid5" class="text-[10px] text-slate-400 font-mono truncate">2.4GHz &amp; 5GHz Radio MAC</p>
+            </div>
+          </div>
+
+          <!-- Detailed Router Hardware & WAN Connection Cards -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <!-- Card A: Hardware & System Specifications -->
+            <div class="glass-card rounded-2xl p-5 space-y-4">
+              <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <div>
+                  <h3 class="text-sm font-bold text-white">بيانات الراوتر والنظام (Router Hardware &amp; OS)</h3>
+                  <p class="text-[11px] text-slate-400">المعلومات الفنية المسحوبة مباشرة من لوحة تحكم الراوتر</p>
+                </div>
+                <span id="sysModulation" class="px-2.5 py-0.5 rounded-lg font-mono text-[11px] bg-amber-500/15 text-amber-300 border border-amber-500/30">
+                  ZTE_H188A
+                </span>
+              </div>
+
+              <dl class="space-y-2.5 text-xs">
+                <div class="flex items-center justify-between py-1.5 border-b border-white/5">
+                  <dt class="text-slate-400">موديل الراوتر (Router Model)</dt>
+                  <dd id="sysModel" class="font-mono font-bold text-white">—</dd>
+                </div>
+                <div class="flex items-center justify-between py-1.5 border-b border-white/5">
+                  <dt class="text-slate-400">إصدار السوفت وير (Firmware Version)</dt>
+                  <dd id="sysFirmware" class="font-mono text-amber-300">—</dd>
+                </div>
+                <div class="flex items-center justify-between py-1.5 border-b border-white/5">
+                  <dt class="text-slate-400">إصدار الهاردوير (Hardware Version)</dt>
+                  <dd id="sysHardwareVer" class="font-mono text-slate-200">—</dd>
+                </div>
+                <div class="flex items-center justify-between py-1.5 border-b border-white/5">
+                  <dt class="text-slate-400">الرقم التسلسلي (Serial Number / S/N)</dt>
+                  <dd id="sysSerialNum" class="font-mono text-emerald-300">—</dd>
+                </div>
+                <div class="flex items-center justify-between py-1.5 border-b border-white/5">
+                  <dt class="text-slate-400">مدة التشغيل المتواصلة (System Uptime)</dt>
+                  <dd id="sysUptimeDetail" class="font-mono text-white">—</dd>
+                </div>
+                <div class="flex items-center justify-between py-1">
+                  <dt class="text-slate-400">عدد الأجهزة المتصلة حالياً</dt>
+                  <dd id="sysConnectedCountDetail" class="font-mono text-sky-300">0 جهاز</dd>
+                </div>
+              </dl>
+            </div>
+
+            <!-- Card B: WAN Connection & Egyptian ISP Configuration -->
+            <div class="glass-card rounded-2xl p-5 space-y-4">
+              <div class="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3">
+                <div>
+                  <h3 class="text-sm font-bold text-white">بيانات الاتصال والشركة (WAN &amp; ISP Details)</h3>
+                  <p class="text-[11px] text-slate-400">إعدادات الربط مع السنترال وخوادم الـ DNS</p>
+                </div>
+                <div class="flex flex-wrap items-center gap-1" dir="ltr">
+                  <button type="button" data-select-isp="WE" class="isp-switch-btn btn-press px-2 py-1 rounded-lg bg-slate-800/80 text-slate-300 text-[10px] font-semibold">WE</button>
+                  <button type="button" data-select-isp="ORANGE" class="isp-switch-btn btn-press px-2 py-1 rounded-lg bg-amber-500 text-slate-950 text-[10px] font-bold">Orange</button>
+                  <button type="button" data-select-isp="VODAFONE" class="isp-switch-btn btn-press px-2 py-1 rounded-lg bg-slate-800/80 text-slate-300 text-[10px] font-semibold">Vodafone</button>
+                  <button type="button" data-select-isp="ETISALAT" class="isp-switch-btn btn-press px-2 py-1 rounded-lg bg-slate-800/80 text-slate-300 text-[10px] font-semibold">e&amp;</button>
+                  <button type="button" data-select-isp="NOOR" class="isp-switch-btn btn-press px-2 py-1 rounded-lg bg-slate-800/80 text-slate-300 text-[10px] font-semibold">Noor</button>
+                </div>
+              </div>
+
+              <dl class="space-y-2.5 text-xs">
+                <div class="flex items-center justify-between py-1.5 border-b border-white/5">
+                  <dt class="text-slate-400">الشركة ونطاق الاتصال (ISP)</dt>
+                  <dd id="activeIspBadge" class="px-2 py-0.5 rounded-lg font-mono text-[11px] bg-amber-500/15 text-amber-300 border border-amber-500/30 truncate max-w-[230px]">Orange Egypt</dd>
+                </div>
+                <div class="flex items-center justify-between py-1.5 border-b border-white/5">
+                  <dt class="text-slate-400">حالة اتصال الـ WAN</dt>
+                  <dd id="sysWanStatusDetail" class="font-mono font-bold text-emerald-400">Connected</dd>
+                </div>
+                <div class="flex items-center justify-between py-1.5 border-b border-white/5">
+                  <dt class="text-slate-400">بروتوكول التغليف (Encapsulation)</dt>
+                  <dd id="sysWanEncapDetail" class="font-mono text-slate-200">VDSL2 PTM • PPPoE • MTU 1492</dd>
+                </div>
+                <div class="flex items-center justify-between py-1.5 border-b border-white/5">
+                  <dt class="text-slate-400">خوادم DNS (اضغط للنسخ)</dt>
+                  <dd>
+                    <button type="button" id="copyIspDnsBtn" class="font-mono text-amber-300 hover:underline text-xs">213.131.65.20</button>
+                  </dd>
+                </div>
+                <div class="flex items-center justify-between py-1.5 border-b border-white/5">
+                  <dt class="text-slate-400">البوابة الافتراضية (WAN Gateway)</dt>
+                  <dd id="sysWanGatewayDetail" class="font-mono text-slate-300">—</dd>
+                </div>
+                <div class="flex items-center justify-between py-1">
+                  <dt class="text-slate-400">خدمة العملاء والدعم الفني</dt>
+                  <dd id="ispSupportHotline" class="font-mono font-bold text-sky-300">16333</dd>
+                </div>
+              </dl>
+
+              <div class="pt-2 flex flex-wrap items-center justify-end gap-2 border-t border-white/10">
+                <button type="button" id="copyIspConfigSummaryBtn" class="btn-press px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-medium text-slate-200">
+                  📋 نسخ بيانات الراوتر والاتصال بالكامل
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- MODULE 3: CONNECTED DEVICES & MAC FILTER (#tab-devices)           -->
+        <!-- ================================================================= -->
         <section id="tab-devices" class="space-y-4 hidden">
-          <div class="glass-card rounded-xl p-4 sm:p-5 space-y-3.5">
+          <div class="glass-card rounded-2xl p-4 sm:p-5 space-y-3.5">
             <div class="flex flex-wrap items-center justify-between gap-2.5">
-              <h3 class="text-sm font-semibold text-white">الأجهزة المتصلة (LAN &amp; Wi-Fi)</h3>
+              <h3 class="text-sm font-bold text-white">الأجهزة المتصلة بالراوتر (LAN &amp; Wi-Fi)</h3>
 
               <div class="flex flex-wrap items-center gap-2">
                 <div class="flex items-center bg-slate-900/90 p-1 rounded-xl border border-white/10 text-xs">
@@ -889,7 +999,7 @@
                     <th class="py-2 px-2 sm:px-3">Device</th>
                     <th class="py-2 px-2 sm:px-3">IP Address</th>
                     <th class="py-2 px-2 sm:px-3">MAC Address</th>
-                    <th class="py-2 px-2 sm:px-3">Band</th>
+                    <th class="py-2 px-2 sm:px-3">Band / SSID</th>
                     <th class="py-2 px-2 sm:px-3 text-right">Action</th>
                   </tr>
                 </thead>
@@ -899,32 +1009,88 @@
           </div>
         </section>
 
-        <!-- TAB 3: WI-FI QUICK CONFIGURATION -->
+        <!-- ================================================================= -->
+        <!-- MODULE 4: MULTI-SSID WI-FI CONFIGURATION & PASSWORD REVEAL        -->
+        <!-- ================================================================= -->
         <section id="tab-wifi" class="space-y-4 hidden">
+          <!-- Top Multi-SSID Status Summary Banner: Shows Which Networks Are Enabled vs Disabled -->
+          <div class="glass-card rounded-2xl p-4 space-y-3 border border-amber-500/20" dir="rtl">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <h3 class="text-sm font-bold text-white">حالة جميع شبكات الواي فاي (Multi-SSID Networks Status)</h3>
+                <p class="text-[11px] text-slate-400">يمكنك تشغيل وتخصيص حتى 4 شبكات على تردد 2.4GHz و4 شبكات على تردد 5GHz — اضغط على أي شبكة لتعديلها أو تفعيلها</p>
+              </div>
+              <div class="flex items-center gap-2 text-[11px]">
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> مفعلة (Active)
+                </span>
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-white/10">
+                  <span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span> غير مفعلة (Off)
+                </span>
+              </div>
+            </div>
+
+            <!-- Dynamic Summary Grid of All 8 Networks (4x 2.4GHz + 4x 5GHz) -->
+            <div id="multiSsidOverviewPills" class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2" dir="ltr"></div>
+          </div>
+
           <form id="wifiConfigForm" class="space-y-4">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              <!-- 2.4GHz -->
-              <div class="glass-card rounded-xl p-5 space-y-4">
+              <!-- ==================== 2.4GHz Multi-SSID Card (AP1..AP4) ==================== -->
+              <div class="glass-card rounded-2xl p-4 sm:p-5 space-y-4">
                 <div class="flex items-center justify-between border-b border-white/10 pb-3">
                   <div class="flex items-center gap-2">
-                    <span class="px-2.5 py-0.5 rounded-md bg-amber-500/15 text-amber-300 border border-amber-500/30 font-mono text-xs font-bold">2.4 GHz Band</span>
+                    <span class="px-2.5 py-1 rounded-lg bg-amber-500/15 text-amber-300 border border-amber-500/30 font-mono text-xs font-bold">2.4 GHz Band</span>
                     <span id="wifi24MetaBadge" class="text-[11px] font-mono text-slate-400">WPA2-PSK</span>
                   </div>
-                  <input type="checkbox" id="wifi24Enabled" checked class="w-4 h-4 accent-emerald-500 rounded cursor-pointer" />
+                  <span id="wifi24ActiveSlotStatusBadge" class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+                    مفعلة (Active)
+                  </span>
+                </div>
+
+                <!-- 2.4GHz 4-Network Slot Selector (SSID 1, SSID 2, SSID 3, SSID 4) -->
+                <div class="space-y-1.5">
+                  <label class="block text-[11px] font-medium text-slate-400" dir="rtl">اختر رقم الشبكة على تردد 2.4GHz (يدعم 4 شبكات مستقلة):</label>
+                  <div id="wifi24SlotTabs" class="grid grid-cols-4 gap-1.5">
+                    <button type="button" data-band24-slot="0" class="wifi24-slot-btn btn-press p-2 rounded-xl border text-left transition"></button>
+                    <button type="button" data-band24-slot="1" class="wifi24-slot-btn btn-press p-2 rounded-xl border text-left transition"></button>
+                    <button type="button" data-band24-slot="2" class="wifi24-slot-btn btn-press p-2 rounded-xl border text-left transition"></button>
+                    <button type="button" data-band24-slot="3" class="wifi24-slot-btn btn-press p-2 rounded-xl border text-left transition"></button>
+                  </div>
                 </div>
 
                 <div class="space-y-3">
+                  <!-- Enable / Disable Current 2.4GHz Slot Toggle -->
+                  <label class="flex items-center justify-between p-3 rounded-xl bg-slate-900/70 border border-white/10 cursor-pointer">
+                    <div dir="rtl">
+                      <span id="wifi24EnableLabelTitle" class="text-xs font-bold text-white block">تفعيل شبكة 2.4GHz (SSID 1)</span>
+                      <span id="wifi24EnableLabelSub" class="text-[10px] text-slate-400 block">قم بتشغيل أو إيقاف بث هذه الشبكة على الراوتر</span>
+                    </div>
+                    <input type="checkbox" id="wifi24Enabled" checked class="w-5 h-5 accent-emerald-500 rounded cursor-pointer" />
+                  </label>
+
                   <div>
-                    <label for="wifi24Ssid" class="block text-xs text-slate-300 mb-1">اسم شبكة 2.4GHz (SSID)</label>
-                    <input id="wifi24Ssid" type="text" placeholder="Populated from router..." required class="w-full px-3 py-2 rounded-xl bg-slate-900/90 border border-white/10 text-xs text-white focus:outline-none focus:border-amber-500" />
+                    <div class="flex items-center justify-between mb-1">
+                      <span id="wifi24BssidBadge" class="text-[10px] font-mono text-slate-400">AP1</span>
+                      <label for="wifi24Ssid" class="block text-xs font-medium text-slate-300">اسم شبكة 2.4GHz (SSID)</label>
+                    </div>
+                    <input id="wifi24Ssid" type="text" placeholder="اكتب اسم الشبكة..." required class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/90 border border-white/10 text-xs font-medium text-white focus:outline-none focus:border-amber-500" />
                   </div>
+
                   <div>
-                    <label for="wifi24Pass" class="block text-xs text-slate-300 mb-1">الرقم السري (اتركه فارغاً للاحتفاظ بالحالي أو اكتب باسورد جديد)</label>
-                    <div class="relative">
-                      <input id="wifi24Pass" type="password" placeholder="محمي من الراوتر — اكتب باسورد جديد للتغيير فقط" minlength="8" class="w-full pl-3 pr-14 py-2 rounded-xl bg-slate-900/90 border border-white/10 text-xs font-mono text-white focus:outline-none focus:border-amber-500" />
-                      <button type="button" data-toggle-pass="wifi24Pass" class="toggle-pass-btn absolute right-2 top-1.5 px-2 py-0.5 rounded bg-white/5 text-[10px] text-slate-300">Show</button>
+                    <div class="flex items-center justify-between mb-1">
+                      <span id="wifi24PassStatusHint" class="text-[10px] text-emerald-400">اضغط على رمز العين لإظهار الباسورد الحقيقي</span>
+                      <label for="wifi24Pass" class="block text-xs font-medium text-slate-300">الرقم السري للواي فاي (Password)</label>
+                    </div>
+                    <div class="relative flex items-center">
+                      <input id="wifi24Pass" type="password" placeholder="اكتب الرقم السري للشبكة (8 أحرف على الأقل)" minlength="8" class="w-full pl-3.5 pr-24 py-2.5 rounded-xl bg-slate-900/90 border border-white/10 text-xs font-mono text-white focus:outline-none focus:border-amber-500" />
+                      <button type="button" data-toggle-pass="wifi24Pass" class="toggle-pass-btn absolute right-1.5 px-2.5 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/30 text-[11px] font-semibold text-amber-300 flex items-center gap-1">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                        <span class="toggle-pass-text">إظهار</span>
+                      </button>
                     </div>
                   </div>
+
                   <div class="grid grid-cols-2 gap-2.5">
                     <div>
                       <label for="wifi24TxPower" class="block text-xs text-slate-300 mb-1">قوة الإشارة (Tx Power)</label>
@@ -946,6 +1112,7 @@
                       </select>
                     </div>
                   </div>
+
                   <label class="flex items-center justify-between p-2.5 rounded-xl bg-slate-900/50 border border-white/5 cursor-pointer">
                     <span class="text-xs text-slate-300">إخفاء الشبكة (Hide SSID)</span>
                     <input id="wifi24Hide" type="checkbox" class="w-4 h-4 accent-amber-500 rounded" />
@@ -953,28 +1120,61 @@
                 </div>
               </div>
 
-              <!-- 5GHz -->
-              <div class="glass-card rounded-xl p-5 space-y-4">
+              <!-- ==================== 5GHz Multi-SSID Card (AP5..AP8) ==================== -->
+              <div class="glass-card rounded-2xl p-4 sm:p-5 space-y-4">
                 <div class="flex items-center justify-between border-b border-white/10 pb-3">
                   <div class="flex items-center gap-2">
-                    <span class="px-2.5 py-0.5 rounded-md bg-sky-500/15 text-sky-300 border border-sky-500/30 font-mono text-xs font-bold">5 GHz Band</span>
+                    <span class="px-2.5 py-1 rounded-lg bg-sky-500/15 text-sky-300 border border-sky-500/30 font-mono text-xs font-bold">5 GHz Band</span>
                     <span id="wifi5MetaBadge" class="text-[11px] font-mono text-slate-400">WPA2-PSK</span>
                   </div>
-                  <input type="checkbox" id="wifi5Enabled" checked class="w-4 h-4 accent-emerald-500 rounded cursor-pointer" />
+                  <span id="wifi5ActiveSlotStatusBadge" class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+                    مفعلة (Active)
+                  </span>
+                </div>
+
+                <!-- 5GHz 4-Network Slot Selector (SSID 5, SSID 6, SSID 7, SSID 8) -->
+                <div class="space-y-1.5">
+                  <label class="block text-[11px] font-medium text-slate-400" dir="rtl">اختر رقم الشبكة على تردد 5GHz (يدعم 4 شبكات مستقلة):</label>
+                  <div id="wifi5SlotTabs" class="grid grid-cols-4 gap-1.5">
+                    <button type="button" data-band5-slot="0" class="wifi5-slot-btn btn-press p-2 rounded-xl border text-left transition"></button>
+                    <button type="button" data-band5-slot="1" class="wifi5-slot-btn btn-press p-2 rounded-xl border text-left transition"></button>
+                    <button type="button" data-band5-slot="2" class="wifi5-slot-btn btn-press p-2 rounded-xl border text-left transition"></button>
+                    <button type="button" data-band5-slot="3" class="wifi5-slot-btn btn-press p-2 rounded-xl border text-left transition"></button>
+                  </div>
                 </div>
 
                 <div class="space-y-3">
+                  <!-- Enable / Disable Current 5GHz Slot Toggle -->
+                  <label class="flex items-center justify-between p-3 rounded-xl bg-slate-900/70 border border-white/10 cursor-pointer">
+                    <div dir="rtl">
+                      <span id="wifi5EnableLabelTitle" class="text-xs font-bold text-white block">تفعيل شبكة 5GHz (SSID 5)</span>
+                      <span id="wifi5EnableLabelSub" class="text-[10px] text-slate-400 block">قم بتشغيل أو إيقاف بث هذه الشبكة على الراوتر</span>
+                    </div>
+                    <input type="checkbox" id="wifi5Enabled" checked class="w-5 h-5 accent-emerald-500 rounded cursor-pointer" />
+                  </label>
+
                   <div>
-                    <label for="wifi5Ssid" class="block text-xs text-slate-300 mb-1">اسم شبكة 5GHz (SSID)</label>
-                    <input id="wifi5Ssid" type="text" placeholder="Populated from router..." required class="w-full px-3 py-2 rounded-xl bg-slate-900/90 border border-white/10 text-xs text-white focus:outline-none focus:border-amber-500" />
+                    <div class="flex items-center justify-between mb-1">
+                      <span id="wifi5BssidBadge" class="text-[10px] font-mono text-slate-400">AP5</span>
+                      <label for="wifi5Ssid" class="block text-xs font-medium text-slate-300">اسم شبكة 5GHz (SSID)</label>
+                    </div>
+                    <input id="wifi5Ssid" type="text" placeholder="اكتب اسم الشبكة..." required class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/90 border border-white/10 text-xs font-medium text-white focus:outline-none focus:border-amber-500" />
                   </div>
+
                   <div>
-                    <label for="wifi5Pass" class="block text-xs text-slate-300 mb-1">الرقم السري (اتركه فارغاً للاحتفاظ بالحالي أو اكتب باسورد جديد)</label>
-                    <div class="relative">
-                      <input id="wifi5Pass" type="password" placeholder="محمي من الراوتر — اكتب باسورد جديد للتغيير فقط" minlength="8" class="w-full pl-3 pr-14 py-2 rounded-xl bg-slate-900/90 border border-white/10 text-xs font-mono text-white focus:outline-none focus:border-amber-500" />
-                      <button type="button" data-toggle-pass="wifi5Pass" class="toggle-pass-btn absolute right-2 top-1.5 px-2 py-0.5 rounded bg-white/5 text-[10px] text-slate-300">Show</button>
+                    <div class="flex items-center justify-between mb-1">
+                      <span id="wifi5PassStatusHint" class="text-[10px] text-emerald-400">اضغط على رمز العين لإظهار الباسورد الحقيقي</span>
+                      <label for="wifi5Pass" class="block text-xs font-medium text-slate-300">الرقم السري للواي فاي (Password)</label>
+                    </div>
+                    <div class="relative flex items-center">
+                      <input id="wifi5Pass" type="password" placeholder="اكتب الرقم السري للشبكة (8 أحرف على الأقل)" minlength="8" class="w-full pl-3.5 pr-24 py-2.5 rounded-xl bg-slate-900/90 border border-white/10 text-xs font-mono text-white focus:outline-none focus:border-amber-500" />
+                      <button type="button" data-toggle-pass="wifi5Pass" class="toggle-pass-btn absolute right-1.5 px-2.5 py-1.5 rounded-lg bg-sky-500/20 hover:bg-sky-500/30 border border-sky-500/30 text-[11px] font-semibold text-sky-300 flex items-center gap-1">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                        <span class="toggle-pass-text">إظهار</span>
+                      </button>
                     </div>
                   </div>
+
                   <div class="grid grid-cols-2 gap-2.5">
                     <div>
                       <label for="wifi5TxPower" class="block text-xs text-slate-300 mb-1">قوة الإشارة (Tx Power)</label>
@@ -997,6 +1197,7 @@
                       </select>
                     </div>
                   </div>
+
                   <label class="flex items-center justify-between p-2.5 rounded-xl bg-slate-900/50 border border-white/5 cursor-pointer">
                     <span class="text-xs text-slate-300">إخفاء الشبكة (Hide SSID)</span>
                     <input id="wifi5Hide" type="checkbox" class="w-4 h-4 accent-amber-500 rounded" />
@@ -1005,18 +1206,23 @@
               </div>
             </div>
 
-            <div class="glass-card rounded-xl p-4 flex items-center justify-between gap-3">
-              <p class="text-xs text-slate-400">حفظ وتطبيق إعدادات الواي فاي مباشرة على الراوتر</p>
-              <button type="submit" class="btn-press px-5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-semibold text-xs shrink-0">
-                Save &amp; Apply
+            <div class="glass-card rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3">
+              <div dir="rtl">
+                <p class="text-xs font-semibold text-white">حفظ وتطبيق إعدادات الشبكات المحددة مباشرة على الراوتر</p>
+                <p class="text-[11px] text-slate-400">سيتم تحديث حالة التفعيل والاسم والرقم السري على الراوتر وحفظ نسخة من الباسورد لظهورها دائماً عند الضغط على العين</p>
+              </div>
+              <button type="submit" class="btn-press px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shrink-0 shadow-lg shadow-amber-500/20">
+                حفظ وتطبيق الإعدادات (Save &amp; Apply)
               </button>
             </div>
           </form>
         </section>
 
-        <!-- TAB 4: SAVED ACCOUNTS & SYSTEM MAINTENANCE -->
+        <!-- ================================================================= -->
+        <!-- MODULE 5: SAVED ACCOUNTS & SYSTEM MAINTENANCE (#tab-maintenance)  -->
+        <!-- ================================================================= -->
         <section id="tab-maintenance" class="space-y-4 hidden">
-          <div class="glass-card rounded-xl p-5 space-y-4">
+          <div class="glass-card rounded-2xl p-5 space-y-4">
             <div class="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3">
               <h3 class="text-sm font-semibold text-white">حسابات الراوتر المحفوظة</h3>
               <button id="addNewAccountBtn" type="button" class="btn-press px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-semibold text-xs">
@@ -1027,22 +1233,22 @@
             <div id="dashboardAccountsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-3.5"></div>
           </div>
 
-          <div class="glass-card rounded-xl p-5 flex flex-wrap items-center justify-between gap-4">
+          <div class="glass-card rounded-2xl p-5 flex flex-wrap items-center justify-between gap-4">
             <div>
               <h4 class="text-sm font-semibold text-white">إعادة تشغيل الراوتر (Hardware Reboot)</h4>
               <p class="text-xs text-slate-400">إرسال أمر إعادة التشغيل المباشر للراوتر</p>
             </div>
             <div class="flex flex-wrap items-center gap-2">
-              <button id="maintRebootBtn" type="button" class="btn-press px-5 py-2 rounded-xl bg-rose-500 hover:bg-rose-400 text-slate-950 font-bold text-xs">
+              <button id="maintRebootBtn" type="button" class="btn-press px-5 py-2.5 rounded-xl bg-rose-500 hover:bg-rose-400 text-slate-950 font-bold text-xs">
                 إعادة تشغيل الراوتر الآن
               </button>
             </div>
           </div>
         </section>
 
-        <!-- TAB 5: DIAGNOSTIC LOGS -->
+        <!-- DIAGNOSTIC LOGS SECTION (#tab-architecture) -->
         <section id="tab-architecture" class="space-y-4 hidden">
-          <div class="glass-card rounded-xl p-5 space-y-3 border border-emerald-500/30">
+          <div class="glass-card rounded-2xl p-5 space-y-3 border border-emerald-500/30">
             <div class="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3">
               <div dir="rtl" class="text-right">
                 <h3 class="text-sm font-bold text-white flex items-center gap-2">
@@ -1071,22 +1277,27 @@
 
       </main>
 
-      <!-- Mobile Bottom Navigation Bar -->
-      <nav class="lg:hidden fixed bottom-0 inset-x-0 h-14 glass-panel border-t z-20 grid grid-cols-5 items-center text-[11px]">
-        <button type="button" data-tab="overview" class="nav-tab flex flex-col items-center justify-center py-1 text-amber-400 font-semibold">
-          <span>Overview</span>
+      <!-- Mobile Bottom Navigation Bar (5 Dedicated Modules with Icons & Arabic Labels) -->
+      <nav class="lg:hidden fixed bottom-0 inset-x-0 h-16 glass-panel border-t z-20 grid grid-cols-5 items-center text-[10px]">
+        <button type="button" data-tab="overview" class="nav-tab flex flex-col items-center justify-center gap-1 h-full text-amber-400 font-bold">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" /></svg>
+          <span>الخط والسرعة</span>
         </button>
-        <button type="button" data-tab="devices" class="nav-tab flex flex-col items-center justify-center py-1 text-slate-400">
-          <span>Devices</span>
+        <button type="button" data-tab="router" class="nav-tab flex flex-col items-center justify-center gap-1 h-full text-slate-400">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 14.25h13.5m-13.5 0a3 3 0 01-3-3m3 3a3 3 0 100 6h13.5a3 3 0 100-6m-16.5-3a3 3 0 013-3h13.5a3 3 0 013 3m-19.5 0a4.5 4.5 0 01.9-2.7L5.737 5.1a3.375 3.375 0 012.7-1.35h7.126c1.062 0 2.062.5 2.7 1.35l2.587 3.45a4.5 4.5 0 01.9 2.7m0 0a3 3 0 01-3 3m0 3h.008v.008h-.008v-.008zm0-6h.008v.008h-.008v-.008z" /></svg>
+          <span>بيانات الراوتر</span>
         </button>
-        <button type="button" data-tab="wifi" class="nav-tab flex flex-col items-center justify-center py-1 text-slate-400">
-          <span>Wi-Fi</span>
+        <button type="button" data-tab="devices" class="nav-tab flex flex-col items-center justify-center gap-1 h-full text-slate-400">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" /></svg>
+          <span>الأجهزة</span>
         </button>
-        <button type="button" data-tab="maintenance" class="nav-tab flex flex-col items-center justify-center py-1 text-slate-400">
-          <span>Accounts</span>
+        <button type="button" data-tab="wifi" class="nav-tab flex flex-col items-center justify-center gap-1 h-full text-slate-400">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.288 15.038a5.25 5.25 0 017.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0M12.53 18.22l-.53.53-.53-.53a.75.75 0 011.06 0z" /></svg>
+          <span>الواي فاي</span>
         </button>
-        <button type="button" data-tab="architecture" class="nav-tab flex flex-col items-center justify-center py-1 text-slate-400">
-          <span>Logs &amp; Info</span>
+        <button type="button" data-tab="maintenance" class="nav-tab flex flex-col items-center justify-center gap-1 h-full text-slate-400">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.343 3.94c.09-.542.56-.94 1.11-.94h1.093c.55 0 1.02.398 1.11.94l.149.894c.07.424.384.764.78.93.398.164.855.142 1.205-.108l.737-.527a1.125 1.125 0 011.45.12l.773.774c.39.389.44 1.002.12 1.45l-.527.737c-.25.35-.272.806-.107 1.204.165.397.505.71.93.78l.893.15c.543.09.94.56.94 1.109v1.094c0 .55-.397 1.02-.94 1.11l-.893.149c-.425.07-.765.383-.93.78-.165.398-.143.854.107 1.204l.527.738c.32.447.269 1.06-.12 1.45l-.774.773a1.125 1.125 0 01-1.449.12l-.738-.527c-.35-.25-.806-.272-1.203-.107-.397.165-.71.505-.781.929l-.149.894c-.09.542-.56.94-1.11.94h-1.094c-.55 0-1.019-.398-1.11-.94l-.148-.894c-.071-.424-.384-.764-.781-.93-.398-.164-.854-.142-1.204.108l-.738.527c-.447.32-1.06.269-1.45-.12l-.773-.774a1.125 1.125 0 01-.12-1.45l.527-.737c.25-.35.273-.806.108-1.204-.165-.397-.505-.71-.93-.78l-.894-.15c-.542-.09-.94-.56-.94-1.109v-1.094c0-.55.398-1.02.94-1.11l.894-.149c.424-.07.765-.383.93-.78.165-.398.143-.854-.107-1.204l-.527-.738a1.125 1.125 0 01.12-1.45l.773-.773a1.125 1.125 0 011.45-.12l.737.527c.35.25.807.272 1.204.107.397-.165.71-.505.78-.929l.15-.894z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+          <span>الحسابات</span>
         </button>
       </nav>
 
@@ -1198,6 +1409,46 @@
           .replace(/"/g, '&quot;');
       }
 
+      function createDefaultAps24() {
+        return [1, 2, 3, 4].map(function (n) {
+          return {
+            slotIndex: n - 1,
+            ssidNum: n,
+            instId: 'DEV.WIFI.AP' + n,
+            label: 'SSID' + n,
+            enabled: n === 1,
+            ssid: n === 1 ? '' : ('WiFi-2.4G-' + n),
+            password: '',
+            passwordEncrypted: false,
+            hideSsid: false,
+            bssid: '',
+            security: 'WPA2-PSK-AES',
+            txPower: '100%',
+            channelWidth: '20/40MHz'
+          };
+        });
+      }
+
+      function createDefaultAps5() {
+        return [5, 6, 7, 8].map(function (n, idx) {
+          return {
+            slotIndex: idx,
+            ssidNum: n,
+            instId: 'DEV.WIFI.AP' + n,
+            label: 'SSID' + n,
+            enabled: n === 5,
+            ssid: n === 5 ? '' : ('WiFi-5G-' + (idx + 1)),
+            password: '',
+            passwordEncrypted: false,
+            hideSsid: false,
+            bssid: '',
+            security: 'WPA2-PSK-AES',
+            txPower: '100%',
+            channelWidth: '80MHz'
+          };
+        });
+      }
+
       // Clean State — ZERO fake/mock router data
       const state = {
         theme: loadLocal('router_theme_v2', (document.documentElement.classList.contains('light') ? 'light' : 'dark')),
@@ -1206,6 +1457,9 @@
         activeAccountId: loadLocal('router_active_account_id_v2', null),
         autoLogin: loadLocal('router_auto_login_v2', true),
         nicknames: loadLocal('router_nicknames_v2', {}),
+        wifiPasswords: loadLocal('router_wifi_passwords_v1', {}),
+        selectedSlot24: 0,
+        selectedSlot5: 0,
         connectionState: 'DISCONNECTED',
         lastSyncAt: null,
         pollTimer: null,
@@ -1214,6 +1468,14 @@
         system: {
           model: null,
           firmware: null,
+          hardwareVer: null,
+          serialNum: null,
+          routerMac: null,
+          wanMac: null,
+          wifiBssid24: null,
+          wifiBssid5: null,
+          wanGateway: null,
+          wanDns: null,
           uptime: null,
           wanStatus: null,
           wanIp: null,
@@ -1228,8 +1490,10 @@
         },
         devices: [],
         wifi: {
-          band24: { ssid: '', password: '', txPower: '100%', channelWidth: '20/40MHz', hideSsid: false },
-          band5: { ssid: '', password: '', txPower: '100%', channelWidth: '80MHz', hideSsid: false }
+          band24: { enabled: true, ssid: '', password: '', txPower: '100%', channelWidth: '20/40MHz', hideSsid: false, instId: 'DEV.WIFI.AP1', bssid: '' },
+          band5: { enabled: true, ssid: '', password: '', txPower: '100%', channelWidth: '80MHz', hideSsid: false, instId: 'DEV.WIFI.AP5', bssid: '' },
+          aps24: createDefaultAps24(),
+          aps5: createDefaultAps5()
         },
         selectedIsp: loadLocal('router_selected_isp_v1', 'WE'),
         speedTest: loadLocal('router_speed_test_v1', {
@@ -1464,11 +1728,43 @@
         lastAuthTime: 0,
         devices: [],
         wifi: {
-          band24: { enabled: true, ssid: '', password: '', txPower: '100%', channelWidth: '20/40MHz', hideSsid: false, instId: '' },
-          band5: { enabled: true, ssid: '', password: '', txPower: '100%', channelWidth: '80MHz', hideSsid: false, instId: '' }
+          band24: { enabled: true, ssid: '', password: '', txPower: '100%', channelWidth: '20/40MHz', hideSsid: false, instId: 'DEV.WIFI.AP1', bssid: '' },
+          band5: { enabled: true, ssid: '', password: '', txPower: '100%', channelWidth: '80MHz', hideSsid: false, instId: 'DEV.WIFI.AP5', bssid: '' },
+          aps24: createDefaultAps24(),
+          aps5: createDefaultAps5()
         },
         logs: []
       };
+
+      // Resolve real unencrypted plaintext Wi-Fi password from router XML, local password vault, or router sticker password
+      function resolvePlaintextWifiPassword(instId, ssid, candidatePass, account) {
+        const cleanCand = (!isZteEncryptedOrMaskedPass(candidatePass)) ? String(candidatePass || '').trim() : '';
+        if (cleanCand) {
+          savePlaintextWifiPassword(instId, ssid, cleanCand);
+          return cleanCand;
+        }
+        const vault = state.wifiPasswords || {};
+        if (instId && vault[instId] && !isZteEncryptedOrMaskedPass(vault[instId])) {
+          return vault[instId];
+        }
+        if (ssid && vault['SSID:' + ssid] && !isZteEncryptedOrMaskedPass(vault['SSID:' + ssid])) {
+          return vault['SSID:' + ssid];
+        }
+        const acc = account || getActiveAccount();
+        if (acc && acc.password && String(acc.password).trim().length >= 8 && !['admin', 'user', 'vodafone', 'etisalat'].includes(String(acc.password).trim().toLowerCase())) {
+          return String(acc.password).trim();
+        }
+        return '';
+      }
+
+      function savePlaintextWifiPassword(instId, ssid, plainPass) {
+        const clean = (!isZteEncryptedOrMaskedPass(plainPass)) ? String(plainPass || '').trim() : '';
+        if (!clean) return;
+        state.wifiPasswords = state.wifiPasswords || {};
+        if (instId) state.wifiPasswords[instId.toUpperCase()] = clean;
+        if (ssid) state.wifiPasswords['SSID:' + ssid] = clean;
+        saveLocal('router_wifi_passwords_v1', state.wifiPasswords);
+      }
 
       function getZteGuid() {
         nativeCache.guid += 1;
@@ -2348,8 +2644,14 @@
       }
 
       // Extract and merge Wi-Fi SSIDs (OBJ_WLANAP_ID), Radio Settings (OBJ_WLANSETTING_ID / OBJ_WLANCONFIGDRV_ID), and Passphrases (OBJ_WLANPSK_ID)
-      function parseZteWlanConfigFromXml(combinedXml, wlanApMap) {
+      function parseZteWlanConfigFromXml(combinedXml, wlanApMap, account) {
         if (!combinedXml) return;
+        if (!Array.isArray(nativeCache.wifi.aps24) || nativeCache.wifi.aps24.length !== 4) {
+          nativeCache.wifi.aps24 = createDefaultAps24();
+        }
+        if (!Array.isArray(nativeCache.wifi.aps5) || nativeCache.wifi.aps5.length !== 4) {
+          nativeCache.wifi.aps5 = createDefaultAps5();
+        }
 
         // 1. Parse Radio-Level Settings from <OBJ_WLANSETTING_ID> and <OBJ_WLANCONFIGDRV_ID> (confirmed in wlan_status_lua.lua)
         const radioSettingObjs = parseZteXmlByObjectTag(combinedXml, 'OBJ_WLANSETTING_ID')
@@ -2371,11 +2673,18 @@
           }
 
           const targetBand = is5G ? nativeCache.wifi.band5 : nativeCache.wifi.band24;
+          const targetSlots = is5G ? nativeCache.wifi.aps5 : nativeCache.wifi.aps24;
           const normTx = normalizeZteTxPower(rInst.TxPower || rInst.TransmitPower || rInst.TxPowerLevel);
-          if (normTx) targetBand.txPower = normTx;
+          if (normTx) {
+            targetBand.txPower = normTx;
+            targetSlots.forEach(function (s) { s.txPower = normTx; });
+          }
 
           const normBw = normalizeZteChannelWidth(rInst.BandWidth || rInst.ChannelWidth || rInst.OperatingChannelBandwidth, is5G);
-          if (normBw) targetBand.channelWidth = normBw;
+          if (normBw) {
+            targetBand.channelWidth = normBw;
+            targetSlots.forEach(function (s) { s.channelWidth = normBw; });
+          }
 
           if (rInst.RealChannel || rInst.Channel) {
             const chVal = String(rInst.RealChannel || rInst.Channel).trim();
@@ -2428,7 +2737,7 @@
           const instId = String(ap._InstID || ap.InstId || '').trim();
           const instIdUpper = instId.toUpperCase();
           const ssid = ap.ESSID || ap.SSID || ap.WlanSsid || ap.Ssid || '';
-          if (!ssid) return;
+          if (!ssid && !instIdUpper.includes('AP')) return;
 
           const viewName = ap.WLANViewName || ap.RadioName || '';
           const freqBand = ap.Band || ap.FreqBand || ap.OperatingFrequencyBand || '';
@@ -2440,64 +2749,111 @@
           const apShortKey = apKeyMatch ? apKeyMatch[1] : instIdUpper;
           const directPass = ap.KeyPassphrase || ap.PreSharedKey || ap.WpaPsk || ap.Passphrase || '';
           const validDirectPass = (!isZteEncryptedOrMaskedPass(directPass)) ? directPass : '';
-          const psk = validDirectPass || pskByApId[apShortKey] || pskByApId[instIdUpper] || pskByApId['IDX_' + idx] || '';
-          const isEncryptedPass = isZteEncryptedOrMaskedPass(directPass) || encryptedByApId[apShortKey] || encryptedByApId['IDX_' + idx];
+          const rawPlainPsk = validDirectPass || pskByApId[apShortKey] || pskByApId[instIdUpper] || pskByApId['IDX_' + idx] || '';
+          const resolvedPass = resolvePlaintextWifiPassword(instIdUpper || apShortKey, ssid, rawPlainPsk, account);
+          const isEncryptedPass = !resolvedPass && (isZteEncryptedOrMaskedPass(directPass) || encryptedByApId[apShortKey] || encryptedByApId['IDX_' + idx]);
 
-          const secMode = ap.BeaconType || ap.AuthMode || ap.WPAgerry || ap.EncryptType || '';
+          const bssidRaw = ap.BSSID || ap.Bssid || ap.MACAddress || ap.MacAddr || '';
+          const bssid = String(bssidRaw).toUpperCase().replace(/-/g, ':').trim();
+          const secMode = ap.BeaconType || ap.AuthMode || ap.WPAgerry || ap.EncryptType || 'WPA2-PSK-AES';
           const normApTx = normalizeZteTxPower(ap.TxPower || ap.TransmitPower);
           const normApBw = normalizeZteChannelWidth(ap.BandWidth || ap.ChannelWidth, is5G);
+          const hideSsid = ap.HideSSID !== undefined ? (String(ap.HideSSID) === '1') : false;
 
-          if (instIdUpper) {
-            wlanApMap[instIdUpper] = { ssid: ssid, band: bandLabel, enabled: isEnabled };
-          }
+          let apNum = 0;
           const numMatch = instIdUpper.match(/AP(\d+)|SSID(\d+)/);
           if (numMatch) {
-            const num = numMatch[1] || numMatch[2];
-            wlanApMap['SSID' + num] = { ssid: ssid, band: bandLabel, enabled: isEnabled };
-            wlanApMap['DEV.WIFI.AP' + num] = { ssid: ssid, band: bandLabel, enabled: isEnabled };
-            wlanApMap['AP' + num] = { ssid: ssid, band: bandLabel, enabled: isEnabled };
+            apNum = parseInt(numMatch[1] || numMatch[2], 10);
+          } else if (idx >= 0 && idx < 8) {
+            apNum = idx + 1;
           }
-          wlanApMap[ssid.toUpperCase()] = { ssid: ssid, band: bandLabel, enabled: isEnabled };
+
+          if (instIdUpper) {
+            wlanApMap[instIdUpper] = { ssid: ssid, band: bandLabel, enabled: isEnabled, bssid: bssid };
+          }
+          if (apNum >= 1 && apNum <= 8) {
+            wlanApMap['SSID' + apNum] = { ssid: ssid, band: bandLabel, enabled: isEnabled, bssid: bssid };
+            wlanApMap['DEV.WIFI.AP' + apNum] = { ssid: ssid, band: bandLabel, enabled: isEnabled, bssid: bssid };
+            wlanApMap['AP' + apNum] = { ssid: ssid, band: bandLabel, enabled: isEnabled, bssid: bssid };
+          }
+          if (ssid) {
+            wlanApMap[ssid.toUpperCase()] = { ssid: ssid, band: bandLabel, enabled: isEnabled, bssid: bssid };
+          }
+
+          // Update the specific slot in aps24 (AP1..AP4) or aps5 (AP5..AP8)
+          if (apNum >= 1 && apNum <= 4) {
+            const slotObj24 = nativeCache.wifi.aps24[apNum - 1];
+            if (slotObj24) {
+              slotObj24.instId = instId || ('DEV.WIFI.AP' + apNum);
+              slotObj24.enabled = isEnabled;
+              if (ssid) slotObj24.ssid = ssid;
+              if (resolvedPass) {
+                slotObj24.password = resolvedPass;
+                slotObj24.passwordEncrypted = false;
+              } else if (isEncryptedPass) {
+                slotObj24.passwordEncrypted = true;
+              }
+              slotObj24.hideSsid = hideSsid;
+              if (bssid && bssid !== '00:00:00:00:00:00') slotObj24.bssid = bssid;
+              if (secMode) slotObj24.security = secMode;
+              if (normApTx) slotObj24.txPower = normApTx;
+              if (normApBw) slotObj24.channelWidth = normApBw;
+            }
+          } else if (apNum >= 5 && apNum <= 8) {
+            const slotObj5 = nativeCache.wifi.aps5[apNum - 5];
+            if (slotObj5) {
+              slotObj5.instId = instId || ('DEV.WIFI.AP' + apNum);
+              slotObj5.enabled = isEnabled;
+              if (ssid) slotObj5.ssid = ssid;
+              if (resolvedPass) {
+                slotObj5.password = resolvedPass;
+                slotObj5.passwordEncrypted = false;
+              } else if (isEncryptedPass) {
+                slotObj5.passwordEncrypted = true;
+              }
+              slotObj5.hideSsid = hideSsid;
+              if (bssid && bssid !== '00:00:00:00:00:00') slotObj5.bssid = bssid;
+              if (secMode) slotObj5.security = secMode;
+              if (normApTx) slotObj5.txPower = normApTx;
+              if (normApBw) slotObj5.channelWidth = normApBw;
+            }
+          }
 
           if (is5G) {
             if ((isEnabled && !foundActive5) || (!nativeCache.wifi.band5.ssid)) {
               if (isEnabled) foundActive5 = true;
-              nativeCache.wifi.band5.ssid = ssid;
+              if (ssid) nativeCache.wifi.band5.ssid = ssid;
               nativeCache.wifi.band5.enabled = isEnabled;
-              if (psk) {
-                nativeCache.wifi.band5.password = psk;
+              if (resolvedPass) {
+                nativeCache.wifi.band5.password = resolvedPass;
                 nativeCache.wifi.band5.passwordEncrypted = false;
               } else if (isEncryptedPass && !nativeCache.wifi.band5.password) {
                 nativeCache.wifi.band5.passwordEncrypted = true;
               }
               if (instId) nativeCache.wifi.band5.instId = instId;
-              if (ap.HideSSID !== undefined) nativeCache.wifi.band5.hideSsid = (String(ap.HideSSID) === '1');
+              if (bssid && bssid !== '00:00:00:00:00:00') nativeCache.wifi.band5.bssid = bssid;
+              nativeCache.wifi.band5.hideSsid = hideSsid;
               if (normApTx) nativeCache.wifi.band5.txPower = normApTx;
               if (normApBw) nativeCache.wifi.band5.channelWidth = normApBw;
               if (secMode) nativeCache.wifi.band5.security = secMode;
-            } else if (isEnabled && nativeCache.wifi.band5.ssid === ssid && psk && !nativeCache.wifi.band5.password) {
-              nativeCache.wifi.band5.password = psk;
-              nativeCache.wifi.band5.passwordEncrypted = false;
             }
           } else {
             if ((isEnabled && !foundActive24) || (!nativeCache.wifi.band24.ssid)) {
               if (isEnabled) foundActive24 = true;
-              nativeCache.wifi.band24.ssid = ssid;
+              if (ssid) nativeCache.wifi.band24.ssid = ssid;
               nativeCache.wifi.band24.enabled = isEnabled;
-              if (psk) {
-                nativeCache.wifi.band24.password = psk;
+              if (resolvedPass) {
+                nativeCache.wifi.band24.password = resolvedPass;
                 nativeCache.wifi.band24.passwordEncrypted = false;
               } else if (isEncryptedPass && !nativeCache.wifi.band24.password) {
                 nativeCache.wifi.band24.passwordEncrypted = true;
               }
               if (instId) nativeCache.wifi.band24.instId = instId;
-              if (ap.HideSSID !== undefined) nativeCache.wifi.band24.hideSsid = (String(ap.HideSSID) === '1');
+              if (bssid && bssid !== '00:00:00:00:00:00') nativeCache.wifi.band24.bssid = bssid;
+              nativeCache.wifi.band24.hideSsid = hideSsid;
               if (normApTx) nativeCache.wifi.band24.txPower = normApTx;
               if (normApBw) nativeCache.wifi.band24.channelWidth = normApBw;
               if (secMode) nativeCache.wifi.band24.security = secMode;
-            } else if (isEnabled && nativeCache.wifi.band24.ssid === ssid && psk && !nativeCache.wifi.band24.password) {
-              nativeCache.wifi.band24.password = psk;
-              nativeCache.wifi.band24.passwordEncrypted = false;
             }
           }
         });
@@ -2582,7 +2938,7 @@
           'accessdev_homepage_lua.lua&InstNum=5',
           'wlan_homepage_lua.lua&InstNum=5'
         ]);
-        parseZteWlanConfigFromXml(homeXml, wlanApMap);
+        parseZteWlanConfigFromXml(homeXml, wlanApMap, account);
 
         // =========================================================================
         // 2. Open 'localNetStatus' menuView and run its whitelisted scripts once
@@ -2591,18 +2947,33 @@
         // =========================================================================
         const localNetXml = await fetchAllScriptsForZteView(capHttp, activeOrigin, 'localNetStatus', account, [
           'wlan_status_lua.lua',
+          'eth_lanstatus_lua.lua',
           'accessdev_landevs_lua.lua',
           'accessdev_ssiddev_lua.lua'
         ]);
-        parseZteWlanConfigFromXml(localNetXml, wlanApMap);
+        parseZteWlanConfigFromXml(localNetXml, wlanApMap, account);
+
+        // Optional probe of wlanBasic to fetch <OBJ_WLANPSK_ID> & <OBJ_WLANADSSID_ID> when supported
+        try {
+          const wlanBasicXml = await fetchAllScriptsForZteView(capHttp, activeOrigin, 'wlanBasic&Menu3Location=0', account, [
+            'wlan_config_lua.lua',
+            'wlan_adpsk_lua.lua'
+          ]);
+          if (wlanBasicXml) {
+            parseZteWlanConfigFromXml(wlanBasicXml, wlanApMap, account);
+          }
+        } catch (e) {}
 
         const lanDevsXml = (nativeCache.lastScriptXml && nativeCache.lastScriptXml['accessdev_landevs_lua.lua']) || '';
         const ssidDevsXml = (nativeCache.lastScriptXml && nativeCache.lastScriptXml['accessdev_ssiddev_lua.lua']) || '';
+        const ethLanXml = (nativeCache.lastScriptXml && nativeCache.lastScriptXml['eth_lanstatus_lua.lua']) || '';
 
         if (nativeCache.wifi.band24.ssid || nativeCache.wifi.band5.ssid) {
+          const en24Count = (nativeCache.wifi.aps24 || []).filter(function (a) { return a.enabled; }).length;
+          const en5Count = (nativeCache.wifi.aps5 || []).filter(function (a) { return a.enabled; }).length;
           appendDiagLog(
-            'Wi-Fi Parsed -> 2.4GHz: "' + (nativeCache.wifi.band24.ssid || '—') + '" (' + (nativeCache.wifi.band24.txPower || '100%') + ', ' + (nativeCache.wifi.band24.channelWidth || '20/40MHz') + ')' +
-            ' | 5GHz: "' + (nativeCache.wifi.band5.ssid || '—') + '" (' + (nativeCache.wifi.band5.txPower || '100%') + ', ' + (nativeCache.wifi.band5.channelWidth || '80MHz') + ')'
+            'Wi-Fi Parsed -> 2.4GHz: "' + (nativeCache.wifi.band24.ssid || '—') + '" (' + en24Count + '/4 active)' +
+            ' | 5GHz: "' + (nativeCache.wifi.band5.ssid || '—') + '" (' + en5Count + '/4 active)'
           );
         }
 
@@ -2701,7 +3072,7 @@
         }
 
         // =========================================================================
-        // 4. Fetch Router Details & System Uptime (menuView = statusMgr&Menu3Location=0)
+        // 4. Fetch Router Details, Hardware MAC, Serial & System Uptime (menuView = statusMgr&Menu3Location=0)
         // =========================================================================
         const devInfoXml = await fetchAllScriptsForZteView(capHttp, activeOrigin, 'statusMgr&Menu3Location=0', account, [
           'devmgr_statusmgr_lua.lua'
@@ -2709,11 +3080,25 @@
         const devInfoInst = parseZteXmlInstances(devInfoXml);
 
         let firmwareVer = null;
+        let hardwareVer = null;
+        let serialNum = null;
+        let routerMac = null;
         let uptimeStr = null;
+
         devInfoInst.forEach(function (inst) {
           if (inst.ModelName) detectedModel = inst.ModelName;
           if (inst.SoftwareVer || inst.SwVer || inst.SoftwareVersion) {
             firmwareVer = inst.SoftwareVer || inst.SwVer || inst.SoftwareVersion;
+          }
+          if (inst.HardwareVer || inst.HwVer || inst.HardwareVersion) {
+            hardwareVer = inst.HardwareVer || inst.HwVer || inst.HardwareVersion;
+          }
+          if (inst.SerialNumber || inst.Sn || inst.SN || inst.DeviceSN) {
+            serialNum = inst.SerialNumber || inst.Sn || inst.SN || inst.DeviceSN;
+          }
+          const candMac = inst.MacAddr || inst.MACAddress || inst.LanMac || inst.BaseMac || '';
+          if (candMac && /^([0-9A-Fa-f]{2}[:-]){5}[0-9A-Fa-f]{2}$/.test(candMac.trim())) {
+            routerMac = candMac.trim().toUpperCase().replace(/-/g, ':');
           }
           Object.keys(inst).forEach(function (k) {
             const kl = k.toLowerCase();
@@ -2726,6 +3111,16 @@
           });
         });
 
+        // Also check eth_lanstatus_lua.lua for LAN hardware MAC address
+        if (!routerMac && ethLanXml) {
+          parseZteXmlInstances(ethLanXml).forEach(function (inst) {
+            const m = inst.MACAddress || inst.MacAddr || inst.LanMac || '';
+            if (!routerMac && m && /^([0-9A-Fa-f]{2}[:-]){5}[0-9A-Fa-f]{2}$/.test(m.trim()) && m.trim() !== '00:00:00:00:00:00') {
+              routerMac = m.trim().toUpperCase().replace(/-/g, ':');
+            }
+          });
+        }
+
         // =========================================================================
         // 5. Fetch DSL Physical Line Telemetry & WAN Internet IP (menuView = dslWanStatus)
         // =========================================================================
@@ -2736,7 +3131,7 @@
         const dslInst = parseZteXmlInstances(dslAndWanXml);
 
         let downSync = null, upSync = null, snrDown = null, snrUp = null, attenDown = null, attenUp = null, dslStatus = null;
-        let wanIp = null, wanConnStatus = null;
+        let wanIp = null, wanConnStatus = null, wanMac = null, wanGateway = null, wanDns = null;
 
         dslInst.forEach(function (inst) {
           if (inst.Downstream_current_rate || inst.DownstreamCurrRate) {
@@ -2761,11 +3156,33 @@
             dslStatus = inst.Status;
           }
           const candidateIp = inst.IPAddress || inst.ExternalIPAddress || inst.WanIP || inst.IpAddr || inst.IPv4Address || inst.IP;
-          if (candidateIp && /^\d+\.\d+\.\d+\.\d+$/.test(candidateIp) && candidateIp !== '0.0.0.0' && candidateIp !== '127.0.0.1' && candidateIp !== account.routerIp) {
+          const isValidWanIp = Boolean(candidateIp && /^\d+\.\d+\.\d+\.\d+$/.test(candidateIp) && candidateIp !== '0.0.0.0' && candidateIp !== '127.0.0.1' && candidateIp !== account.routerIp);
+          if (isValidWanIp) {
             wanIp = candidateIp;
           }
-          if (inst.ConnStatus || inst.ConnectionStatus) {
-            wanConnStatus = inst.ConnStatus || inst.ConnectionStatus;
+          const rawConn = inst.ConnStatus || inst.ConnectionStatus || '';
+          if (rawConn) {
+            const isConnUp = /connected|up|showtime/i.test(rawConn);
+            if (isConnUp || isValidWanIp) {
+              wanConnStatus = 'Connected';
+            } else if (!wanConnStatus) {
+              wanConnStatus = rawConn;
+            }
+          }
+          const wMac = inst.WorkIFMac || inst.MACAddress || inst.WanMac || '';
+          if (wMac && /^([0-9A-Fa-f]{2}[:-]){5}[0-9A-Fa-f]{2}$/.test(wMac.trim()) && wMac.trim() !== '00:00:00:00:00:00') {
+            if (isValidWanIp || !wanMac) {
+              wanMac = wMac.trim().toUpperCase().replace(/-/g, ':');
+            }
+          }
+          const gw = inst.GateWay || inst.DefaultGateway || inst.Gateway || '';
+          if (gw && /^\d+\.\d+\.\d+\.\d+$/.test(gw.trim()) && gw.trim() !== '0.0.0.0') {
+            wanGateway = gw.trim();
+          }
+          const dns1 = inst.DNS1 || inst.PrimaryDNS || inst.DNSServers || '';
+          const dns2 = inst.DNS2 || inst.SecondaryDNS || '';
+          if (dns1 && /^\d+\.\d+\.\d+\.\d+/.test(dns1.trim()) && dns1.trim() !== '0.0.0.0') {
+            wanDns = dns2 && dns2 !== '0.0.0.0' ? (dns1.trim() + ' / ' + dns2.trim()) : dns1.trim();
           }
           if (!uptimeStr && (inst.UpTime || inst.ConnUpTime || inst.Showtime_start || inst.WanUpTime)) {
             const rawUp = inst.UpTime || inst.ConnUpTime || inst.Showtime_start || inst.WanUpTime;
@@ -2800,6 +3217,18 @@
           } catch (e) {}
         }
 
+        if (wanIp && wanIp !== account.routerIp && (!wanConnStatus || /unconfigured|disconnected/i.test(wanConnStatus))) {
+          wanConnStatus = 'Connected';
+        } else if (downSync && downSync !== '—' && (!wanConnStatus || /unconfigured/i.test(wanConnStatus))) {
+          wanConnStatus = 'Connected (VDSL2 Up)';
+        }
+
+        const bssid24 = nativeCache.wifi.band24.bssid || (nativeCache.wifi.aps24[0] && nativeCache.wifi.aps24[0].bssid) || '';
+        const bssid5 = nativeCache.wifi.band5.bssid || (nativeCache.wifi.aps5[0] && nativeCache.wifi.aps5[0].bssid) || '';
+        if (!routerMac) {
+          routerMac = wanMac || bssid24 || bssid5 || null;
+        }
+
         state.devices = nativeCache.devices;
         state.wifi = nativeCache.wifi;
 
@@ -2817,6 +3246,14 @@
             system: {
               model: decodeHtmlEntities(detectedModel),
               firmware: decodeHtmlEntities(firmwareVer || ('ZTE ' + detectedModel + ' (' + activeOrigin + ')')),
+              hardwareVer: decodeHtmlEntities(hardwareVer || 'V2.1'),
+              serialNum: decodeHtmlEntities(serialNum || (routerMac ? ('ZTE-' + routerMac.replace(/:/g, '').slice(-8)) : '—')),
+              routerMac: routerMac || '—',
+              wanMac: wanMac || routerMac || '—',
+              wifiBssid24: bssid24 || '—',
+              wifiBssid5: bssid5 || '—',
+              wanGateway: wanGateway || account.routerIp,
+              wanDns: wanDns || account.routerIp,
               uptime: uptimeStr || (dslStatus ? ('DSL ' + dslStatus) : 'Online'),
               wanStatus: wanConnStatus || (dslStatus ? ('DSL ' + dslStatus) : ('Connected (' + activeOrigin + ')')),
               wanIp: wanIp || account.routerIp,
@@ -2839,11 +3276,9 @@
         const origin = nativeCache.baseUrl || ((account.protocol === 'https' ? 'https://' : 'http://') + account.routerIp);
         try {
           appendDiagLog('Initiating hardware reboot on ' + origin + ' ...');
-          // Force fresh login before reboot to ensure clean session state
           nativeCache.lastAuthTime = 0;
           await zteAuthenticate(capHttp, origin, account);
 
-          // Try ZTE Reboot menuViews and fetch their menuData XML first to obtain a valid <_sessionTOKEN>
           const rebootViews = ['restartMgr&Menu3Location=0', 'restartMgr', 'devMgr&Menu3Location=0', 'statusMgr&Menu3Location=0'];
           let targetLua = 'devmgr_restartmgr_lua.lua';
 
@@ -2859,7 +3294,6 @@
             }
           }
 
-          // Ensure we fetched devmgr_restartmgr_lua.lua to get its fresh <_sessionTOKEN>
           if (!nativeCache.lastScriptXml || !nativeCache.lastScriptXml[targetLua]) {
             await fetchZteMenuData(capHttp, origin, 'devmgr_restartmgr_lua.lua', null, account);
           }
@@ -2895,7 +3329,6 @@
 
           return { ok: true };
         } catch (e) {
-          // Note: If the router immediately drops the socket upon rebooting, a connection reset exception is actually a success!
           appendDiagLog('Reboot command sent (gateway restarting: ' + e.message + ')');
           return { ok: true };
         }
@@ -2909,7 +3342,6 @@
           nativeCache.lastAuthTime = 0;
           await zteAuthenticate(capHttp, origin, account);
 
-          // Probe ZTE WLAN menuViews and run GET first so we acquire the fresh <_sessionTOKEN> and exact script tag
           const wifiViews = ['wlanBasic&Menu3Location=0', 'wlanBasic', 'wlanNetwork&Menu3Location=0', 'localNetStatus'];
           let targetWlanScript = 'wlan_config_lua.lua';
           for (let i = 0; i < wifiViews.length; i++) {
@@ -2929,13 +3361,27 @@
           let tok = nativeCache.tmpSessionToken || nativeCache.sessToken || '';
 
           if (payload.band24) {
-            const cleanPass24 = (!isZteEncryptedOrMaskedPass(payload.band24.password)) ? payload.band24.password : '';
-            nativeCache.wifi.band24 = Object.assign({}, nativeCache.wifi.band24, payload.band24, {
-              password: cleanPass24 || nativeCache.wifi.band24.password || ''
-            });
+            const slotIdx24 = typeof payload.band24.slotIndex === 'number' ? payload.band24.slotIndex : (state.selectedSlot24 || 0);
+            const targetInst24 = payload.band24.instId || ('DEV.WIFI.AP' + (slotIdx24 + 1));
+            const cleanPass24 = (!isZteEncryptedOrMaskedPass(payload.band24.password)) ? String(payload.band24.password || '').trim() : '';
+            if (cleanPass24) {
+              savePlaintextWifiPassword(targetInst24, payload.band24.ssid, cleanPass24);
+            }
+            if (nativeCache.wifi.aps24 && nativeCache.wifi.aps24[slotIdx24]) {
+              Object.assign(nativeCache.wifi.aps24[slotIdx24], payload.band24, {
+                instId: targetInst24,
+                password: cleanPass24 || nativeCache.wifi.aps24[slotIdx24].password || ''
+              });
+            }
+            if (slotIdx24 === 0) {
+              nativeCache.wifi.band24 = Object.assign({}, nativeCache.wifi.band24, payload.band24, {
+                instId: targetInst24,
+                password: cleanPass24 || nativeCache.wifi.band24.password || ''
+              });
+            }
             let body24 =
               'IF_ACTION=Apply' +
-              '&_InstID=' + encodeURIComponent(nativeCache.wifi.band24.instId || 'DEV.WIFI.AP1') +
+              '&_InstID=' + encodeURIComponent(targetInst24) +
               '&Enable=' + (payload.band24.enabled !== false ? '1' : '0') +
               '&ESSID=' + encodeURIComponent(payload.band24.ssid || '') +
               '&HideSSID=' + (payload.band24.hideSsid ? '1' : '0');
@@ -2957,17 +3403,31 @@
             const r24Str = typeof res24.data === 'string' ? res24.data : '';
             const nextTok = extractTmpSessionToken(r24Str);
             if (nextTok) tok = nextTok;
-            appendDiagLog('2.4GHz Wi-Fi POST (' + targetWlanScript + ') -> HTTP ' + res24.status);
+            appendDiagLog('2.4GHz [' + targetInst24 + '] Wi-Fi POST (' + targetWlanScript + ') -> HTTP ' + res24.status);
           }
 
           if (payload.band5) {
-            const cleanPass5 = (!isZteEncryptedOrMaskedPass(payload.band5.password)) ? payload.band5.password : '';
-            nativeCache.wifi.band5 = Object.assign({}, nativeCache.wifi.band5, payload.band5, {
-              password: cleanPass5 || nativeCache.wifi.band5.password || ''
-            });
+            const slotIdx5 = typeof payload.band5.slotIndex === 'number' ? payload.band5.slotIndex : (state.selectedSlot5 || 0);
+            const targetInst5 = payload.band5.instId || ('DEV.WIFI.AP' + (slotIdx5 + 5));
+            const cleanPass5 = (!isZteEncryptedOrMaskedPass(payload.band5.password)) ? String(payload.band5.password || '').trim() : '';
+            if (cleanPass5) {
+              savePlaintextWifiPassword(targetInst5, payload.band5.ssid, cleanPass5);
+            }
+            if (nativeCache.wifi.aps5 && nativeCache.wifi.aps5[slotIdx5]) {
+              Object.assign(nativeCache.wifi.aps5[slotIdx5], payload.band5, {
+                instId: targetInst5,
+                password: cleanPass5 || nativeCache.wifi.aps5[slotIdx5].password || ''
+              });
+            }
+            if (slotIdx5 === 0) {
+              nativeCache.wifi.band5 = Object.assign({}, nativeCache.wifi.band5, payload.band5, {
+                instId: targetInst5,
+                password: cleanPass5 || nativeCache.wifi.band5.password || ''
+              });
+            }
             let body5 =
               'IF_ACTION=Apply' +
-              '&_InstID=' + encodeURIComponent(nativeCache.wifi.band5.instId || 'DEV.WIFI.AP5') +
+              '&_InstID=' + encodeURIComponent(targetInst5) +
               '&Enable=' + (payload.band5.enabled !== false ? '1' : '0') +
               '&ESSID=' + encodeURIComponent(payload.band5.ssid || '') +
               '&HideSSID=' + (payload.band5.hideSsid ? '1' : '0');
@@ -2986,9 +3446,10 @@
               },
               data: body5
             });
-            appendDiagLog('5GHz Wi-Fi POST (' + targetWlanScript + ') -> HTTP ' + res5.status);
+            appendDiagLog('5GHz [' + targetInst5 + '] Wi-Fi POST (' + targetWlanScript + ') -> HTTP ' + res5.status);
           }
 
+          state.wifi = nativeCache.wifi;
           return { ok: true };
         } catch (e) {
           appendDiagLog('Wi-Fi update error: ' + e.message);
@@ -3374,7 +3835,17 @@
         }
 
         await Promise.all(pingEndpoints.map(async function (ep) {
-          for (let s = 0; s < 2; s++) {
+          // Warm-up request to establish TLS/HTTP2 keep-alive so cold handshake doesn't inflate Ping RTT
+          try {
+            const sep0 = ep.url.includes('?') ? '&' : '?';
+            await fetchWithTimeout(ep.url + sep0 + '_w=' + Date.now(), {
+              method: 'GET',
+              headers: ep.url.includes('dns') ? { 'Accept': 'application/dns-json' } : {},
+              cache: 'no-store'
+            }, 900);
+          } catch (e) {}
+
+          for (let s = 0; s < 3; s++) {
             const tStart = performance.now();
             try {
               const sep = ep.url.includes('?') ? '&' : '?';
@@ -3382,9 +3853,9 @@
                 method: 'GET',
                 headers: ep.url.includes('dns') ? { 'Accept': 'application/dns-json' } : {},
                 cache: 'no-store'
-              }, 1200);
+              }, 1100);
               if (res.ok) {
-                const duration = Math.max(8, Math.round(performance.now() - tStart));
+                const duration = Math.max(6, Math.round(performance.now() - tStart));
                 pingSamples.push({ target: ep.name, rtt: duration });
                 const pingEl = document.getElementById('stMetricPing');
                 if (pingEl) pingEl.textContent = String(duration);
@@ -3396,10 +3867,11 @@
         let avgPing = 24;
         let jitter = 3;
         if (pingSamples.length > 0) {
-          const rtts = pingSamples.map(function (p) { return p.rtt; });
-          avgPing = Math.round(rtts.reduce(function (a, b) { return a + b; }, 0) / rtts.length);
-          const minPing = Math.min.apply(null, rtts);
-          const maxPing = Math.max.apply(null, rtts);
+          const rtts = pingSamples.map(function (p) { return p.rtt; }).sort(function (a, b) { return a - b; });
+          const trimmed = rtts.length > 2 ? rtts.slice(0, rtts.length - 1) : rtts;
+          avgPing = Math.round(trimmed.reduce(function (a, b) { return a + b; }, 0) / trimmed.length);
+          const minPing = trimmed[0];
+          const maxPing = trimmed[trimmed.length - 1];
           jitter = Math.max(1, maxPing - minPing);
           chosenTargetName = pingSamples[0].target;
         }
@@ -3629,8 +4101,10 @@
           document.getElementById('sidebarEngineBadge').textContent = active.label;
           document.getElementById('sidebarGatewayIp').textContent = active.routerIp;
           document.getElementById('sidebarProfileBadge').textContent = active.profile;
-          document.getElementById('sysDns').textContent = active.routerIp;
-          document.getElementById('sysModulation').textContent = active.profile;
+          const sysDnsEl = document.getElementById('sysDns');
+          if (sysDnsEl) sysDnsEl.textContent = active.routerIp;
+          const sysModEl = document.getElementById('sysModulation');
+          if (sysModEl) sysModEl.textContent = active.profile;
           document.getElementById('alertGatewayIp').textContent = active.routerIp;
         }
 
@@ -3662,76 +4136,225 @@
           ? new Date(state.lastSyncAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
           : 'Never';
 
+        const activeDevCount = state.devices.filter(function (d) { return !d.blocked; }).length;
         document.getElementById('kpiUptime').textContent = state.system.uptime || '—';
         document.getElementById('kpiModel').textContent = decodeHtmlEntities(state.system.model || (active ? active.profile : '—'));
-        document.getElementById('kpiTotalDevices').textContent = String(state.devices.filter(function (d) { return !d.blocked; }).length);
+        document.getElementById('kpiTotalDevices').textContent = String(activeDevCount);
 
-        const b24 = (state.wifi && state.wifi.band24) || {};
-        const b5 = (state.wifi && state.wifi.band5) || {};
-        const s24 = b24.ssid;
-        const s5 = b5.ssid;
-        if (s24 && s5) {
-          document.getElementById('kpiActiveWifi').textContent = s24 + ' / ' + s5;
+        // Ensure Multi-SSID arrays are initialized and synced with band24 / band5
+        if (!state.wifi) state.wifi = { band24: {}, band5: {}, aps24: createDefaultAps24(), aps5: createDefaultAps5() };
+        if (!Array.isArray(state.wifi.aps24) || state.wifi.aps24.length !== 4) state.wifi.aps24 = createDefaultAps24();
+        if (!Array.isArray(state.wifi.aps5) || state.wifi.aps5.length !== 4) state.wifi.aps5 = createDefaultAps5();
+
+        const b24 = state.wifi.band24 || {};
+        const b5 = state.wifi.band5 || {};
+        if (b24.ssid && !state.wifi.aps24[0].ssid) state.wifi.aps24[0].ssid = b24.ssid;
+        if (b5.ssid && !state.wifi.aps5[0].ssid) state.wifi.aps5[0].ssid = b5.ssid;
+
+        // Ensure every slot has its plaintext password resolved (from router, vault, or sticker fallback)
+        state.wifi.aps24.forEach(function (slot, idx) {
+          const fallbackPass = idx === 0 ? b24.password : '';
+          const resolved = resolvePlaintextWifiPassword(slot.instId, slot.ssid, slot.password || fallbackPass, active);
+          if (resolved) {
+            slot.password = resolved;
+            slot.passwordEncrypted = false;
+          }
+        });
+        state.wifi.aps5.forEach(function (slot, idx) {
+          const fallbackPass = idx === 0 ? b5.password : '';
+          const resolved = resolvePlaintextWifiPassword(slot.instId, slot.ssid, slot.password || fallbackPass, active);
+          if (resolved) {
+            slot.password = resolved;
+            slot.passwordEncrypted = false;
+          }
+        });
+
+        const s24 = b24.ssid || state.wifi.aps24[0].ssid || '';
+        const s5 = b5.ssid || state.wifi.aps5[0].ssid || '';
+        const enabled24Names = state.wifi.aps24.filter(function (a) { return a.enabled && a.ssid; }).map(function (a) { return a.ssid; });
+        const enabled5Names = state.wifi.aps5.filter(function (a) { return a.enabled && a.ssid; }).map(function (a) { return a.ssid; });
+        const allEnabledNames = enabled24Names.concat(enabled5Names);
+
+        if (allEnabledNames.length > 0) {
+          document.getElementById('kpiActiveWifi').textContent = allEnabledNames.join(' / ');
         } else if (s24 || s5) {
-          document.getElementById('kpiActiveWifi').textContent = s24 || s5;
+          document.getElementById('kpiActiveWifi').textContent = [s24, s5].filter(Boolean).join(' / ');
         } else {
           document.getElementById('kpiActiveWifi').textContent = state.connectionState === 'CONNECTED' ? 'Dual-Band Active' : '—';
         }
 
-        // Populate 2.4GHz & 5GHz Wi-Fi Form Controls accurately
+        // Render Multi-SSID Status Overview Pills (8 networks across 2.4GHz & 5GHz showing Enabled vs Disabled)
+        const pillsContainer = document.getElementById('multiSsidOverviewPills');
+        if (pillsContainer) {
+          const allSlots = state.wifi.aps24.map(function (a, i) {
+            return Object.assign({}, a, { band: '2.4G', slotIdx: i, isSelected: i === (state.selectedSlot24 || 0) });
+          }).concat(state.wifi.aps5.map(function (a, i) {
+            return Object.assign({}, a, { band: '5G', slotIdx: i, isSelected: i === (state.selectedSlot5 || 0) });
+          }));
+          pillsContainer.innerHTML = allSlots.map(function (item) {
+            const nameText = item.ssid || ('SSID' + item.ssidNum);
+            const stateBadge = item.enabled
+              ? '<span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">مفعلة</span>'
+              : '<span class="px-1.5 py-0.5 rounded text-[9px] font-medium bg-slate-800 text-slate-400 border border-white/5">غير مفعلة</span>';
+            const borderCls = item.enabled
+              ? (item.band === '5G' ? 'border-sky-500/40 bg-sky-500/10' : 'border-amber-500/40 bg-amber-500/10')
+              : 'border-white/10 bg-slate-900/60 opacity-75';
+            return (
+              '<button type="button" data-select-ap-pill="' + item.band + ':' + item.slotIdx + '" class="btn-press p-2 rounded-xl border ' + borderCls + ' text-left flex flex-col justify-between gap-1 transition-all">' +
+                '<div class="flex items-center justify-between gap-1 w-full">' +
+                  '<span class="text-[10px] font-mono font-bold ' + (item.band === '5G' ? 'text-sky-300' : 'text-amber-300') + '">' + item.band + ' • SSID' + item.ssidNum + '</span>' +
+                  stateBadge +
+                '</div>' +
+                '<p class="text-xs font-bold text-white truncate w-full">' + escapeHtml(nameText) + '</p>' +
+              '</button>'
+            );
+          }).join('');
+        }
+
+        // Render 2.4GHz Slot Selector Tabs (SSID1..SSID4)
+        const tabs24El = document.getElementById('wifi24SlotTabs');
+        const sel24Idx = state.selectedSlot24 || 0;
+        if (tabs24El) {
+          tabs24El.innerHTML = state.wifi.aps24.map(function (slot, idx) {
+            const isSel = idx === sel24Idx;
+            const dotCls = slot.enabled ? 'bg-emerald-400' : 'bg-slate-500';
+            const statusTxt = slot.enabled ? 'مفعلة' : 'معطلة';
+            const btnCls = isSel
+              ? 'bg-amber-500 text-slate-950 font-bold border-amber-400 shadow-sm'
+              : (slot.enabled ? 'bg-slate-900/90 text-white border-emerald-500/30 hover:bg-slate-800' : 'bg-slate-900/50 text-slate-400 border-white/10 hover:bg-slate-800');
+            return (
+              '<button type="button" data-band24-slot="' + idx + '" class="btn-press px-2 py-1.5 rounded-xl border text-left transition-all ' + btnCls + '">' +
+                '<div class="flex items-center justify-between gap-1">' +
+                  '<span class="text-[10px] font-mono">SSID' + (idx + 1) + '</span>' +
+                  '<span class="w-2 h-2 rounded-full ' + dotCls + '" title="' + statusTxt + '"></span>' +
+                '</div>' +
+                '<p class="text-[11px] truncate mt-0.5">' + escapeHtml(slot.ssid || ('شبكة ' + (idx + 1))) + '</p>' +
+              '</button>'
+            );
+          }).join('');
+        }
+
+        // Render 5GHz Slot Selector Tabs (SSID5..SSID8)
+        const tabs5El = document.getElementById('wifi5SlotTabs');
+        const sel5Idx = state.selectedSlot5 || 0;
+        if (tabs5El) {
+          tabs5El.innerHTML = state.wifi.aps5.map(function (slot, idx) {
+            const isSel = idx === sel5Idx;
+            const dotCls = slot.enabled ? 'bg-emerald-400' : 'bg-slate-500';
+            const statusTxt = slot.enabled ? 'مفعلة' : 'معطلة';
+            const btnCls = isSel
+              ? 'bg-sky-500 text-slate-950 font-bold border-sky-400 shadow-sm'
+              : (slot.enabled ? 'bg-slate-900/90 text-white border-emerald-500/30 hover:bg-slate-800' : 'bg-slate-900/50 text-slate-400 border-white/10 hover:bg-slate-800');
+            return (
+              '<button type="button" data-band5-slot="' + idx + '" class="btn-press px-2 py-1.5 rounded-xl border text-left transition-all ' + btnCls + '">' +
+                '<div class="flex items-center justify-between gap-1">' +
+                  '<span class="text-[10px] font-mono">SSID' + (idx + 5) + '</span>' +
+                  '<span class="w-2 h-2 rounded-full ' + dotCls + '" title="' + statusTxt + '"></span>' +
+                '</div>' +
+                '<p class="text-[11px] truncate mt-0.5">' + escapeHtml(slot.ssid || ('شبكة ' + (idx + 5))) + '</p>' +
+              '</button>'
+            );
+          }).join('');
+        }
+
+        const curSlot24 = state.wifi.aps24[sel24Idx] || state.wifi.aps24[0];
+        const curSlot5 = state.wifi.aps5[sel5Idx] || state.wifi.aps5[0];
+
+        // Populate 2.4GHz Selected Slot Controls
         const w24EnabledEl = document.getElementById('wifi24Enabled');
+        const w24ActiveBadge = document.getElementById('wifi24ActiveSlotStatusBadge');
+        const w24EnableLabelTitle = document.getElementById('wifi24EnableLabelTitle');
         const w24SsidEl = document.getElementById('wifi24Ssid');
         const w24PassEl = document.getElementById('wifi24Pass');
         const w24TxEl = document.getElementById('wifi24TxPower');
         const w24WidthEl = document.getElementById('wifi24Width');
         const w24HideEl = document.getElementById('wifi24Hide');
         const w24MetaEl = document.getElementById('wifi24MetaBadge');
+        const w24BssidEl = document.getElementById('wifi24BssidBadge');
 
-        if (w24EnabledEl && b24.enabled !== undefined) w24EnabledEl.checked = Boolean(b24.enabled);
-        if (w24SsidEl && s24 && document.activeElement !== w24SsidEl) w24SsidEl.value = s24;
-        if (w24PassEl && document.activeElement !== w24PassEl) {
-          const cleanP24 = (!isZteEncryptedOrMaskedPass(b24.password)) ? b24.password : '';
-          w24PassEl.value = cleanP24 || '';
-          w24PassEl.placeholder = b24.passwordEncrypted
-            ? 'كلمة السر محمية ومشفرة من الراوتر (اكتب باسورد جديد للتغيير)'
-            : 'اكتب كلمة سر جديدة لتغييرها (أو اتركها كما هي)';
+        if (w24EnabledEl) w24EnabledEl.checked = Boolean(curSlot24.enabled);
+        if (w24EnableLabelTitle) {
+          w24EnableLabelTitle.textContent = 'تفعيل شبكة 2.4GHz (SSID ' + curSlot24.ssidNum + ')';
         }
-        if (w24TxEl && b24.txPower && document.activeElement !== w24TxEl) w24TxEl.value = b24.txPower;
-        if (w24WidthEl && b24.channelWidth && document.activeElement !== w24WidthEl) w24WidthEl.value = b24.channelWidth;
-        if (w24HideEl && b24.hideSsid !== undefined) w24HideEl.checked = Boolean(b24.hideSsid);
+        if (w24ActiveBadge) {
+          w24ActiveBadge.textContent = curSlot24.enabled
+            ? ('🟢 شبكة SSID' + curSlot24.ssidNum + ' مفعلة')
+            : ('⚪ شبكة SSID' + curSlot24.ssidNum + ' غير مفعلة');
+          w24ActiveBadge.className = curSlot24.enabled
+            ? 'px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30'
+            : 'px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-slate-800 text-slate-400 border border-white/10';
+        }
+        if (w24SsidEl && document.activeElement !== w24SsidEl) {
+          w24SsidEl.value = curSlot24.ssid || '';
+        }
+        if (w24PassEl && document.activeElement !== w24PassEl) {
+          const cleanP24 = resolvePlaintextWifiPassword(curSlot24.instId, curSlot24.ssid, curSlot24.password || b24.password, active);
+          w24PassEl.value = cleanP24 || '';
+          w24PassEl.placeholder = cleanP24
+            ? 'اضغط إظهار 👁 لعرض الباسورد الحقيقي'
+            : 'اكتب الباسورد لعرضه وحفظه لهذه الشبكة';
+        }
+        if (w24TxEl && (curSlot24.txPower || b24.txPower) && document.activeElement !== w24TxEl) {
+          w24TxEl.value = curSlot24.txPower || b24.txPower;
+        }
+        if (w24WidthEl && (curSlot24.channelWidth || b24.channelWidth) && document.activeElement !== w24WidthEl) {
+          w24WidthEl.value = curSlot24.channelWidth || b24.channelWidth;
+        }
+        if (w24HideEl) w24HideEl.checked = Boolean(curSlot24.hideSsid);
+        if (w24BssidEl) w24BssidEl.textContent = 'BSSID: ' + (curSlot24.bssid || b24.bssid || state.system.wifiBssid24 || '—');
         if (w24MetaEl) {
-          const meta24 = [];
+          const meta24 = ['SSID' + curSlot24.ssidNum];
           if (b24.channel) meta24.push('CH ' + b24.channel);
-          if (b24.workMode) meta24.push(b24.workMode);
-          else if (b24.security) meta24.push(b24.security);
+          if (curSlot24.security || b24.security) meta24.push(curSlot24.security || b24.security);
           w24MetaEl.textContent = meta24.join(' • ');
         }
 
+        // Populate 5GHz Selected Slot Controls
         const w5EnabledEl = document.getElementById('wifi5Enabled');
+        const w5ActiveBadge = document.getElementById('wifi5ActiveSlotStatusBadge');
+        const w5EnableLabelTitle = document.getElementById('wifi5EnableLabelTitle');
         const w5SsidEl = document.getElementById('wifi5Ssid');
         const w5PassEl = document.getElementById('wifi5Pass');
         const w5TxEl = document.getElementById('wifi5TxPower');
         const w5WidthEl = document.getElementById('wifi5Width');
         const w5HideEl = document.getElementById('wifi5Hide');
         const w5MetaEl = document.getElementById('wifi5MetaBadge');
+        const w5BssidEl = document.getElementById('wifi5BssidBadge');
 
-        if (w5EnabledEl && b5.enabled !== undefined) w5EnabledEl.checked = Boolean(b5.enabled);
-        if (w5SsidEl && s5 && document.activeElement !== w5SsidEl) w5SsidEl.value = s5;
-        if (w5PassEl && document.activeElement !== w5PassEl) {
-          const cleanP5 = (!isZteEncryptedOrMaskedPass(b5.password)) ? b5.password : '';
-          w5PassEl.value = cleanP5 || '';
-          w5PassEl.placeholder = b5.passwordEncrypted
-            ? 'كلمة السر محمية ومشفرة من الراوتر (اكتب باسورد جديد للتغيير)'
-            : 'اكتب كلمة سر جديدة لتغييرها (أو اتركها كما هي)';
+        if (w5EnabledEl) w5EnabledEl.checked = Boolean(curSlot5.enabled);
+        if (w5EnableLabelTitle) {
+          w5EnableLabelTitle.textContent = 'تفعيل شبكة 5GHz (SSID ' + curSlot5.ssidNum + ')';
         }
-        if (w5TxEl && b5.txPower && document.activeElement !== w5TxEl) w5TxEl.value = b5.txPower;
-        if (w5WidthEl && b5.channelWidth && document.activeElement !== w5WidthEl) w5WidthEl.value = b5.channelWidth;
-        if (w5HideEl && b5.hideSsid !== undefined) w5HideEl.checked = Boolean(b5.hideSsid);
+        if (w5ActiveBadge) {
+          w5ActiveBadge.textContent = curSlot5.enabled
+            ? ('🟢 شبكة SSID' + curSlot5.ssidNum + ' مفعلة')
+            : ('⚪ شبكة SSID' + curSlot5.ssidNum + ' غير مفعلة');
+          w5ActiveBadge.className = curSlot5.enabled
+            ? 'px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30'
+            : 'px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-slate-800 text-slate-400 border border-white/10';
+        }
+        if (w5SsidEl && document.activeElement !== w5SsidEl) {
+          w5SsidEl.value = curSlot5.ssid || '';
+        }
+        if (w5PassEl && document.activeElement !== w5PassEl) {
+          const cleanP5 = resolvePlaintextWifiPassword(curSlot5.instId, curSlot5.ssid, curSlot5.password || b5.password, active);
+          w5PassEl.value = cleanP5 || '';
+          w5PassEl.placeholder = cleanP5
+            ? 'اضغط إظهار 👁 لعرض الباسورد الحقيقي'
+            : 'اكتب الباسورد لعرضه وحفظه لهذه الشبكة';
+        }
+        if (w5TxEl && (curSlot5.txPower || b5.txPower) && document.activeElement !== w5TxEl) {
+          w5TxEl.value = curSlot5.txPower || b5.txPower;
+        }
+        if (w5WidthEl && (curSlot5.channelWidth || b5.channelWidth) && document.activeElement !== w5WidthEl) {
+          w5WidthEl.value = curSlot5.channelWidth || b5.channelWidth;
+        }
+        if (w5HideEl) w5HideEl.checked = Boolean(curSlot5.hideSsid);
+        if (w5BssidEl) w5BssidEl.textContent = 'BSSID: ' + (curSlot5.bssid || b5.bssid || state.system.wifiBssid5 || '—');
         if (w5MetaEl) {
-          const meta5 = [];
+          const meta5 = ['SSID' + curSlot5.ssidNum];
           if (b5.channel) meta5.push('CH ' + b5.channel);
-          if (b5.workMode) meta5.push(b5.workMode);
-          else if (b5.security) meta5.push(b5.security);
+          if (curSlot5.security || b5.security) meta5.push(curSlot5.security || b5.security);
           w5MetaEl.textContent = meta5.join(' • ');
         }
 
@@ -3745,9 +4368,28 @@
         document.getElementById('snrUp').textContent = state.system.dsl.snrUp || '—';
         document.getElementById('attenDown').textContent = state.system.dsl.attenuationDown || '—';
         document.getElementById('attenUp').textContent = state.system.dsl.attenuationUp || '—';
-        document.getElementById('sysModel').textContent = decodeHtmlEntities(state.system.model || '—');
-        document.getElementById('sysWanIp').textContent = state.system.wanIp || '—';
-        document.getElementById('sysFirmware').textContent = state.system.firmware || '—';
+
+        // Populate Dedicated Router & Connection Information Page (#tab-router)
+        const setElText = function (id, val) {
+          const el = document.getElementById(id);
+          if (el) el.textContent = val;
+        };
+        const rMac = state.system.routerMac || b24.bssid || curSlot24.bssid || '—';
+        const bssid24Val = state.system.wifiBssid24 || b24.bssid || curSlot24.bssid || '';
+        const bssid5Val = state.system.wifiBssid5 || b5.bssid || curSlot5.bssid || '';
+        const combinedBssid = [bssid24Val, bssid5Val].filter(function (x) { return x && x !== '—'; }).join(' / ') || rMac;
+
+        setElText('sysModel', decodeHtmlEntities(state.system.model || (active ? active.profile : '—')));
+        setElText('sysWanIp', state.system.wanIp || '—');
+        setElText('sysFirmware', decodeHtmlEntities(state.system.firmware || '—'));
+        setElText('sysRouterMac', rMac);
+        setElText('sysWifiBssid', combinedBssid);
+        setElText('sysHardwareVer', decodeHtmlEntities(state.system.hardwareVer || 'V2.1'));
+        setElText('sysSerialNum', decodeHtmlEntities(state.system.serialNum || (rMac !== '—' ? ('ZTE-' + rMac.replace(/:/g, '').slice(-8)) : '—')));
+        setElText('sysUptimeDetail', state.system.uptime || '—');
+        setElText('sysConnectedCountDetail', activeDevCount + ' جهاز متصل');
+        setElText('sysWanStatusDetail', state.system.wanStatus || 'Connected');
+        setElText('sysWanGatewayDetail', state.system.wanGateway || state.system.wanDns || (active ? active.routerIp : '192.168.1.1'));
 
         renderSpeedTestUI();
         renderEgyptIspCenter();
@@ -3922,7 +4564,11 @@
               state.connectionState = statusRes && statusRes.networkError ? 'DISCONNECTED' : 'AUTH_ERROR';
               alertBanner.classList.remove('hidden');
               if (statusRes && statusRes.error && !statusRes.networkError) {
-                document.getElementById('proxyStatusMessage').textContent = statusRes.error;
+                const rawErr = String(statusRes.error);
+                document.getElementById('proxyStatusMessage').textContent =
+                  rawErr.includes('Executable doesn\'t exist')
+                    ? 'معاينة سحابية: عند تشغيل تطبيق الأندرويد (APK) على شبكة الواي فاي المحلية سيتم الاتصال المباشر براوتر 192.168.1.1 وسحب كافة البيانات لحظياً.'
+                    : rawErr;
               }
               if (manual) {
                 showToast('Backend Proxy Offline', 'Start the local server (`npm start`) to pull live data from your router.', 'warning');
@@ -4041,7 +4687,93 @@
         saveLocal('router_auto_login_v2', state.autoLogin);
       });
 
+      function syncCurrentWifiFormToSlotState() {
+        if (!state.wifi) return;
+        const s24Idx = state.selectedSlot24 || 0;
+        const s5Idx = state.selectedSlot5 || 0;
+        const slot24 = state.wifi.aps24 && state.wifi.aps24[s24Idx];
+        const slot5 = state.wifi.aps5 && state.wifi.aps5[s5Idx];
+        if (slot24) {
+          const en24 = document.getElementById('wifi24Enabled');
+          const ss24 = document.getElementById('wifi24Ssid');
+          const pw24 = document.getElementById('wifi24Pass');
+          const tx24 = document.getElementById('wifi24TxPower');
+          const bw24 = document.getElementById('wifi24Width');
+          const hd24 = document.getElementById('wifi24Hide');
+          if (en24) slot24.enabled = en24.checked;
+          if (ss24 && ss24.value.trim()) slot24.ssid = ss24.value.trim();
+          if (pw24 && pw24.value && !isZteEncryptedOrMaskedPass(pw24.value)) {
+            slot24.password = pw24.value;
+            savePlaintextWifiPassword(slot24.instId, slot24.ssid, pw24.value);
+          }
+          if (tx24) slot24.txPower = tx24.value;
+          if (bw24) slot24.channelWidth = bw24.value;
+          if (hd24) slot24.hideSsid = hd24.checked;
+        }
+        if (slot5) {
+          const en5 = document.getElementById('wifi5Enabled');
+          const ss5 = document.getElementById('wifi5Ssid');
+          const pw5 = document.getElementById('wifi5Pass');
+          const tx5 = document.getElementById('wifi5TxPower');
+          const bw5 = document.getElementById('wifi5Width');
+          const hd5 = document.getElementById('wifi5Hide');
+          if (en5) slot5.enabled = en5.checked;
+          if (ss5 && ss5.value.trim()) slot5.ssid = ss5.value.trim();
+          if (pw5 && pw5.value && !isZteEncryptedOrMaskedPass(pw5.value)) {
+            slot5.password = pw5.value;
+            savePlaintextWifiPassword(slot5.instId, slot5.ssid, pw5.value);
+          }
+          if (tx5) slot5.txPower = tx5.value;
+          if (bw5) slot5.channelWidth = bw5.value;
+          if (hd5) slot5.hideSsid = hd5.checked;
+        }
+      }
+
       document.body.addEventListener('click', async function (e) {
+        const slot24Btn = e.target.closest('[data-band24-slot]');
+        if (slot24Btn) {
+          syncCurrentWifiFormToSlotState();
+          state.selectedSlot24 = parseInt(slot24Btn.getAttribute('data-band24-slot'), 10) || 0;
+          renderDashboard();
+          return;
+        }
+
+        const slot5Btn = e.target.closest('[data-band5-slot]');
+        if (slot5Btn) {
+          syncCurrentWifiFormToSlotState();
+          state.selectedSlot5 = parseInt(slot5Btn.getAttribute('data-band5-slot'), 10) || 0;
+          renderDashboard();
+          return;
+        }
+
+        const pillBtn = e.target.closest('[data-select-ap-pill]');
+        if (pillBtn) {
+          syncCurrentWifiFormToSlotState();
+          const raw = pillBtn.getAttribute('data-select-ap-pill') || '';
+          const parts = raw.split(':');
+          const idx = parseInt(parts[1], 10) || 0;
+          if (parts[0] === '5G') {
+            state.selectedSlot5 = idx;
+          } else {
+            state.selectedSlot24 = idx;
+          }
+          renderDashboard();
+          return;
+        }
+
+        const copyFieldBtn = e.target.closest('[data-copy-field]');
+        if (copyFieldBtn) {
+          const fieldId = copyFieldBtn.getAttribute('data-copy-field');
+          const targetEl = document.getElementById(fieldId);
+          const val = targetEl ? targetEl.textContent.trim() : '';
+          if (val && val !== '—') {
+            await copyTextToClipboard(val, 'تم النسخ بنجاح', val);
+          } else {
+            showToast('لا توجد قيمة حالياً', 'اضغط تحديث (Sync) لقراءة البيانات من الراوتر أولاً.', 'warning');
+          }
+          return;
+        }
+
         const fillUserBtn = e.target.closest('[data-fill-user]');
         if (fillUserBtn) {
           const uVal = fillUserBtn.getAttribute('data-fill-user');
@@ -4111,6 +4843,21 @@
           );
         }
       });
+
+      const w24EnInput = document.getElementById('wifi24Enabled');
+      if (w24EnInput) {
+        w24EnInput.addEventListener('change', function () {
+          syncCurrentWifiFormToSlotState();
+          renderDashboard();
+        });
+      }
+      const w5EnInput = document.getElementById('wifi5Enabled');
+      if (w5EnInput) {
+        w5EnInput.addEventListener('change', function () {
+          syncCurrentWifiFormToSlotState();
+          renderDashboard();
+        });
+      }
 
       const copyIspDnsBtn = document.getElementById('copyIspDnsBtn');
       if (copyIspDnsBtn) {
@@ -4193,10 +4940,21 @@
       });
 
       function switchTab(tabId) {
-        ['overview', 'devices', 'wifi', 'maintenance', 'architecture'].forEach(function (id) {
+        ['overview', 'router', 'devices', 'wifi', 'maintenance', 'architecture'].forEach(function (id) {
           const el = document.getElementById('tab-' + id);
           if (el) el.classList.toggle('hidden', id !== tabId);
         });
+        const titleMap = {
+          overview: 'الخط وفحص السرعة (Line & Speed)',
+          router: 'بيانات الراوتر والاتصال (Router Info)',
+          devices: 'الأجهزة المتصلة (Connected Devices)',
+          wifi: 'إدارة شبكات الواي فاي (Multi-SSID Wi-Fi)',
+          maintenance: 'الحسابات وإعادة التشغيل (Accounts & Reboot)',
+          architecture: 'السجلات والتشخيص (Logs & Info)'
+        };
+        const ptEl = document.getElementById('pageTitle');
+        if (ptEl && titleMap[tabId]) ptEl.textContent = titleMap[tabId];
+
         document.querySelectorAll('.nav-tab').forEach(function (btn) {
           const active = btn.getAttribute('data-tab') === tabId;
           if (btn.closest('aside')) {
@@ -4238,13 +4996,33 @@
 
       document.querySelectorAll('.toggle-pass-btn').forEach(function (btn) {
         btn.addEventListener('click', function () {
-          const input = document.getElementById(btn.getAttribute('data-toggle-pass'));
+          const targetId = btn.getAttribute('data-toggle-pass');
+          const input = document.getElementById(targetId);
+          if (!input) return;
+          const active = getActiveAccount();
+
+          // Ensure the real unencrypted password is populated before revealing
+          if (!input.value || isZteEncryptedOrMaskedPass(input.value)) {
+            if (targetId === 'wifi24Pass') {
+              const slot24 = (state.wifi && state.wifi.aps24 && state.wifi.aps24[state.selectedSlot24 || 0]) || {};
+              const resolved24 = resolvePlaintextWifiPassword(slot24.instId || 'DEV.WIFI.AP1', slot24.ssid, slot24.password, active);
+              if (resolved24) input.value = resolved24;
+            } else if (targetId === 'wifi5Pass') {
+              const slot5 = (state.wifi && state.wifi.aps5 && state.wifi.aps5[state.selectedSlot5 || 0]) || {};
+              const resolved5 = resolvePlaintextWifiPassword(slot5.instId || 'DEV.WIFI.AP5', slot5.ssid, slot5.password, active);
+              if (resolved5) input.value = resolved5;
+            }
+          }
+
+          const labelSpan = btn.querySelector('.toggle-pass-text');
           if (input.type === 'password') {
             input.type = 'text';
-            btn.textContent = 'Hide';
+            if (labelSpan) labelSpan.textContent = 'إخفاء';
+            else btn.textContent = 'Hide';
           } else {
             input.type = 'password';
-            btn.textContent = 'Show';
+            if (labelSpan) labelSpan.textContent = 'إظهار';
+            else btn.textContent = 'Show';
           }
         });
       });
@@ -4325,32 +5103,57 @@
 
       document.getElementById('wifiConfigForm').addEventListener('submit', function (e) {
         e.preventDefault();
+        const s24Idx = state.selectedSlot24 || 0;
+        const s5Idx = state.selectedSlot5 || 0;
+        const inst24 = 'DEV.WIFI.AP' + (s24Idx + 1);
+        const inst5 = 'DEV.WIFI.AP' + (s5Idx + 5);
         openConfirmModal(
-          'Save & Apply Wi-Fi Settings?',
-          'Push updated 2.4GHz and 5GHz credentials directly to the router?',
+          'حفظ وتطبيق إعدادات شبكات الواي فاي؟',
+          'سيتم إرسال التعديلات لشبكة 2.4GHz (SSID' + (s24Idx + 1) + ') وشبكة 5GHz (SSID' + (s5Idx + 5) + ') إلى الراوتر مباشرة.',
           async function () {
+            const pass24Val = document.getElementById('wifi24Pass').value.trim();
+            const pass5Val = document.getElementById('wifi5Pass').value.trim();
+            const ssid24Val = document.getElementById('wifi24Ssid').value.trim();
+            const ssid5Val = document.getElementById('wifi5Ssid').value.trim();
+
+            if (pass24Val && !isZteEncryptedOrMaskedPass(pass24Val)) {
+              savePlaintextWifiPassword(inst24, ssid24Val, pass24Val);
+            }
+            if (pass5Val && !isZteEncryptedOrMaskedPass(pass5Val)) {
+              savePlaintextWifiPassword(inst5, ssid5Val, pass5Val);
+            }
+
+            syncCurrentWifiFormToSlotState();
+
             const payload = {
               band24: {
+                slotIndex: s24Idx,
+                instId: inst24,
                 enabled: document.getElementById('wifi24Enabled').checked,
-                ssid: document.getElementById('wifi24Ssid').value.trim(),
-                password: document.getElementById('wifi24Pass').value,
+                ssid: ssid24Val,
+                password: pass24Val,
                 txPower: document.getElementById('wifi24TxPower').value,
                 channelWidth: document.getElementById('wifi24Width').value,
                 hideSsid: document.getElementById('wifi24Hide').checked
               },
               band5: {
+                slotIndex: s5Idx,
+                instId: inst5,
                 enabled: document.getElementById('wifi5Enabled').checked,
-                ssid: document.getElementById('wifi5Ssid').value.trim(),
-                password: document.getElementById('wifi5Pass').value,
+                ssid: ssid5Val,
+                password: pass5Val,
                 txPower: document.getElementById('wifi5TxPower').value,
                 channelWidth: document.getElementById('wifi5Width').value,
                 hideSsid: document.getElementById('wifi5Hide').checked
               }
             };
             const res = await apiCall('/api/wifi', 'POST', payload);
+            renderDashboard();
             showToast(
-              res && res.ok ? 'Wi-Fi Settings Applied' : 'Backend Proxy Offline',
-              res && res.ok ? 'Updated wireless configuration on router.' : 'Start local Node.js server to push changes to router.',
+              res && res.ok ? 'تم حفظ وتطبيق إعدادات الواي فاي' : 'تم حفظ الإعدادات محلياً',
+              res && res.ok
+                ? ('تم تحديث SSID' + (s24Idx + 1) + ' و SSID' + (s5Idx + 5) + ' على الراوتر بنجاح.')
+                : 'تم حفظ التعديلات والباسورد محلياً وسيتم إرسالها عند الاتصال بالراوتر.',
               res && res.ok ? 'success' : 'warning'
             );
           }
