@@ -971,24 +971,89 @@
         <!-- MODULE 3: CONNECTED DEVICES & MAC FILTER (#tab-devices)           -->
         <!-- ================================================================= -->
         <section id="tab-devices" class="space-y-4 hidden">
-          <div class="glass-card rounded-2xl p-4 sm:p-5 space-y-3.5">
-            <div class="flex flex-wrap items-center justify-between gap-2.5">
-              <h3 class="text-sm font-bold text-white">الأجهزة المتصلة بالراوتر (LAN &amp; Wi-Fi)</h3>
+          <!-- 1. Router Access Control & MAC Filter Policy Card (Blacklist / Whitelist / Disabled) -->
+          <div class="glass-card rounded-2xl p-4 sm:p-5 space-y-4 border border-amber-500/20" dir="rtl">
+            <div class="flex flex-wrap items-start justify-between gap-3 border-b border-white/10 pb-3">
+              <div>
+                <div class="flex items-center gap-2">
+                  <h3 class="text-sm font-bold text-white">نظام التحكم في الأجهزة (MAC Filter: Blacklist &amp; Whitelist)</h3>
+                  <span id="macFilterModeBadge" class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-rose-500/15 text-rose-300 border border-rose-500/30">
+                    القائمة السوداء (Blacklist)
+                  </span>
+                </div>
+                <p id="macFilterModeDesc" class="text-[11px] text-slate-400 mt-1">
+                  يسمح لجميع الأجهزة بالاتصال بالواي فاي ما عدا الأجهزة المضافة في قائمة الحظر (Blacklist) حيث يتم منعها نهائياً وتظل محفوظة في الحظر.
+                </p>
+              </div>
 
               <div class="flex flex-wrap items-center gap-2">
-                <div class="flex items-center bg-slate-900/90 p-1 rounded-xl border border-white/10 text-xs">
-                  <button type="button" data-filter="ALL" class="dev-filter-btn px-2.5 py-1 rounded-lg bg-amber-500 text-slate-950 font-semibold">All</button>
+                <button type="button" id="whitelistAllConnectedBtn" class="btn-press px-3 py-1.5 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-300 text-[11px] font-semibold">
+                  + إضافة المتصلين حالياً للقائمة البيضاء
+                </button>
+                <button type="button" id="openAddMacModalBtn" class="btn-press px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-[11px] font-bold">
+                  + إضافة جهاز بالـ MAC يدوياً
+                </button>
+              </div>
+            </div>
+
+            <!-- Mode Selector + Target SSID Bar -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 items-center">
+              <div class="lg:col-span-7 grid grid-cols-3 gap-2" id="macFilterModeButtons">
+                <button type="button" data-mac-mode="BLACKLIST" class="mac-mode-btn btn-press p-2.5 rounded-xl border border-rose-500/40 bg-rose-500/15 text-right transition">
+                  <span class="text-xs font-bold text-white block">🚫 القائمة السوداء</span>
+                  <span class="text-[10px] text-slate-300 block mt-0.5">حظر أجهزة محددة فقط</span>
+                </button>
+                <button type="button" data-mac-mode="WHITELIST" class="mac-mode-btn btn-press p-2.5 rounded-xl border border-white/10 bg-slate-900/60 text-right transition">
+                  <span class="text-xs font-bold text-white block">🛡️ القائمة البيضاء</span>
+                  <span class="text-[10px] text-slate-400 block mt-0.5">السماح للمحددين فقط</span>
+                </button>
+                <button type="button" data-mac-mode="DISABLED" class="mac-mode-btn btn-press p-2.5 rounded-xl border border-white/10 bg-slate-900/60 text-right transition">
+                  <span class="text-xs font-bold text-white block">⚪ إيقاف الفلتر</span>
+                  <span class="text-[10px] text-slate-400 block mt-0.5">سماح للكل مؤقتاً</span>
+                </button>
+              </div>
+
+              <div class="lg:col-span-5 flex flex-wrap sm:flex-nowrap items-center gap-2">
+                <div class="flex-1 min-w-[160px]">
+                  <label for="macFilterTargetAp" class="block text-[10px] text-slate-400 mb-1">تطبيق الفلتر على شبكة:</label>
+                  <select id="macFilterTargetAp" class="w-full px-3 py-2 rounded-xl bg-slate-900/90 border border-white/10 text-xs text-white" dir="ltr">
+                    <option value="ALL_ACTIVE">All Active Wi-Fi SSIDs (2.4G &amp; 5G)</option>
+                    <option value="DEV.WIFI.AP1">SSID1 (2.4GHz - AP1)</option>
+                    <option value="DEV.WIFI.AP2">SSID2 (2.4GHz - AP2)</option>
+                    <option value="DEV.WIFI.AP3">SSID3 (2.4GHz - AP3)</option>
+                    <option value="DEV.WIFI.AP4">SSID4 (2.4GHz - AP4)</option>
+                    <option value="DEV.WIFI.AP5">SSID5 (5GHz - AP5)</option>
+                    <option value="DEV.WIFI.AP6">SSID6 (5GHz - AP6)</option>
+                    <option value="DEV.WIFI.AP7">SSID7 (5GHz - AP7)</option>
+                    <option value="DEV.WIFI.AP8">SSID8 (5GHz - AP8)</option>
+                  </select>
+                </div>
+                <button type="button" id="applyMacPolicyBtn" class="btn-press mt-4 sm:mt-5 px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shrink-0">
+                  تطبيق على الراوتر
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Live Connected & Blocked Devices Table Card -->
+          <div class="glass-card rounded-2xl p-4 sm:p-5 space-y-3.5">
+            <div class="flex flex-wrap items-center justify-between gap-2.5">
+              <div>
+                <h3 class="text-sm font-bold text-white">الأجهزة المتصلة والمحظورة (LAN &amp; Wi-Fi Clients)</h3>
+                <p class="text-[11px] text-slate-400">الأجهزة المحظورة تظل محفوظة بالجدول حتى بعد فصلها من الشبكة لتتمكن من فك الحظر عنها في أي وقت</p>
+              </div>
+
+              <div class="flex flex-wrap items-center gap-2">
+                <div class="flex flex-wrap items-center bg-slate-900/90 p-1 rounded-xl border border-white/10 text-xs">
+                  <button type="button" data-filter="ALL" class="dev-filter-btn px-2.5 py-1 rounded-lg bg-amber-500 text-slate-950 font-semibold">الكل</button>
                   <button type="button" data-filter="2.4GHz" class="dev-filter-btn px-2.5 py-1 rounded-lg text-slate-300 hover:text-white">2.4GHz</button>
                   <button type="button" data-filter="5GHz" class="dev-filter-btn px-2.5 py-1 rounded-lg text-slate-300 hover:text-white">5GHz</button>
                   <button type="button" data-filter="Ethernet" class="dev-filter-btn px-2.5 py-1 rounded-lg text-slate-300 hover:text-white">LAN</button>
-                  <button type="button" data-filter="BLOCKED" class="dev-filter-btn px-2.5 py-1 rounded-lg text-rose-300 hover:text-rose-200">Blocked</button>
+                  <button type="button" data-filter="BLOCKED" class="dev-filter-btn px-2.5 py-1 rounded-lg text-rose-300 hover:text-rose-200">المحظورة (<span id="filterBlockedCount">0</span>)</button>
+                  <button type="button" data-filter="WHITELISTED" class="dev-filter-btn px-2.5 py-1 rounded-lg text-emerald-300 hover:text-emerald-200">البيضاء (<span id="filterWhitelistCount">0</span>)</button>
                 </div>
 
-                <input id="deviceSearchInput" type="text" placeholder="بحث بالاسم أو IP أو MAC..." class="w-40 sm:w-48 px-3 py-1.5 rounded-xl bg-slate-900/90 border border-white/10 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500" />
-
-                <button id="openAddMacModalBtn" type="button" class="btn-press px-3 py-1.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-rose-300 text-xs font-semibold">
-                  حظر MAC
-                </button>
+                <input id="deviceSearchInput" type="text" placeholder="بحث بالاسم أو IP أو MAC..." class="w-44 sm:w-52 px-3 py-1.5 rounded-xl bg-slate-900/90 border border-white/10 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500" />
               </div>
             </div>
 
@@ -996,15 +1061,42 @@
               <table class="w-full text-left border-collapse">
                 <thead>
                   <tr class="border-b border-white/10 text-[11px] uppercase text-slate-400">
-                    <th class="py-2 px-2 sm:px-3">Device</th>
+                    <th class="py-2 px-2 sm:px-3">الجهاز والحالة (Device)</th>
                     <th class="py-2 px-2 sm:px-3">IP Address</th>
                     <th class="py-2 px-2 sm:px-3">MAC Address</th>
-                    <th class="py-2 px-2 sm:px-3">Band / SSID</th>
-                    <th class="py-2 px-2 sm:px-3 text-right">Action</th>
+                    <th class="py-2 px-2 sm:px-3">الشبكة (Band / SSID)</th>
+                    <th class="py-2 px-2 sm:px-3 text-right">التحكم (Block / Whitelist)</th>
                   </tr>
                 </thead>
                 <tbody id="devicesTableBody" class="divide-y divide-white/5 text-xs"></tbody>
               </table>
+            </div>
+          </div>
+
+          <!-- 3. Dedicated Persistent Blacklist & Whitelist Panels -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-4" dir="rtl">
+            <!-- Blacklist Panel -->
+            <div class="glass-card rounded-2xl p-4 sm:p-5 space-y-3 border border-rose-500/20">
+              <div class="flex items-center justify-between border-b border-white/10 pb-2.5">
+                <div>
+                  <h4 class="text-xs sm:text-sm font-bold text-rose-300">🚫 قائمة الحظر المستمرة (Blacklist)</h4>
+                  <p class="text-[11px] text-slate-400">أجهزة ممنوعة من الاتصال بالواي فاي بشكل دائم حتى تقوم بفك الحظر</p>
+                </div>
+                <span id="blacklistCountBadge" class="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-rose-500/15 text-rose-300 border border-rose-500/30">0</span>
+              </div>
+              <div id="blacklistItemsContainer" class="space-y-2 max-h-64 overflow-y-auto"></div>
+            </div>
+
+            <!-- Whitelist Panel -->
+            <div class="glass-card rounded-2xl p-4 sm:p-5 space-y-3 border border-emerald-500/20">
+              <div class="flex items-center justify-between border-b border-white/10 pb-2.5">
+                <div>
+                  <h4 class="text-xs sm:text-sm font-bold text-emerald-300">🛡️ القائمة البيضاء الموثوقة (Whitelist)</h4>
+                  <p class="text-[11px] text-slate-400">عند تفعيل وضع القائمة البيضاء، يُسمح لهذه الأجهزة فقط بالاتصال</p>
+                </div>
+                <span id="whitelistCountBadge" class="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">0</span>
+              </div>
+              <div id="whitelistItemsContainer" class="space-y-2 max-h-64 overflow-y-auto"></div>
             </div>
           </div>
         </section>
@@ -1018,7 +1110,7 @@
             <div class="flex flex-wrap items-center justify-between gap-2">
               <div>
                 <h3 class="text-sm font-bold text-white">حالة جميع شبكات الواي فاي (Multi-SSID Networks Status)</h3>
-                <p class="text-[11px] text-slate-400">يمكنك تشغيل وتخصيص حتى 4 شبكات على تردد 2.4GHz و4 شبكات على تردد 5GHz — اضغط على أي شبكة لتعديلها أو تفعيلها</p>
+                <p class="text-[11px] text-slate-400">يعرض حالة الـ 8 شبكات الفعلية من الراوتر مباشرة — اضغط على أي شبكة لعرض وتعديل إعداداتها</p>
               </div>
               <div class="flex items-center gap-2 text-[11px]">
                 <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
@@ -1071,7 +1163,7 @@
 
                   <div>
                     <div class="flex items-center justify-between mb-1">
-                      <span id="wifi24BssidBadge" class="text-[10px] font-mono text-slate-400">AP1</span>
+                      <span id="wifi24BssidBadge" class="text-[10px] font-mono text-slate-400">BSSID: —</span>
                       <label for="wifi24Ssid" class="block text-xs font-medium text-slate-300">اسم شبكة 2.4GHz (SSID)</label>
                     </div>
                     <input id="wifi24Ssid" type="text" placeholder="اكتب اسم الشبكة..." required class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/90 border border-white/10 text-xs font-medium text-white focus:outline-none focus:border-amber-500" />
@@ -1088,6 +1180,37 @@
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                         <span class="toggle-pass-text">إظهار</span>
                       </button>
+                    </div>
+                  </div>
+
+                  <div class="grid grid-cols-2 gap-2.5">
+                    <div>
+                      <label for="wifi24Security" class="block text-xs text-slate-300 mb-1">نوع الحماية (Security)</label>
+                      <select id="wifi24Security" class="w-full px-2.5 py-2 rounded-xl bg-slate-900/90 border border-white/10 text-xs text-white">
+                        <option value="11i">WPA2-PSK (AES)</option>
+                        <option value="WPAand11i">WPA/WPA2-PSK (TKIP+AES)</option>
+                        <option value="WPA">WPA-PSK (TKIP)</option>
+                        <option value="None">Open (بدون كلمة مرور)</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label for="wifi24Channel" class="block text-xs text-slate-300 mb-1">القناة (Channel)</label>
+                      <select id="wifi24Channel" class="w-full px-2.5 py-2 rounded-xl bg-slate-900/90 border border-white/10 text-xs text-white">
+                        <option value="0">Auto (تلقائي)</option>
+                        <option value="1">Channel 1</option>
+                        <option value="2">Channel 2</option>
+                        <option value="3">Channel 3</option>
+                        <option value="4">Channel 4</option>
+                        <option value="5">Channel 5</option>
+                        <option value="6">Channel 6</option>
+                        <option value="7">Channel 7</option>
+                        <option value="8">Channel 8</option>
+                        <option value="9">Channel 9</option>
+                        <option value="10">Channel 10</option>
+                        <option value="11">Channel 11</option>
+                        <option value="12">Channel 12</option>
+                        <option value="13">Channel 13</option>
+                      </select>
                     </div>
                   </div>
 
@@ -1113,10 +1236,16 @@
                     </div>
                   </div>
 
-                  <label class="flex items-center justify-between p-2.5 rounded-xl bg-slate-900/50 border border-white/5 cursor-pointer">
-                    <span class="text-xs text-slate-300">إخفاء الشبكة (Hide SSID)</span>
-                    <input id="wifi24Hide" type="checkbox" class="w-4 h-4 accent-amber-500 rounded" />
-                  </label>
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <label class="flex items-center justify-between p-2.5 rounded-xl bg-slate-900/50 border border-white/5 cursor-pointer">
+                      <span class="text-xs text-slate-300">إخفاء الشبكة (Hide SSID)</span>
+                      <input id="wifi24Hide" type="checkbox" class="w-4 h-4 accent-amber-500 rounded" />
+                    </label>
+                    <div class="flex items-center justify-between p-2 rounded-xl bg-slate-900/50 border border-white/5">
+                      <label for="wifi24MaxClients" class="text-xs text-slate-300">أقصى عدد أجهزة</label>
+                      <input id="wifi24MaxClients" type="number" min="1" max="64" value="32" class="w-16 px-2 py-1 rounded-lg bg-slate-950 border border-white/10 text-xs font-mono text-center text-white" />
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -1155,7 +1284,7 @@
 
                   <div>
                     <div class="flex items-center justify-between mb-1">
-                      <span id="wifi5BssidBadge" class="text-[10px] font-mono text-slate-400">AP5</span>
+                      <span id="wifi5BssidBadge" class="text-[10px] font-mono text-slate-400">BSSID: —</span>
                       <label for="wifi5Ssid" class="block text-xs font-medium text-slate-300">اسم شبكة 5GHz (SSID)</label>
                     </div>
                     <input id="wifi5Ssid" type="text" placeholder="اكتب اسم الشبكة..." required class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/90 border border-white/10 text-xs font-medium text-white focus:outline-none focus:border-amber-500" />
@@ -1172,6 +1301,37 @@
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                         <span class="toggle-pass-text">إظهار</span>
                       </button>
+                    </div>
+                  </div>
+
+                  <div class="grid grid-cols-2 gap-2.5">
+                    <div>
+                      <label for="wifi5Security" class="block text-xs text-slate-300 mb-1">نوع الحماية (Security)</label>
+                      <select id="wifi5Security" class="w-full px-2.5 py-2 rounded-xl bg-slate-900/90 border border-white/10 text-xs text-white">
+                        <option value="11i">WPA2-PSK (AES)</option>
+                        <option value="WPAand11i">WPA/WPA2-PSK (TKIP+AES)</option>
+                        <option value="WPA">WPA-PSK (TKIP)</option>
+                        <option value="None">Open (بدون كلمة مرور)</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label for="wifi5Channel" class="block text-xs text-slate-300 mb-1">القناة (Channel)</label>
+                      <select id="wifi5Channel" class="w-full px-2.5 py-2 rounded-xl bg-slate-900/90 border border-white/10 text-xs text-white">
+                        <option value="0">Auto (تلقائي)</option>
+                        <option value="36">Channel 36</option>
+                        <option value="40">Channel 40</option>
+                        <option value="44">Channel 44</option>
+                        <option value="48">Channel 48</option>
+                        <option value="52">Channel 52</option>
+                        <option value="56">Channel 56</option>
+                        <option value="60">Channel 60</option>
+                        <option value="64">Channel 64</option>
+                        <option value="100">Channel 100</option>
+                        <option value="149">Channel 149</option>
+                        <option value="153">Channel 153</option>
+                        <option value="157">Channel 157</option>
+                        <option value="161">Channel 161</option>
+                      </select>
                     </div>
                   </div>
 
@@ -1198,10 +1358,16 @@
                     </div>
                   </div>
 
-                  <label class="flex items-center justify-between p-2.5 rounded-xl bg-slate-900/50 border border-white/5 cursor-pointer">
-                    <span class="text-xs text-slate-300">إخفاء الشبكة (Hide SSID)</span>
-                    <input id="wifi5Hide" type="checkbox" class="w-4 h-4 accent-amber-500 rounded" />
-                  </label>
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <label class="flex items-center justify-between p-2.5 rounded-xl bg-slate-900/50 border border-white/5 cursor-pointer">
+                      <span class="text-xs text-slate-300">إخفاء الشبكة (Hide SSID)</span>
+                      <input id="wifi5Hide" type="checkbox" class="w-4 h-4 accent-amber-500 rounded" />
+                    </label>
+                    <div class="flex items-center justify-between p-2 rounded-xl bg-slate-900/50 border border-white/5">
+                      <label for="wifi5MaxClients" class="text-xs text-slate-300">أقصى عدد أجهزة</label>
+                      <input id="wifi5MaxClients" type="number" min="1" max="64" value="32" class="w-16 px-2 py-1 rounded-lg bg-slate-950 border border-white/10 text-xs font-mono text-center text-white" />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1209,7 +1375,7 @@
             <div class="glass-card rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3">
               <div dir="rtl">
                 <p class="text-xs font-semibold text-white">حفظ وتطبيق إعدادات الشبكات المحددة مباشرة على الراوتر</p>
-                <p class="text-[11px] text-slate-400">سيتم تحديث حالة التفعيل والاسم والرقم السري على الراوتر وحفظ نسخة من الباسورد لظهورها دائماً عند الضغط على العين</p>
+                <p class="text-[11px] text-slate-400">يرسل التعديلات لـ wlan_sssidconf_lua.lua و wlan_basicadconf_lua.lua ويعيد التحقق من الراوتر</p>
               </div>
               <button type="submit" class="btn-press px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shrink-0 shadow-lg shadow-amber-500/20">
                 حفظ وتطبيق الإعدادات (Save &amp; Apply)
@@ -1415,16 +1581,21 @@
             slotIndex: n - 1,
             ssidNum: n,
             instId: 'DEV.WIFI.AP' + n,
+            pskInstId: 'DEV.WIFI.AP' + n + '.PSK1',
             label: 'SSID' + n,
             enabled: n === 1,
-            ssid: n === 1 ? '' : ('WiFi-2.4G-' + n),
+            ssid: '',
             password: '',
             passwordEncrypted: false,
+            passwordSource: 'none',
             hideSsid: false,
             bssid: '',
-            security: 'WPA2-PSK-AES',
+            security: '11i',
             txPower: '100%',
-            channelWidth: '20/40MHz'
+            channelWidth: '20/40MHz',
+            channel: '0',
+            maxClients: 32,
+            rawFields: {}
           };
         });
       }
@@ -1435,16 +1606,21 @@
             slotIndex: idx,
             ssidNum: n,
             instId: 'DEV.WIFI.AP' + n,
+            pskInstId: 'DEV.WIFI.AP' + n + '.PSK1',
             label: 'SSID' + n,
             enabled: n === 5,
-            ssid: n === 5 ? '' : ('WiFi-5G-' + (idx + 1)),
+            ssid: '',
             password: '',
             passwordEncrypted: false,
+            passwordSource: 'none',
             hideSsid: false,
             bssid: '',
-            security: 'WPA2-PSK-AES',
+            security: '11i',
             txPower: '100%',
-            channelWidth: '80MHz'
+            channelWidth: '80MHz',
+            channel: '0',
+            maxClients: 32,
+            rawFields: {}
           };
         });
       }
@@ -1457,9 +1633,17 @@
         activeAccountId: loadLocal('router_active_account_id_v2', null),
         autoLogin: loadLocal('router_auto_login_v2', true),
         nicknames: loadLocal('router_nicknames_v2', {}),
-        wifiPasswords: loadLocal('router_wifi_passwords_v1', {}),
+        wifiPasswords: loadLocal('router_wifi_passwords_v2', {}),
+        macFilter: loadLocal('router_mac_filter_v2', {
+          mode: 'BLACKLIST',
+          targetAp: 'ALL_ACTIVE',
+          blacklist: [],
+          whitelist: [],
+          updatedAt: null
+        }),
         selectedSlot24: 0,
         selectedSlot5: 0,
+        hasAutoSelectedWifiSlots: false,
         connectionState: 'DISCONNECTED',
         lastSyncAt: null,
         pollTimer: null,
@@ -1490,8 +1674,8 @@
         },
         devices: [],
         wifi: {
-          band24: { enabled: true, ssid: '', password: '', txPower: '100%', channelWidth: '20/40MHz', hideSsid: false, instId: 'DEV.WIFI.AP1', bssid: '' },
-          band5: { enabled: true, ssid: '', password: '', txPower: '100%', channelWidth: '80MHz', hideSsid: false, instId: 'DEV.WIFI.AP5', bssid: '' },
+          band24: { enabled: true, ssid: '', password: '', txPower: '100%', channelWidth: '20/40MHz', channel: '0', security: '11i', maxClients: 32, hideSsid: false, instId: 'DEV.WIFI.AP1', bssid: '', rawFields: {} },
+          band5: { enabled: true, ssid: '', password: '', txPower: '100%', channelWidth: '80MHz', channel: '0', security: '11i', maxClients: 32, hideSsid: false, instId: 'DEV.WIFI.AP5', bssid: '', rawFields: {} },
           aps24: createDefaultAps24(),
           aps5: createDefaultAps5()
         },
@@ -1728,42 +1912,243 @@
         lastAuthTime: 0,
         devices: [],
         wifi: {
-          band24: { enabled: true, ssid: '', password: '', txPower: '100%', channelWidth: '20/40MHz', hideSsid: false, instId: 'DEV.WIFI.AP1', bssid: '' },
-          band5: { enabled: true, ssid: '', password: '', txPower: '100%', channelWidth: '80MHz', hideSsid: false, instId: 'DEV.WIFI.AP5', bssid: '' },
+          band24: { enabled: true, ssid: '', password: '', txPower: '100%', channelWidth: '20/40MHz', channel: '0', security: '11i', maxClients: 32, hideSsid: false, instId: 'DEV.WIFI.AP1', bssid: '', rawFields: {} },
+          band5: { enabled: true, ssid: '', password: '', txPower: '100%', channelWidth: '80MHz', channel: '0', security: '11i', maxClients: 32, hideSsid: false, instId: 'DEV.WIFI.AP5', bssid: '', rawFields: {} },
           aps24: createDefaultAps24(),
           aps5: createDefaultAps5()
         },
         logs: []
       };
 
-      // Resolve real unencrypted plaintext Wi-Fi password from router XML, local password vault, or router sticker password
+      // Purge any legacy router login password that was mistakenly cached in localStorage as a Wi-Fi password
+      function sanitizeWifiPasswordVault() {
+        try {
+          localStorage.removeItem('router_wifi_passwords_v1');
+        } catch (e) {}
+        if (!state.wifiPasswords || typeof state.wifiPasswords !== 'object') {
+          state.wifiPasswords = {};
+          return;
+        }
+        const adminPasswords = (state.accounts || [])
+          .map(function (a) { return String((a && a.password) || '').trim(); })
+          .filter(Boolean);
+        let modified = false;
+        Object.keys(state.wifiPasswords).forEach(function (k) {
+          const val = String(state.wifiPasswords[k] || '').trim();
+          if (!val || isZteEncryptedOrMaskedPass(val) || adminPasswords.includes(val)) {
+            delete state.wifiPasswords[k];
+            modified = true;
+          }
+        });
+        if (modified) {
+          saveLocal('router_wifi_passwords_v2', state.wifiPasswords);
+        }
+      }
+
+      // Resolve real unencrypted plaintext Wi-Fi password from router XML or user-saved Wi-Fi password vault.
+      // CRITICAL: NEVER fall back to account.password (the router admin login password)!
       function resolvePlaintextWifiPassword(instId, ssid, candidatePass, account) {
+        const acc = account || (typeof getActiveAccount === 'function' ? getActiveAccount() : null);
+        const adminPass = acc && acc.password ? String(acc.password).trim() : '';
         const cleanCand = (!isZteEncryptedOrMaskedPass(candidatePass)) ? String(candidatePass || '').trim() : '';
-        if (cleanCand) {
+
+        if (cleanCand && cleanCand !== adminPass) {
           savePlaintextWifiPassword(instId, ssid, cleanCand);
           return cleanCand;
         }
+
         const vault = state.wifiPasswords || {};
-        if (instId && vault[instId] && !isZteEncryptedOrMaskedPass(vault[instId])) {
-          return vault[instId];
+        const instKey = String(instId || '').toUpperCase();
+        if (instKey && vault[instKey] && !isZteEncryptedOrMaskedPass(vault[instKey]) && vault[instKey] !== adminPass) {
+          return vault[instKey];
         }
-        if (ssid && vault['SSID:' + ssid] && !isZteEncryptedOrMaskedPass(vault['SSID:' + ssid])) {
+        if (ssid && vault['SSID:' + ssid] && !isZteEncryptedOrMaskedPass(vault['SSID:' + ssid]) && vault['SSID:' + ssid] !== adminPass) {
           return vault['SSID:' + ssid];
         }
-        const acc = account || getActiveAccount();
-        if (acc && acc.password && String(acc.password).trim().length >= 8 && !['admin', 'user', 'vodafone', 'etisalat'].includes(String(acc.password).trim().toLowerCase())) {
-          return String(acc.password).trim();
+        if (instKey && vault['USER_CONFIRMED:' + instKey] && !isZteEncryptedOrMaskedPass(vault['USER_CONFIRMED:' + instKey])) {
+          return vault['USER_CONFIRMED:' + instKey];
         }
         return '';
       }
 
-      function savePlaintextWifiPassword(instId, ssid, plainPass) {
+      function savePlaintextWifiPassword(instId, ssid, plainPass, userConfirmed) {
         const clean = (!isZteEncryptedOrMaskedPass(plainPass)) ? String(plainPass || '').trim() : '';
         if (!clean) return;
         state.wifiPasswords = state.wifiPasswords || {};
-        if (instId) state.wifiPasswords[instId.toUpperCase()] = clean;
+        const instKey = String(instId || '').toUpperCase();
+        if (instKey) {
+          state.wifiPasswords[instKey] = clean;
+          if (userConfirmed) {
+            state.wifiPasswords['USER_CONFIRMED:' + instKey] = clean;
+          }
+        }
         if (ssid) state.wifiPasswords['SSID:' + ssid] = clean;
-        saveLocal('router_wifi_passwords_v1', state.wifiPasswords);
+        saveLocal('router_wifi_passwords_v2', state.wifiPasswords);
+      }
+
+      function normalizeMacAddress(rawMac) {
+        const cleaned = String(rawMac || '').toUpperCase().replace(/[^0-9A-F]/g, '');
+        if (cleaned.length !== 12) return String(rawMac || '').toUpperCase().replace(/-/g, ':').trim();
+        return cleaned.match(/.{1,2}/g).join(':');
+      }
+
+      function ensureMacFilterState() {
+        if (!state.macFilter || typeof state.macFilter !== 'object') {
+          state.macFilter = { mode: 'BLACKLIST', targetAp: 'ALL_ACTIVE', blacklist: [], whitelist: [], updatedAt: null };
+        }
+        if (!['BLACKLIST', 'WHITELIST', 'DISABLED'].includes(state.macFilter.mode)) {
+          state.macFilter.mode = 'BLACKLIST';
+        }
+        if (!state.macFilter.targetAp) state.macFilter.targetAp = 'ALL_ACTIVE';
+        if (!Array.isArray(state.macFilter.blacklist)) state.macFilter.blacklist = [];
+        if (!Array.isArray(state.macFilter.whitelist)) state.macFilter.whitelist = [];
+        return state.macFilter;
+      }
+
+      function saveMacFilterState() {
+        const mf = ensureMacFilterState();
+        mf.updatedAt = new Date().toISOString();
+        saveLocal('router_mac_filter_v2', mf);
+      }
+
+      // Merge live scraped router devices with persistent Blacklist & Whitelist rules
+      // so blocked devices NEVER disappear or reset to unblocked when the router disconnects them!
+      function mergeDevicesWithMacFilter(liveDevices) {
+        const mf = ensureMacFilterState();
+        const blackMap = {};
+        const whiteMap = {};
+
+        mf.blacklist.forEach(function (item) {
+          if (item && item.mac) {
+            blackMap[normalizeMacAddress(item.mac)] = item;
+          }
+        });
+        mf.whitelist.forEach(function (item) {
+          if (item && item.mac) {
+            whiteMap[normalizeMacAddress(item.mac)] = item;
+          }
+        });
+
+        const merged = [];
+        const seenMacs = {};
+
+        (Array.isArray(liveDevices) ? liveDevices : []).forEach(function (d) {
+          if (!d || !d.mac) return;
+          const mac = normalizeMacAddress(d.mac);
+          if (!mac || seenMacs[mac]) return;
+          seenMacs[mac] = true;
+
+          const isBlacklisted = Boolean(blackMap[mac]);
+          const isWhitelisted = Boolean(whiteMap[mac]);
+          const isBlockedByPolicy = isBlacklisted || (mf.mode === 'WHITELIST' && mf.whitelist.length > 0 && !isWhitelisted);
+
+          // Update metadata in blacklist/whitelist if device is seen with better hostname/ip
+          if (blackMap[mac]) {
+            if (d.hostname && !d.hostname.startsWith('Blocked-') && !d.hostname.startsWith('Blacklisted-')) {
+              blackMap[mac].hostname = d.hostname;
+            }
+            if (d.ip && d.ip !== '—') blackMap[mac].ip = d.ip;
+            if (d.connectionType) blackMap[mac].connectionType = d.connectionType;
+          }
+          if (whiteMap[mac]) {
+            if (d.hostname && !d.hostname.startsWith('Allowed-')) {
+              whiteMap[mac].hostname = d.hostname;
+            }
+            if (d.ip && d.ip !== '—') whiteMap[mac].ip = d.ip;
+            if (d.connectionType) whiteMap[mac].connectionType = d.connectionType;
+          }
+
+          merged.push({
+            hostname: d.hostname || (blackMap[mac] && blackMap[mac].hostname) || (whiteMap[mac] && whiteMap[mac].hostname) || ('Device-' + mac.slice(-5)),
+            ip: d.ip || '—',
+            mac: mac,
+            connectionType: d.connectionType || '2.4GHz',
+            ssidName: d.ssidName || '',
+            online: d.online !== false,
+            blocked: Boolean(isBlockedByPolicy || d.blocked),
+            blacklisted: isBlacklisted,
+            whitelisted: isWhitelisted
+          });
+        });
+
+        // Always keep blacklisted devices visible in the table even after the router kicks them offline!
+        mf.blacklist.forEach(function (bItem) {
+          if (!bItem || !bItem.mac) return;
+          const mac = normalizeMacAddress(bItem.mac);
+          if (!mac || seenMacs[mac]) return;
+          seenMacs[mac] = true;
+          merged.push({
+            hostname: bItem.hostname || state.nicknames[mac] || ('Blocked-' + mac.slice(-5)),
+            ip: bItem.ip || 'محظور (Offline)',
+            mac: mac,
+            connectionType: bItem.connectionType || '2.4GHz',
+            ssidName: bItem.ssidName || '',
+            online: false,
+            blocked: true,
+            blacklisted: true,
+            whitelisted: Boolean(whiteMap[mac])
+          });
+        });
+
+        return merged;
+      }
+
+      function upsertMacInBlacklist(macRaw, meta, shouldBlock) {
+        const mac = normalizeMacAddress(macRaw);
+        if (!/^([0-9A-F]{2}:){5}[0-9A-F]{2}$/.test(mac)) return false;
+        const mf = ensureMacFilterState();
+        const existingDev = (state.devices || []).find(function (d) { return normalizeMacAddress(d.mac) === mac; }) || {};
+        const info = Object.assign({
+          mac: mac,
+          hostname: state.nicknames[mac] || existingDev.hostname || ('Device-' + mac.slice(-5)),
+          ip: existingDev.ip || '—',
+          connectionType: existingDev.connectionType || '2.4GHz',
+          addedAt: new Date().toISOString()
+        }, meta || {});
+
+        if (shouldBlock) {
+          const idx = mf.blacklist.findIndex(function (item) { return normalizeMacAddress(item.mac) === mac; });
+          if (idx >= 0) {
+            mf.blacklist[idx] = Object.assign({}, mf.blacklist[idx], info);
+          } else {
+            mf.blacklist.push(info);
+          }
+          mf.whitelist = mf.whitelist.filter(function (item) { return normalizeMacAddress(item.mac) !== mac; });
+        } else {
+          mf.blacklist = mf.blacklist.filter(function (item) { return normalizeMacAddress(item.mac) !== mac; });
+        }
+        saveMacFilterState();
+        state.devices = mergeDevicesWithMacFilter(nativeCache.devices.length > 0 ? nativeCache.devices : state.devices);
+        return true;
+      }
+
+      function upsertMacInWhitelist(macRaw, meta, shouldAllow) {
+        const mac = normalizeMacAddress(macRaw);
+        if (!/^([0-9A-F]{2}:){5}[0-9A-F]{2}$/.test(mac)) return false;
+        const mf = ensureMacFilterState();
+        const existingDev = (state.devices || []).find(function (d) { return normalizeMacAddress(d.mac) === mac; }) || {};
+        const info = Object.assign({
+          mac: mac,
+          hostname: state.nicknames[mac] || existingDev.hostname || ('Device-' + mac.slice(-5)),
+          ip: existingDev.ip || '—',
+          connectionType: existingDev.connectionType || '2.4GHz',
+          addedAt: new Date().toISOString()
+        }, meta || {});
+
+        if (shouldAllow) {
+          const idx = mf.whitelist.findIndex(function (item) { return normalizeMacAddress(item.mac) === mac; });
+          if (idx >= 0) {
+            mf.whitelist[idx] = Object.assign({}, mf.whitelist[idx], info);
+          } else {
+            mf.whitelist.push(info);
+          }
+          mf.blacklist = mf.blacklist.filter(function (item) { return normalizeMacAddress(item.mac) !== mac; });
+        } else {
+          mf.whitelist = mf.whitelist.filter(function (item) { return normalizeMacAddress(item.mac) !== mac; });
+        }
+        saveMacFilterState();
+        state.devices = mergeDevicesWithMacFilter(nativeCache.devices.length > 0 ? nativeCache.devices : state.devices);
+        return true;
       }
 
       function getZteGuid() {
@@ -1858,15 +2243,19 @@
           systemTelemetry: state.system,
           dslHealthAnalysis: analyzeEgyptianDslLine(state.system && state.system.dsl),
           wifiStatus: {
-            band24: { ssid: state.wifi.band24.ssid, txPower: state.wifi.band24.txPower, width: state.wifi.band24.channelWidth, hide: state.wifi.band24.hideSsid },
-            band5: { ssid: state.wifi.band5.ssid, txPower: state.wifi.band5.txPower, width: state.wifi.band5.channelWidth, hide: state.wifi.band5.hideSsid }
+            band24: { ssid: state.wifi.band24.ssid, txPower: state.wifi.band24.txPower, width: state.wifi.band24.channelWidth, channel: state.wifi.band24.channel, hide: state.wifi.band24.hideSsid },
+            band5: { ssid: state.wifi.band5.ssid, txPower: state.wifi.band5.txPower, width: state.wifi.band5.channelWidth, channel: state.wifi.band5.channel, hide: state.wifi.band5.hideSsid },
+            aps24: (state.wifi.aps24 || []).map(function (s) { return { instId: s.instId, ssid: s.ssid, enabled: s.enabled, hide: s.hideSsid, bssid: s.bssid, security: s.security }; }),
+            aps5: (state.wifi.aps5 || []).map(function (s) { return { instId: s.instId, ssid: s.ssid, enabled: s.enabled, hide: s.hideSsid, bssid: s.bssid, security: s.security }; })
           },
+          macFilterPolicy: state.macFilter,
           devicesSummary: {
             totalDevices: state.devices.length,
             wifi5GHz: state.devices.filter(function (d) { return d.connectionType === '5GHz'; }).length,
             wifi24GHz: state.devices.filter(function (d) { return d.connectionType === '2.4GHz'; }).length,
             ethernet: state.devices.filter(function (d) { return d.connectionType === 'Ethernet'; }).length,
-            blocked: state.devices.filter(function (d) { return d.blocked; }).length
+            blocked: state.devices.filter(function (d) { return d.blocked; }).length,
+            whitelisted: state.devices.filter(function (d) { return d.whitelisted; }).length
           },
           devicesList: state.devices,
           speedTestPerformance: state.speedTest,
@@ -2643,7 +3032,37 @@
         return false;
       }
 
-      // Extract and merge Wi-Fi SSIDs (OBJ_WLANAP_ID), Radio Settings (OBJ_WLANSETTING_ID / OBJ_WLANCONFIGDRV_ID), and Passphrases (OBJ_WLANPSK_ID)
+      // Normalize ZTE BeaconType / AuthMode into the standard ZTE values ('11i', 'WPAand11i', 'WPA', 'None')
+      function normalizeZteSecurityMode(rawSec) {
+        const s = String(rawSec || '').trim();
+        if (!s) return '11i';
+        const up = s.toUpperCase();
+        if (up === 'NONE' || up === 'OPEN' || up === 'BASIC') return 'None';
+        if (up === 'WPAAND11I' || up.includes('WPA/WPA2') || up.includes('WPA-PSK/WPA2-PSK') || up.includes('MIXED')) return 'WPAand11i';
+        if (up === '11I' || up === 'WPA2' || up.includes('WPA2-PSK')) return '11i';
+        if (up === 'WPA' || up === 'WPA-PSK') return 'WPA';
+        return s;
+      }
+
+      // Convert UI Channel Width back to ZTE BandWidth code when needed
+      function mapUiWidthToZteBandWidth(uiWidth, is5G) {
+        const s = String(uiWidth || '').trim().toUpperCase();
+        if (is5G) {
+          if (s.includes('80')) return '80MHz';
+          if (s.includes('40')) return '40MHz';
+          if (s.includes('20')) return '20MHz';
+          return '80MHz';
+        } else {
+          if (s === 'AUTO') return 'Auto';
+          if (s.includes('20/40')) return '20/40MHz';
+          if (s.includes('40')) return '40MHz';
+          if (s.includes('20')) return '20MHz';
+          return '20/40MHz';
+        }
+      }
+
+      // Extract and merge Wi-Fi SSIDs (OBJ_WLANAP_ID), Radio Settings (OBJ_WLANSETTING_ID & OBJ_CHANNEL_ID),
+      // Driver BSSIDs (OBJ_WLANCONFIGDRV_ID), and Passphrases (OBJ_WLANPSK_ID)
       function parseZteWlanConfigFromXml(combinedXml, wlanApMap, account) {
         if (!combinedXml) return;
         if (!Array.isArray(nativeCache.wifi.aps24) || nativeCache.wifi.aps24.length !== 4) {
@@ -2653,27 +3072,30 @@
           nativeCache.wifi.aps5 = createDefaultAps5();
         }
 
-        // 1. Parse Radio-Level Settings from <OBJ_WLANSETTING_ID> and <OBJ_WLANCONFIGDRV_ID> (confirmed in wlan_status_lua.lua)
+        // 1. Parse Radio-Level Settings ONLY from <OBJ_WLANSETTING_ID> and <OBJ_CHANNEL_ID>
+        //    (Do NOT mix <OBJ_WLANCONFIGDRV_ID> here because OBJ_WLANCONFIGDRV_ID has 8 AP instances where disabled 5GHz APs have RealChannel=0!)
         const radioSettingObjs = parseZteXmlByObjectTag(combinedXml, 'OBJ_WLANSETTING_ID')
-          .concat(parseZteXmlByObjectTag(combinedXml, 'OBJ_WLANCONFIGDRV_ID'));
+          .concat(parseZteXmlByObjectTag(combinedXml, 'OBJ_CHANNEL_ID'));
 
         radioSettingObjs.forEach(function (rInst, idx) {
-          const rId = String(rInst._InstID || rInst.InstId || '').toUpperCase();
+          const rId = String(rInst._InstID || rInst.InstId || rInst.WLANViewName || '').toUpperCase();
           const rBand = String(rInst.Band || rInst.FreqBand || rInst.WorkMode || rInst.Standard || '').toUpperCase();
           const chNum = parseInt(rInst.RealChannel || rInst.Channel || '0', 10);
           let is5G = false;
-          if (rId.includes('RD2') || rId.includes('VIEW2') || rId.includes('RADIO2') || rId.includes('WLAN2')) {
+          if (rId.includes('RD2') || rId.includes('VIEW2') || rId.includes('RADIO2') || rId.includes('WLAN2') || /AP[5678]\b/.test(rId)) {
             is5G = true;
-          } else if (rId.includes('RD1') || rId.includes('VIEW1') || rId.includes('RADIO1') || rId.includes('WLAN1')) {
+          } else if (rId.includes('RD1') || rId.includes('VIEW1') || rId.includes('RADIO1') || rId.includes('WLAN1') || /AP[1234]\b/.test(rId)) {
             is5G = false;
           } else if (rBand.includes('5G') || rBand.includes('AC') || rBand.includes('11A') || chNum > 14) {
             is5G = true;
-          } else if (idx === 1 && radioSettingObjs.length === 2) {
+          } else if (idx % 2 === 1 && radioSettingObjs.length >= 2) {
             is5G = true;
           }
 
           const targetBand = is5G ? nativeCache.wifi.band5 : nativeCache.wifi.band24;
           const targetSlots = is5G ? nativeCache.wifi.aps5 : nativeCache.wifi.aps24;
+          targetBand.rawFields = Object.assign({}, targetBand.rawFields || {}, rInst);
+
           const normTx = normalizeZteTxPower(rInst.TxPower || rInst.TransmitPower || rInst.TxPowerLevel);
           if (normTx) {
             targetBand.txPower = normTx;
@@ -2686,10 +3108,18 @@
             targetSlots.forEach(function (s) { s.channelWidth = normBw; });
           }
 
-          if (rInst.RealChannel || rInst.Channel) {
-            const chVal = String(rInst.RealChannel || rInst.Channel).trim();
-            targetBand.channel = (chVal === '0' ? 'Auto (' + (rInst.RealChannel || 'Auto') + ')' : chVal);
+          const isAutoCh = String(rInst.AutoChannelEnabled || '') === '1' || String(rInst.Channel || '') === '0';
+          const realCh = String(rInst.RealChannel || rInst.Channel || '').trim();
+          if (isAutoCh) {
+            targetBand.channel = '0';
+            targetBand.realChannel = (realCh && realCh !== '0') ? realCh : 'Auto';
+            targetSlots.forEach(function (s) { s.channel = '0'; });
+          } else if (realCh) {
+            targetBand.channel = realCh;
+            targetBand.realChannel = realCh;
+            targetSlots.forEach(function (s) { s.channel = realCh; });
           }
+
           if (rInst.WorkMode || rInst.Standard) {
             targetBand.workMode = rInst.WorkMode || rInst.Standard;
           }
@@ -2699,27 +3129,54 @@
           }
         });
 
-        // 2. Map all PSK passphrases from <OBJ_WLANPSK_ID> by their parent AP ID (filtering out ZTE AES Base64 blocks!)
-        const pskByApId = {};
-        const encryptedByApId = {};
-        const pskList = parseZteXmlByObjectTag(combinedXml, 'OBJ_WLANPSK_ID');
-        pskList.forEach(function (pskInst, idx) {
-          const rawId = String(pskInst._InstID || pskInst.InstId || '').toUpperCase();
-          const rawPass = pskInst.KeyPassphrase || pskInst.PreSharedKey || pskInst.WpaPsk || pskInst.Passphrase || pskInst.Key || '';
-          const apMatch = rawId.match(/(DEV\.WIFI\.AP\d+|SSID\d+|AP\d+)/);
-          const apKey = (apMatch && apMatch[1]) ? apMatch[1] : ('IDX_' + idx);
-          if (rawPass) {
-            if (isZteEncryptedOrMaskedPass(rawPass)) {
-              encryptedByApId[apKey] = true;
-              encryptedByApId['IDX_' + idx] = true;
-            } else {
-              pskByApId[apKey] = rawPass;
-              pskByApId['IDX_' + idx] = rawPass;
+        // 2. Parse Per-AP Runtime Driver Status from <OBJ_WLANCONFIGDRV_ID> (8 instances: DEV.WIFI.AP1..AP8 with BSSID & RealChannel)
+        const drvByApNum = {};
+        const drvList = parseZteXmlByObjectTag(combinedXml, 'OBJ_WLANCONFIGDRV_ID');
+        drvList.forEach(function (dInst, idx) {
+          const dId = String(dInst._InstID || dInst.InstId || dInst.WLANViewName || '').toUpperCase();
+          const m = dId.match(/AP(\d+)|SSID(\d+)/);
+          const apNum = m ? parseInt(m[1] || m[2], 10) : (idx + 1);
+          if (apNum >= 1 && apNum <= 8) {
+            const rawBssid = String(dInst.BSSID || dInst.Bssid || dInst.MACAddress || dInst.MacAddr || '').toUpperCase().replace(/-/g, ':').trim();
+            const validBssid = (rawBssid && rawBssid !== '00:00:00:00:00:00' && /^([0-9A-F]{2}:){5}[0-9A-F]{2}$/.test(rawBssid)) ? rawBssid : '';
+            const realCh = String(dInst.RealChannel || dInst.Channel || '').trim();
+            drvByApNum[apNum] = {
+              bssid: validBssid,
+              realChannel: (realCh && realCh !== '0') ? realCh : ''
+            };
+            const targetSlot = apNum <= 4 ? nativeCache.wifi.aps24[apNum - 1] : nativeCache.wifi.aps5[apNum - 5];
+            if (targetSlot && validBssid) {
+              targetSlot.bssid = validBssid;
             }
           }
         });
 
-        // 3. Parse AP instances from <OBJ_WLANAP_ID> (and fallback <OBJ_WLANADSSID_ID>)
+        // 3. Map all PSK passphrases from <OBJ_WLANPSK_ID> by their parent AP number (1..8)
+        const pskByApNum = {};
+        const pskInstIdByApNum = {};
+        const encryptedByApNum = {};
+        const pskList = parseZteXmlByObjectTag(combinedXml, 'OBJ_WLANPSK_ID');
+        pskList.forEach(function (pskInst, idx) {
+          const rawId = String(pskInst._InstID || pskInst.InstId || '').trim();
+          const rawIdUpper = rawId.toUpperCase();
+          const viewRef = String(pskInst.WLANViewName || pskInst.APInstID || '').toUpperCase();
+          const numMatch = rawIdUpper.match(/AP(\d+)|SSID(\d+)|PSK(\d+)/) || viewRef.match(/AP(\d+)|SSID(\d+)/);
+          const apNum = numMatch ? parseInt(numMatch[1] || numMatch[2] || numMatch[3], 10) : (idx + 1);
+
+          if (apNum >= 1 && apNum <= 8) {
+            if (rawId) pskInstIdByApNum[apNum] = rawId;
+            const rawPass = pskInst.KeyPassphrase || pskInst.PreSharedKey || pskInst.WpaPsk || pskInst.Passphrase || pskInst.Key || '';
+            if (rawPass) {
+              if (isZteEncryptedOrMaskedPass(rawPass)) {
+                encryptedByApNum[apNum] = true;
+              } else {
+                pskByApNum[apNum] = rawPass;
+              }
+            }
+          }
+        });
+
+        // 4. Parse AP instances from <OBJ_WLANAP_ID> (and fallback <OBJ_WLANADSSID_ID>)
         let apList = parseZteXmlByObjectTag(combinedXml, 'OBJ_WLANAP_ID');
         if (apList.length === 0) {
           apList = parseZteXmlByObjectTag(combinedXml, 'OBJ_WLANADSSID_ID');
@@ -2739,27 +3196,6 @@
           const ssid = ap.ESSID || ap.SSID || ap.WlanSsid || ap.Ssid || '';
           if (!ssid && !instIdUpper.includes('AP')) return;
 
-          const viewName = ap.WLANViewName || ap.RadioName || '';
-          const freqBand = ap.Band || ap.FreqBand || ap.OperatingFrequencyBand || '';
-          const isEnabled = (ap.Enable === undefined || ap.Enable === '1' || String(ap.Enable).toLowerCase() === 'true');
-          const is5G = isZte5GHzAp(instIdUpper, viewName, ssid, freqBand);
-          const bandLabel = is5G ? '5GHz' : '2.4GHz';
-
-          const apKeyMatch = instIdUpper.match(/(DEV\.WIFI\.AP\d+|SSID\d+|AP\d+)/);
-          const apShortKey = apKeyMatch ? apKeyMatch[1] : instIdUpper;
-          const directPass = ap.KeyPassphrase || ap.PreSharedKey || ap.WpaPsk || ap.Passphrase || '';
-          const validDirectPass = (!isZteEncryptedOrMaskedPass(directPass)) ? directPass : '';
-          const rawPlainPsk = validDirectPass || pskByApId[apShortKey] || pskByApId[instIdUpper] || pskByApId['IDX_' + idx] || '';
-          const resolvedPass = resolvePlaintextWifiPassword(instIdUpper || apShortKey, ssid, rawPlainPsk, account);
-          const isEncryptedPass = !resolvedPass && (isZteEncryptedOrMaskedPass(directPass) || encryptedByApId[apShortKey] || encryptedByApId['IDX_' + idx]);
-
-          const bssidRaw = ap.BSSID || ap.Bssid || ap.MACAddress || ap.MacAddr || '';
-          const bssid = String(bssidRaw).toUpperCase().replace(/-/g, ':').trim();
-          const secMode = ap.BeaconType || ap.AuthMode || ap.WPAgerry || ap.EncryptType || 'WPA2-PSK-AES';
-          const normApTx = normalizeZteTxPower(ap.TxPower || ap.TransmitPower);
-          const normApBw = normalizeZteChannelWidth(ap.BandWidth || ap.ChannelWidth, is5G);
-          const hideSsid = ap.HideSSID !== undefined ? (String(ap.HideSSID) === '1') : false;
-
           let apNum = 0;
           const numMatch = instIdUpper.match(/AP(\d+)|SSID(\d+)/);
           if (numMatch) {
@@ -2767,6 +3203,45 @@
           } else if (idx >= 0 && idx < 8) {
             apNum = idx + 1;
           }
+
+          const viewName = ap.WLANViewName || ap.RadioName || '';
+          const freqBand = ap.Band || ap.FreqBand || ap.OperatingFrequencyBand || '';
+          const isEnabled = (ap.Enable !== undefined)
+            ? (String(ap.Enable) === '1' || String(ap.Enable).toLowerCase() === 'true')
+            : false;
+          const is5G = (apNum >= 5 && apNum <= 8) ? true : ((apNum >= 1 && apNum <= 4) ? false : isZte5GHzAp(instIdUpper, viewName, ssid, freqBand));
+          const bandLabel = is5G ? '5GHz' : '2.4GHz';
+
+          const directPass = ap.KeyPassphrase || ap.PreSharedKey || ap.WpaPsk || ap.Passphrase || '';
+          const validDirectPass = (!isZteEncryptedOrMaskedPass(directPass)) ? directPass : '';
+          const rawPlainPsk = validDirectPass || pskByApNum[apNum] || '';
+          const canonicalInstId = instIdUpper || ('DEV.WIFI.AP' + apNum);
+          const resolvedPass = resolvePlaintextWifiPassword(canonicalInstId, ssid, rawPlainPsk, account);
+          const isEncryptedPass = !resolvedPass && Boolean(isZteEncryptedOrMaskedPass(directPass) || encryptedByApNum[apNum]);
+
+          const bssidFromAp = String(ap.BSSID || ap.Bssid || ap.MACAddress || ap.MacAddr || '').toUpperCase().replace(/-/g, ':').trim();
+          const validApBssid = (bssidFromAp && bssidFromAp !== '00:00:00:00:00:00' && /^([0-9A-F]{2}:){5}[0-9A-F]{2}$/.test(bssidFromAp)) ? bssidFromAp : '';
+          const bssid = validApBssid || (drvByApNum[apNum] && drvByApNum[apNum].bssid) || '';
+
+          const secMode = normalizeZteSecurityMode(ap.BeaconType || ap.AuthMode || ap.WPAgerry || ap.EncryptType || '11i');
+          const normApTx = normalizeZteTxPower(ap.TxPower || ap.TransmitPower);
+          const normApBw = normalizeZteChannelWidth(ap.BandWidth || ap.ChannelWidth, is5G);
+
+          // Accurate Hidden SSID check across all ZTE H188A / H168N / H288A parameter variants:
+          // ZTE H188A uses Hidden ('1' = hidden, '0' = broadcast) or HideSSID ('1' = hidden) or SSIDAdvertisementEnabled ('0' = hidden, '1' = visible)
+          let hideSsid = false;
+          if (ap.Hidden !== undefined) {
+            hideSsid = (String(ap.Hidden) === '1' || String(ap.Hidden).toLowerCase() === 'true');
+          } else if (ap.HideSSID !== undefined) {
+            hideSsid = (String(ap.HideSSID) === '1' || String(ap.HideSSID).toLowerCase() === 'true');
+          } else if (ap.SSIDAdvertisementEnabled !== undefined) {
+            hideSsid = (String(ap.SSIDAdvertisementEnabled) === '0' || String(ap.SSIDAdvertisementEnabled).toLowerCase() === 'false');
+          } else if (ap.BroadcastSSID !== undefined) {
+            hideSsid = (String(ap.BroadcastSSID) === '0' || String(ap.BroadcastSSID).toLowerCase() === 'false');
+          }
+
+          const maxStaRaw = parseInt(ap.MaxStaNum || ap.AssocNum || ap.MaxUserNum || ap.MaxAssocNum || '32', 10);
+          const maxClients = (!isNaN(maxStaRaw) && maxStaRaw >= 1 && maxStaRaw <= 64) ? maxStaRaw : 32;
 
           if (instIdUpper) {
             wlanApMap[instIdUpper] = { ssid: ssid, band: bandLabel, enabled: isEnabled, bssid: bssid };
@@ -2781,87 +3256,90 @@
           }
 
           // Update the specific slot in aps24 (AP1..AP4) or aps5 (AP5..AP8)
-          if (apNum >= 1 && apNum <= 4) {
-            const slotObj24 = nativeCache.wifi.aps24[apNum - 1];
-            if (slotObj24) {
-              slotObj24.instId = instId || ('DEV.WIFI.AP' + apNum);
-              slotObj24.enabled = isEnabled;
-              if (ssid) slotObj24.ssid = ssid;
-              if (resolvedPass) {
-                slotObj24.password = resolvedPass;
-                slotObj24.passwordEncrypted = false;
-              } else if (isEncryptedPass) {
-                slotObj24.passwordEncrypted = true;
-              }
-              slotObj24.hideSsid = hideSsid;
-              if (bssid && bssid !== '00:00:00:00:00:00') slotObj24.bssid = bssid;
-              if (secMode) slotObj24.security = secMode;
-              if (normApTx) slotObj24.txPower = normApTx;
-              if (normApBw) slotObj24.channelWidth = normApBw;
+          const slotObj = (apNum >= 1 && apNum <= 4)
+            ? nativeCache.wifi.aps24[apNum - 1]
+            : ((apNum >= 5 && apNum <= 8) ? nativeCache.wifi.aps5[apNum - 5] : null);
+
+          if (slotObj) {
+            slotObj.instId = instId || ('DEV.WIFI.AP' + apNum);
+            if (pskInstIdByApNum[apNum]) slotObj.pskInstId = pskInstIdByApNum[apNum];
+            slotObj.enabled = isEnabled;
+            if (ssid) slotObj.ssid = ssid;
+            if (resolvedPass) {
+              slotObj.password = resolvedPass;
+              slotObj.passwordEncrypted = false;
+              slotObj.passwordSource = rawPlainPsk ? 'router' : 'vault';
+            } else {
+              slotObj.password = '';
+              slotObj.passwordEncrypted = isEncryptedPass;
+              slotObj.passwordSource = isEncryptedPass ? 'encrypted_on_router' : 'none';
             }
-          } else if (apNum >= 5 && apNum <= 8) {
-            const slotObj5 = nativeCache.wifi.aps5[apNum - 5];
-            if (slotObj5) {
-              slotObj5.instId = instId || ('DEV.WIFI.AP' + apNum);
-              slotObj5.enabled = isEnabled;
-              if (ssid) slotObj5.ssid = ssid;
-              if (resolvedPass) {
-                slotObj5.password = resolvedPass;
-                slotObj5.passwordEncrypted = false;
-              } else if (isEncryptedPass) {
-                slotObj5.passwordEncrypted = true;
-              }
-              slotObj5.hideSsid = hideSsid;
-              if (bssid && bssid !== '00:00:00:00:00:00') slotObj5.bssid = bssid;
-              if (secMode) slotObj5.security = secMode;
-              if (normApTx) slotObj5.txPower = normApTx;
-              if (normApBw) slotObj5.channelWidth = normApBw;
-            }
+            slotObj.hideSsid = hideSsid;
+            if (bssid) slotObj.bssid = bssid;
+            if (secMode) slotObj.security = secMode;
+            if (normApTx) slotObj.txPower = normApTx;
+            if (normApBw) slotObj.channelWidth = normApBw;
+            slotObj.maxClients = maxClients;
+            slotObj.rawFields = Object.assign({}, slotObj.rawFields || {}, ap);
           }
 
           if (is5G) {
+            if (drvByApNum[apNum] && drvByApNum[apNum].realChannel && isEnabled) {
+              nativeCache.wifi.band5.realChannel = drvByApNum[apNum].realChannel;
+            }
             if ((isEnabled && !foundActive5) || (!nativeCache.wifi.band5.ssid)) {
               if (isEnabled) foundActive5 = true;
               if (ssid) nativeCache.wifi.band5.ssid = ssid;
               nativeCache.wifi.band5.enabled = isEnabled;
-              if (resolvedPass) {
-                nativeCache.wifi.band5.password = resolvedPass;
-                nativeCache.wifi.band5.passwordEncrypted = false;
-              } else if (isEncryptedPass && !nativeCache.wifi.band5.password) {
-                nativeCache.wifi.band5.passwordEncrypted = true;
-              }
+              nativeCache.wifi.band5.password = resolvedPass || '';
+              nativeCache.wifi.band5.passwordEncrypted = isEncryptedPass;
               if (instId) nativeCache.wifi.band5.instId = instId;
-              if (bssid && bssid !== '00:00:00:00:00:00') nativeCache.wifi.band5.bssid = bssid;
+              if (bssid) nativeCache.wifi.band5.bssid = bssid;
               nativeCache.wifi.band5.hideSsid = hideSsid;
               if (normApTx) nativeCache.wifi.band5.txPower = normApTx;
               if (normApBw) nativeCache.wifi.band5.channelWidth = normApBw;
               if (secMode) nativeCache.wifi.band5.security = secMode;
+              nativeCache.wifi.band5.maxClients = maxClients;
             }
           } else {
+            if (drvByApNum[apNum] && drvByApNum[apNum].realChannel && isEnabled) {
+              nativeCache.wifi.band24.realChannel = drvByApNum[apNum].realChannel;
+            }
             if ((isEnabled && !foundActive24) || (!nativeCache.wifi.band24.ssid)) {
               if (isEnabled) foundActive24 = true;
               if (ssid) nativeCache.wifi.band24.ssid = ssid;
               nativeCache.wifi.band24.enabled = isEnabled;
-              if (resolvedPass) {
-                nativeCache.wifi.band24.password = resolvedPass;
-                nativeCache.wifi.band24.passwordEncrypted = false;
-              } else if (isEncryptedPass && !nativeCache.wifi.band24.password) {
-                nativeCache.wifi.band24.passwordEncrypted = true;
-              }
+              nativeCache.wifi.band24.password = resolvedPass || '';
+              nativeCache.wifi.band24.passwordEncrypted = isEncryptedPass;
               if (instId) nativeCache.wifi.band24.instId = instId;
-              if (bssid && bssid !== '00:00:00:00:00:00') nativeCache.wifi.band24.bssid = bssid;
+              if (bssid) nativeCache.wifi.band24.bssid = bssid;
               nativeCache.wifi.band24.hideSsid = hideSsid;
               if (normApTx) nativeCache.wifi.band24.txPower = normApTx;
               if (normApBw) nativeCache.wifi.band24.channelWidth = normApBw;
               if (secMode) nativeCache.wifi.band24.security = secMode;
+              nativeCache.wifi.band24.maxClients = maxClients;
             }
           }
         });
+
+        // Auto-select the first enabled 2.4GHz and 5GHz slot on initial sync so when SSID1/SSID5 are disabled
+        // and SSID2 ("iCe") / SSID6 ("eNg") are active, the user immediately sees their active networks!
+        if (!state.hasAutoSelectedWifiSlots && apList.length > 0) {
+          const firstActive24 = nativeCache.wifi.aps24.findIndex(function (s) { return s.enabled; });
+          const firstActive5 = nativeCache.wifi.aps5.findIndex(function (s) { return s.enabled; });
+          if (firstActive24 >= 0) state.selectedSlot24 = firstActive24;
+          if (firstActive5 >= 0) state.selectedSlot5 = firstActive5;
+          if (firstActive24 >= 0 || firstActive5 >= 0) {
+            state.hasAutoSelectedWifiSlots = true;
+          }
+        }
       }
 
       async function nativeDirectRouterRequest(account) {
         const capHttp = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.CapacitorHttp;
         if (!capHttp || !account) return null;
+
+        sanitizeWifiPasswordVault();
 
         // Clear any stale encrypted Base64 password from previous cache
         if (isZteEncryptedOrMaskedPass(nativeCache.wifi.band24.password)) {
@@ -2953,9 +3431,12 @@
         ]);
         parseZteWlanConfigFromXml(localNetXml, wlanApMap, account);
 
-        // Optional probe of wlanBasic to fetch <OBJ_WLANPSK_ID> & <OBJ_WLANADSSID_ID> when supported
+        // Probe wlanBasic&Menu3Location=0 to fetch wlan_basiconoff_lua.lua, wlan_basicadconf_lua.lua [OBJ_CHANNEL_ID], and wlan_sssidconf_lua.lua [OBJ_WLANPSK_ID]
         try {
           const wlanBasicXml = await fetchAllScriptsForZteView(capHttp, activeOrigin, 'wlanBasic&Menu3Location=0', account, [
+            'wlan_basiconoff_lua.lua',
+            'wlan_basicadconf_lua.lua',
+            'wlan_sssidconf_lua.lua',
             'wlan_config_lua.lua',
             'wlan_adpsk_lua.lua'
           ]);
@@ -2989,7 +3470,7 @@
             if (inst.ESSID && !inst.IPAddress && !inst.HostName && !inst.MACAddress && !inst.MacAddr) return;
 
             const rawMac = inst.MACAddress || inst.MacAddr || inst.HostMac || inst.Mac || inst.MAC || inst.devMac || '';
-            const mac = String(rawMac).toUpperCase().replace(/-/g, ':').trim();
+            const mac = normalizeMacAddress(rawMac);
             if (mac && /^([0-9A-F]{2}:){5}[0-9A-F]{2}$/.test(mac) && !seenMac[mac]) {
               seenMac[mac] = true;
               const ip = inst.IPAddress || inst.IpAddr || inst.HostIp || inst.Ip || inst.IPv4Address || inst.devIp || '—';
@@ -3016,12 +3497,14 @@
               }
 
               let connType = defaultConnType || '2.4GHz';
+              let matchedSsidName = '';
               let matchedFromMap = false;
 
               for (let cIdx = 0; cIdx < aliasCandidates.length; cIdx++) {
                 const key = aliasCandidates[cIdx].toUpperCase();
                 if (wlanApMap[key]) {
                   connType = wlanApMap[key].band;
+                  matchedSsidName = wlanApMap[key].ssid || '';
                   matchedFromMap = true;
                   break;
                 }
@@ -3046,6 +3529,8 @@
                 ip: ip,
                 mac: mac,
                 connectionType: connType,
+                ssidName: matchedSsidName,
+                online: true,
                 blocked: false
               });
             }
@@ -3070,6 +3555,11 @@
         } else {
           appendDiagLog('Device scan complete (0 devices parsed)');
         }
+
+        // Sync MAC filter rules (Blacklist / Whitelist) from router if available and merge with persistent local state
+        try {
+          await nativeZteSyncMacFilter(capHttp, activeOrigin, account);
+        } catch (e) {}
 
         // =========================================================================
         // 4. Fetch Router Details, Hardware MAC, Serial & System Uptime (menuView = statusMgr&Menu3Location=0)
@@ -3223,13 +3713,24 @@
           wanConnStatus = 'Connected (VDSL2 Up)';
         }
 
-        const bssid24 = nativeCache.wifi.band24.bssid || (nativeCache.wifi.aps24[0] && nativeCache.wifi.aps24[0].bssid) || '';
-        const bssid5 = nativeCache.wifi.band5.bssid || (nativeCache.wifi.aps5[0] && nativeCache.wifi.aps5[0].bssid) || '';
+        let bssid24 = nativeCache.wifi.band24.bssid ||
+          ((nativeCache.wifi.aps24.find(function (s) { return s.enabled && s.bssid; }) || {}).bssid) || '';
+        let bssid5 = nativeCache.wifi.band5.bssid ||
+          ((nativeCache.wifi.aps5.find(function (s) { return s.enabled && s.bssid; }) || {}).bssid) || '';
         if (!routerMac) {
           routerMac = wanMac || bssid24 || bssid5 || null;
         }
+        // Populate fallback BSSID from routerMac when ZTE driver reports empty BSSID
+        if (routerMac) {
+          if (!bssid24) bssid24 = routerMac;
+          if (!bssid5) bssid5 = routerMac;
+          nativeCache.wifi.band24.bssid = bssid24;
+          nativeCache.wifi.band5.bssid = bssid5;
+          nativeCache.wifi.aps24.forEach(function (s) { if (!s.bssid && s.enabled) s.bssid = bssid24; });
+          nativeCache.wifi.aps5.forEach(function (s) { if (!s.bssid && s.enabled) s.bssid = bssid5; });
+        }
 
-        state.devices = nativeCache.devices;
+        state.devices = mergeDevicesWithMacFilter(nativeCache.devices);
         state.wifi = nativeCache.wifi;
 
         const incompleteDueToTimeout = Boolean(
@@ -3334,6 +3835,118 @@
         }
       }
 
+      // Build comprehensive ZTE CGILua form-urlencoded payload for updating a Wi-Fi AP instance (wlan_sssidconf_lua.lua)
+      function buildZteSsidPostPayload(slotObj, bandPayload, tok) {
+        const instId = bandPayload.instId || (slotObj && slotObj.instId) || 'DEV.WIFI.AP1';
+        const pskInstId = (slotObj && slotObj.pskInstId) || (instId + '.PSK1');
+        const enabledStr = bandPayload.enabled !== false ? '1' : '0';
+        const ssidStr = String(bandPayload.ssid || (slotObj && slotObj.ssid) || '').trim();
+        const hideStr = bandPayload.hideSsid ? '1' : '0';
+        const advStr = bandPayload.hideSsid ? '0' : '1';
+        const secStr = normalizeZteSecurityMode(bandPayload.security || (slotObj && slotObj.security) || '11i');
+        const maxClientsStr = String(bandPayload.maxClients || (slotObj && slotObj.maxClients) || 32);
+        const cleanPass = (!isZteEncryptedOrMaskedPass(bandPayload.password)) ? String(bandPayload.password || '').trim() : '';
+
+        const params = [];
+        const addParam = function (k, v) {
+          if (v !== undefined && v !== null) {
+            params.push(encodeURIComponent(k) + '=' + encodeURIComponent(String(v)));
+          }
+        };
+
+        addParam('IF_ACTION', 'Apply');
+        addParam('_InstNum', '1');
+        addParam('_InstID', instId);
+        addParam('_InstID_0', instId);
+
+        // Preserve existing non-conflicting fields from router's <OBJ_WLANAP_ID> instance so CGILua validation succeeds
+        const rawFields = (slotObj && slotObj.rawFields) || {};
+        const skipKeys = {
+          _InstID: 1, InstId: 1, Enable: 1, ESSID: 1, SSID: 1, Hidden: 1, HideSSID: 1,
+          SSIDAdvertisementEnabled: 1, BroadcastSSID: 1, BeaconType: 1, MaxStaNum: 1,
+          AssocNum: 1, KeyPassphrase: 1, PreSharedKey: 1
+        };
+        Object.keys(rawFields).forEach(function (rk) {
+          if (!skipKeys[rk] && rawFields[rk] !== undefined && rawFields[rk] !== '') {
+            addParam(rk, rawFields[rk]);
+            addParam(rk + '_0', rawFields[rk]);
+          }
+        });
+
+        // Core SSID parameters (both direct and _0 indexed for universal ZTE H188A / H168N / H288A compatibility)
+        addParam('Enable', enabledStr);
+        addParam('Enable_0', enabledStr);
+        addParam('ESSID', ssidStr);
+        addParam('ESSID_0', ssidStr);
+        addParam('Hidden', hideStr);
+        addParam('Hidden_0', hideStr);
+        addParam('HideSSID', hideStr);
+        addParam('HideSSID_0', hideStr);
+        addParam('SSIDAdvertisementEnabled', advStr);
+        addParam('SSIDAdvertisementEnabled_0', advStr);
+        addParam('BeaconType', secStr);
+        addParam('BeaconType_0', secStr);
+        addParam('MaxStaNum', maxClientsStr);
+        addParam('MaxStaNum_0', maxClientsStr);
+        addParam('AssocNum', maxClientsStr);
+        addParam('AssocNum_0', maxClientsStr);
+
+        if (cleanPass) {
+          addParam('_InstID_PSK', pskInstId);
+          addParam('KeyPassphrase', cleanPass);
+          addParam('KeyPassphrase_0', cleanPass);
+          addParam('PreSharedKey', cleanPass);
+        }
+
+        addParam('_sessionTOKEN', tok);
+        return params.join('&');
+      }
+
+      // Build ZTE CGILua form-urlencoded payload for Radio settings (wlan_basicadconf_lua.lua)
+      function buildZteRadioPostPayload(bandState, bandPayload, is5G, tok) {
+        const radioInstId = is5G ? 'DEV.WIFI.RD2' : 'DEV.WIFI.RD1';
+        const txNum = String(bandPayload.txPower || bandState.txPower || '100%').replace('%', '').trim();
+        const bwVal = mapUiWidthToZteBandWidth(bandPayload.channelWidth || bandState.channelWidth, is5G);
+        const chVal = String(bandPayload.channel !== undefined ? bandPayload.channel : (bandState.channel || '0')).trim();
+        const autoCh = (chVal === '0' || chVal.toLowerCase().includes('auto')) ? '1' : '0';
+        const cleanCh = autoCh === '1' ? '0' : chVal;
+
+        const params = [];
+        const addParam = function (k, v) {
+          if (v !== undefined && v !== null) {
+            params.push(encodeURIComponent(k) + '=' + encodeURIComponent(String(v)));
+          }
+        };
+
+        addParam('IF_ACTION', 'Apply');
+        addParam('_InstNum', '1');
+        addParam('_InstID', radioInstId);
+        addParam('_InstID_0', radioInstId);
+
+        const rawFields = (bandState && bandState.rawFields) || {};
+        const skipKeys = {
+          _InstID: 1, InstId: 1, TxPower: 1, TransmitPower: 1, BandWidth: 1,
+          ChannelWidth: 1, Channel: 1, AutoChannelEnabled: 1
+        };
+        Object.keys(rawFields).forEach(function (rk) {
+          if (!skipKeys[rk] && rawFields[rk] !== undefined && rawFields[rk] !== '') {
+            addParam(rk, rawFields[rk]);
+            addParam(rk + '_0', rawFields[rk]);
+          }
+        });
+
+        addParam('TxPower', txNum);
+        addParam('TxPower_0', txNum);
+        addParam('BandWidth', bwVal);
+        addParam('BandWidth_0', bwVal);
+        addParam('Channel', cleanCh);
+        addParam('Channel_0', cleanCh);
+        addParam('AutoChannelEnabled', autoCh);
+        addParam('AutoChannelEnabled_0', autoCh);
+        addParam('_sessionTOKEN', tok);
+        return params.join('&');
+      }
+
       async function nativeZteUpdateWifi(account, payload) {
         const capHttp = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.CapacitorHttp;
         if (!capHttp || !account) return { ok: false };
@@ -3342,19 +3955,26 @@
           nativeCache.lastAuthTime = 0;
           await zteAuthenticate(capHttp, origin, account);
 
-          const wifiViews = ['wlanBasic&Menu3Location=0', 'wlanBasic', 'wlanNetwork&Menu3Location=0', 'localNetStatus'];
-          let targetWlanScript = 'wlan_config_lua.lua';
+          const wifiViews = ['wlanBasic&Menu3Location=0', 'wlanBasic', 'wlanNetwork&Menu3Location=0'];
+          let activeWifiView = 'wlanBasic&Menu3Location=0';
+          let targetSsidScript = 'wlan_sssidconf_lua.lua';
+          let targetRadioScript = 'wlan_basicadconf_lua.lua';
+
           for (let i = 0; i < wifiViews.length; i++) {
             const wv = wifiViews[i];
             const ok = await openZteMenuView(capHttp, origin, wv, account);
             if (ok) {
+              activeWifiView = wv;
               const scripts = (nativeCache.viewScripts && nativeCache.viewScripts[wv]) || [];
-              const ssidScript = scripts.find(function (s) { return /ssid|wlan_config|wlan_status/i.test(s); }) || scripts[0];
-              if (ssidScript) {
-                targetWlanScript = ssidScript;
-                await fetchZteMenuData(capHttp, origin, targetWlanScript, wv, account);
-                break;
+              const foundSsid = scripts.find(function (s) { return /sssidconf|wlan_config|ssid/i.test(s); });
+              const foundRadio = scripts.find(function (s) { return /basicadconf|wlan_adconf|channel/i.test(s); });
+              if (foundSsid) targetSsidScript = foundSsid;
+              if (foundRadio) targetRadioScript = foundRadio;
+              await fetchZteMenuData(capHttp, origin, targetSsidScript, wv, account);
+              if (foundRadio) {
+                await fetchZteMenuData(capHttp, origin, targetRadioScript, wv, account);
               }
+              break;
             }
           }
 
@@ -3365,34 +3985,26 @@
             const targetInst24 = payload.band24.instId || ('DEV.WIFI.AP' + (slotIdx24 + 1));
             const cleanPass24 = (!isZteEncryptedOrMaskedPass(payload.band24.password)) ? String(payload.band24.password || '').trim() : '';
             if (cleanPass24) {
-              savePlaintextWifiPassword(targetInst24, payload.band24.ssid, cleanPass24);
+              savePlaintextWifiPassword(targetInst24, payload.band24.ssid, cleanPass24, true);
             }
-            if (nativeCache.wifi.aps24 && nativeCache.wifi.aps24[slotIdx24]) {
-              Object.assign(nativeCache.wifi.aps24[slotIdx24], payload.band24, {
+            const slotObj24 = (nativeCache.wifi.aps24 && nativeCache.wifi.aps24[slotIdx24]) || null;
+            if (slotObj24) {
+              Object.assign(slotObj24, payload.band24, {
                 instId: targetInst24,
-                password: cleanPass24 || nativeCache.wifi.aps24[slotIdx24].password || ''
+                password: cleanPass24 || slotObj24.password || '',
+                passwordEncrypted: cleanPass24 ? false : slotObj24.passwordEncrypted
               });
             }
-            if (slotIdx24 === 0) {
-              nativeCache.wifi.band24 = Object.assign({}, nativeCache.wifi.band24, payload.band24, {
-                instId: targetInst24,
-                password: cleanPass24 || nativeCache.wifi.band24.password || ''
-              });
-            }
-            let body24 =
-              'IF_ACTION=Apply' +
-              '&_InstID=' + encodeURIComponent(targetInst24) +
-              '&Enable=' + (payload.band24.enabled !== false ? '1' : '0') +
-              '&ESSID=' + encodeURIComponent(payload.band24.ssid || '') +
-              '&HideSSID=' + (payload.band24.hideSsid ? '1' : '0');
-            if (cleanPass24) {
-              body24 += '&KeyPassphrase=' + encodeURIComponent(cleanPass24);
-            }
-            body24 += '&_sessionTOKEN=' + encodeURIComponent(tok);
+            nativeCache.wifi.band24 = Object.assign({}, nativeCache.wifi.band24, payload.band24, {
+              instId: targetInst24,
+              password: cleanPass24 || nativeCache.wifi.band24.password || ''
+            });
 
+            // 1. POST SSID Configuration to wlan_sssidconf_lua.lua
+            const body24 = buildZteSsidPostPayload(slotObj24, payload.band24, tok);
             const res24 = await capRequestWithRedirects(capHttp, {
               method: 'POST',
-              url: origin + '/?_type=menuData&_tag=' + targetWlanScript + '&_=' + getZteGuid(),
+              url: origin + '/?_type=menuData&_tag=' + targetSsidScript + '&_=' + getZteGuid(),
               headers: {
                 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
                 'Referer': origin + '/',
@@ -3403,7 +4015,26 @@
             const r24Str = typeof res24.data === 'string' ? res24.data : '';
             const nextTok = extractTmpSessionToken(r24Str);
             if (nextTok) tok = nextTok;
-            appendDiagLog('2.4GHz [' + targetInst24 + '] Wi-Fi POST (' + targetWlanScript + ') -> HTTP ' + res24.status);
+            appendDiagLog('2.4GHz [' + targetInst24 + '] SSID POST (' + targetSsidScript + ') -> HTTP ' + res24.status);
+
+            // 2. POST 2.4GHz Radio Configuration (TxPower, BandWidth, Channel) to wlan_basicadconf_lua.lua
+            if (targetRadioScript) {
+              const radioBody24 = buildZteRadioPostPayload(nativeCache.wifi.band24, payload.band24, false, tok);
+              const rRadio24 = await capRequestWithRedirects(capHttp, {
+                method: 'POST',
+                url: origin + '/?_type=menuData&_tag=' + targetRadioScript + '&_=' + getZteGuid(),
+                headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                  'Referer': origin + '/',
+                  'X-Requested-With': 'XMLHttpRequest'
+                },
+                data: radioBody24
+              });
+              const rRadio24Str = typeof rRadio24.data === 'string' ? rRadio24.data : '';
+              const nextRadioTok = extractTmpSessionToken(rRadio24Str);
+              if (nextRadioTok) tok = nextRadioTok;
+              appendDiagLog('2.4GHz [DEV.WIFI.RD1] Radio POST (' + targetRadioScript + ') -> HTTP ' + rRadio24.status);
+            }
           }
 
           if (payload.band5) {
@@ -3411,34 +4042,26 @@
             const targetInst5 = payload.band5.instId || ('DEV.WIFI.AP' + (slotIdx5 + 5));
             const cleanPass5 = (!isZteEncryptedOrMaskedPass(payload.band5.password)) ? String(payload.band5.password || '').trim() : '';
             if (cleanPass5) {
-              savePlaintextWifiPassword(targetInst5, payload.band5.ssid, cleanPass5);
+              savePlaintextWifiPassword(targetInst5, payload.band5.ssid, cleanPass5, true);
             }
-            if (nativeCache.wifi.aps5 && nativeCache.wifi.aps5[slotIdx5]) {
-              Object.assign(nativeCache.wifi.aps5[slotIdx5], payload.band5, {
+            const slotObj5 = (nativeCache.wifi.aps5 && nativeCache.wifi.aps5[slotIdx5]) || null;
+            if (slotObj5) {
+              Object.assign(slotObj5, payload.band5, {
                 instId: targetInst5,
-                password: cleanPass5 || nativeCache.wifi.aps5[slotIdx5].password || ''
+                password: cleanPass5 || slotObj5.password || '',
+                passwordEncrypted: cleanPass5 ? false : slotObj5.passwordEncrypted
               });
             }
-            if (slotIdx5 === 0) {
-              nativeCache.wifi.band5 = Object.assign({}, nativeCache.wifi.band5, payload.band5, {
-                instId: targetInst5,
-                password: cleanPass5 || nativeCache.wifi.band5.password || ''
-              });
-            }
-            let body5 =
-              'IF_ACTION=Apply' +
-              '&_InstID=' + encodeURIComponent(targetInst5) +
-              '&Enable=' + (payload.band5.enabled !== false ? '1' : '0') +
-              '&ESSID=' + encodeURIComponent(payload.band5.ssid || '') +
-              '&HideSSID=' + (payload.band5.hideSsid ? '1' : '0');
-            if (cleanPass5) {
-              body5 += '&KeyPassphrase=' + encodeURIComponent(cleanPass5);
-            }
-            body5 += '&_sessionTOKEN=' + encodeURIComponent(tok);
+            nativeCache.wifi.band5 = Object.assign({}, nativeCache.wifi.band5, payload.band5, {
+              instId: targetInst5,
+              password: cleanPass5 || nativeCache.wifi.band5.password || ''
+            });
 
+            // 1. POST 5GHz SSID Configuration to wlan_sssidconf_lua.lua
+            const body5 = buildZteSsidPostPayload(slotObj5, payload.band5, tok);
             const res5 = await capRequestWithRedirects(capHttp, {
               method: 'POST',
-              url: origin + '/?_type=menuData&_tag=' + targetWlanScript + '&_=' + getZteGuid(),
+              url: origin + '/?_type=menuData&_tag=' + targetSsidScript + '&_=' + getZteGuid(),
               headers: {
                 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
                 'Referer': origin + '/',
@@ -3446,8 +4069,41 @@
               },
               data: body5
             });
-            appendDiagLog('5GHz [' + targetInst5 + '] Wi-Fi POST (' + targetWlanScript + ') -> HTTP ' + res5.status);
+            const r5Str = typeof res5.data === 'string' ? res5.data : '';
+            const nextTok5 = extractTmpSessionToken(r5Str);
+            if (nextTok5) tok = nextTok5;
+            appendDiagLog('5GHz [' + targetInst5 + '] SSID POST (' + targetSsidScript + ') -> HTTP ' + res5.status);
+
+            // 2. POST 5GHz Radio Configuration (TxPower, BandWidth, Channel) to wlan_basicadconf_lua.lua
+            if (targetRadioScript) {
+              const radioBody5 = buildZteRadioPostPayload(nativeCache.wifi.band5, payload.band5, true, tok);
+              const rRadio5 = await capRequestWithRedirects(capHttp, {
+                method: 'POST',
+                url: origin + '/?_type=menuData&_tag=' + targetRadioScript + '&_=' + getZteGuid(),
+                headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                  'Referer': origin + '/',
+                  'X-Requested-With': 'XMLHttpRequest'
+                },
+                data: radioBody5
+              });
+              const rRadio5Str = typeof rRadio5.data === 'string' ? rRadio5.data : '';
+              const nextRadioTok5 = extractTmpSessionToken(rRadio5Str);
+              if (nextRadioTok5) tok = nextRadioTok5;
+              appendDiagLog('5GHz [DEV.WIFI.RD2] Radio POST (' + targetRadioScript + ') -> HTTP ' + rRadio5.status);
+            }
           }
+
+          // Re-fetch updated Wi-Fi XML from router to confirm applied changes
+          try {
+            const verifyXml = await fetchAllScriptsForZteView(capHttp, origin, activeWifiView, account, [
+              targetSsidScript,
+              targetRadioScript
+            ]);
+            if (verifyXml) {
+              parseZteWlanConfigFromXml(verifyXml, {}, account);
+            }
+          } catch (e) {}
 
           state.wifi = nativeCache.wifi;
           return { ok: true };
@@ -3457,29 +4113,258 @@
         }
       }
 
-      async function nativeZteBlockMac(account, mac, block) {
+      // Discover and sync existing MAC Filter / Access Control rules from ZTE Router
+      async function nativeZteSyncMacFilter(capHttp, origin, account) {
+        const aclViews = [
+          'wlanMacFilter&Menu3Location=0',
+          'macFilter&Menu3Location=0',
+          'wlanAdvanced&Menu3Location=0',
+          'security&Menu3Location=0'
+        ];
+        const fallbackAclScripts = [
+          'wlan_macfilter_lua.lua',
+          'wlan_acl_lua.lua',
+          'macfilter_lua.lua'
+        ];
+
+        for (let i = 0; i < aclViews.length; i++) {
+          const v = aclViews[i];
+          const ok = await openZteMenuView(capHttp, origin, v, account);
+          if (ok) {
+            const scripts = (nativeCache.viewScripts && nativeCache.viewScripts[v]) || [];
+            const aclScript = scripts.find(function (s) { return /macfilter|acl|filter/i.test(s); });
+            if (aclScript) {
+              nativeCache.aclView = v;
+              nativeCache.aclScript = aclScript;
+              const aclXml = await fetchZteMenuData(capHttp, origin, aclScript, v, account);
+              if (aclXml) {
+                parseZteMacFilterFromXml(aclXml);
+              }
+              return;
+            }
+          }
+        }
+
+        // Try direct script probe if view discovery didn't list an ACL script
+        for (let j = 0; j < fallbackAclScripts.length; j++) {
+          const s = fallbackAclScripts[j];
+          const xml = await fetchZteMenuData(capHttp, origin, s, null, account);
+          if (xml && (xml.includes('OBJ_') || xml.includes('MACAddress') || xml.includes('MacAddr'))) {
+            nativeCache.aclScript = s;
+            parseZteMacFilterFromXml(xml);
+            break;
+          }
+        }
+      }
+
+      function parseZteMacFilterFromXml(aclXml) {
+        if (!aclXml) return;
+        const mf = ensureMacFilterState();
+        const instList = parseZteXmlInstances(aclXml);
+        let modified = false;
+
+        instList.forEach(function (inst) {
+          const modeRaw = String(inst.FilterMode || inst.MacFilterMode || inst.Mode || inst.ACLMode || '').toUpperCase();
+          if (modeRaw) {
+            if (modeRaw.includes('DENY') || modeRaw.includes('BLACK') || modeRaw === '2' || modeRaw === 'DISCARD') {
+              mf.mode = 'BLACKLIST';
+            } else if (modeRaw.includes('ALLOW') || modeRaw.includes('PERMIT') || modeRaw.includes('WHITE') || modeRaw === '1') {
+              mf.mode = 'WHITELIST';
+            } else if (modeRaw.includes('DISABLE') || modeRaw === '0' || modeRaw === 'OFF') {
+              mf.mode = 'DISABLED';
+            }
+          }
+
+          const rawMac = inst.MACAddress || inst.MacAddr || inst.Mac || inst.SourceMACAddress || '';
+          const mac = normalizeMacAddress(rawMac);
+          if (mac && /^([0-9A-F]{2}:){5}[0-9A-F]{2}$/.test(mac) && mac !== '00:00:00:00:00:00') {
+            const ruleType = String(inst.FilterMode || inst.Type || inst.Permission || mf.mode).toUpperCase();
+            const isAllow = ruleType.includes('ALLOW') || ruleType.includes('PERMIT') || ruleType.includes('WHITE');
+            const name = inst.Name || inst.HostName || inst.Description || state.nicknames[mac] || ('Device-' + mac.slice(-5));
+            const apId = inst.WLANViewName || inst.SSIDName || inst._InstID || 'ALL_ACTIVE';
+
+            if (isAllow) {
+              const existsW = mf.whitelist.some(function (w) { return normalizeMacAddress(w.mac) === mac; });
+              if (!existsW) {
+                mf.whitelist.push({ mac: mac, hostname: name, targetAp: apId, instId: inst._InstID || '', addedAt: new Date().toISOString() });
+                modified = true;
+              }
+            } else {
+              const existsB = mf.blacklist.some(function (b) { return normalizeMacAddress(b.mac) === mac; });
+              if (!existsB) {
+                mf.blacklist.push({ mac: mac, hostname: name, targetAp: apId, instId: inst._InstID || '', addedAt: new Date().toISOString() });
+                modified = true;
+              }
+            }
+          }
+        });
+
+        if (modified) {
+          saveMacFilterState();
+        }
+      }
+
+      function getTargetApsForMacFilter(targetApChoice) {
+        if (targetApChoice && targetApChoice !== 'ALL_ACTIVE') {
+          return [targetApChoice];
+        }
+        const active24 = (state.wifi && state.wifi.aps24 || []).filter(function (s) { return s.enabled; }).map(function (s) { return s.instId; });
+        const active5 = (state.wifi && state.wifi.aps5 || []).filter(function (s) { return s.enabled; }).map(function (s) { return s.instId; });
+        const combined = active24.concat(active5);
+        return combined.length > 0 ? combined : ['DEV.WIFI.AP1', 'DEV.WIFI.AP2', 'DEV.WIFI.AP5', 'DEV.WIFI.AP6'];
+      }
+
+      async function nativeZteBlockMac(account, macRaw, block, meta) {
+        const mac = normalizeMacAddress(macRaw);
+        upsertMacInBlacklist(mac, meta, block);
+
         const capHttp = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.CapacitorHttp;
-        if (!capHttp || !account) return { ok: false };
+        if (!capHttp || !account) return { ok: true, data: state.macFilter };
+
         const origin = nativeCache.baseUrl || ((account.protocol === 'https' ? 'https://' : 'http://') + account.routerIp);
         try {
           await zteAuthenticate(capHttp, origin, account);
-          await openZteMenuView(capHttp, origin, 'wlanAdvanced&Menu3Location=0', account);
-          const tok = nativeCache.tmpSessionToken || nativeCache.sessToken || '';
-          const body =
-            'IF_ACTION=' + (block ? 'Apply' : 'Delete') +
-            '&MACAddress=' + encodeURIComponent(mac) +
-            '&FilterMode=Deny' +
-            '&_sessionTOKEN=' + encodeURIComponent(tok);
-          await capRequestWithRedirects(capHttp, {
-            method: 'POST',
-            url: origin + '/?_type=menuData&_tag=wlan_macfilter_lua.lua',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Referer': origin + '/' },
-            data: body
-          });
-          appendDiagLog('MAC Filter ' + (block ? 'Block' : 'Unblock') + ' pushed for ' + mac);
-          return { ok: true };
+          const targetView = nativeCache.aclView || 'wlanAdvanced&Menu3Location=0';
+          const targetScript = nativeCache.aclScript || 'wlan_macfilter_lua.lua';
+          await openZteMenuView(capHttp, origin, targetView, account);
+          await fetchZteMenuData(capHttp, origin, targetScript, targetView, account);
+
+          let tok = nativeCache.tmpSessionToken || nativeCache.sessToken || '';
+          const targetAps = getTargetApsForMacFilter(state.macFilter.targetAp);
+
+          for (let i = 0; i < targetAps.length; i++) {
+            const apId = targetAps[i];
+            const actionStr = block ? 'Apply' : 'Delete';
+            const body =
+              'IF_ACTION=' + actionStr +
+              '&_InstNum=1' +
+              '&_InstID=' + encodeURIComponent(apId) +
+              '&_InstID_0=' + encodeURIComponent(apId) +
+              '&WLANViewName=' + encodeURIComponent(apId) +
+              '&WLANViewName_0=' + encodeURIComponent(apId) +
+              '&Enable=1&Enable_0=1' +
+              '&FilterMode=Deny&FilterMode_0=Deny' +
+              '&MACAddress=' + encodeURIComponent(mac) +
+              '&MACAddress_0=' + encodeURIComponent(mac) +
+              '&_sessionTOKEN=' + encodeURIComponent(tok);
+
+            const rRes = await capRequestWithRedirects(capHttp, {
+              method: 'POST',
+              url: origin + '/?_type=menuData&_tag=' + targetScript + '&_=' + getZteGuid(),
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                'Referer': origin + '/',
+                'X-Requested-With': 'XMLHttpRequest'
+              },
+              data: body
+            });
+            const rStr = typeof rRes.data === 'string' ? rRes.data : '';
+            const nextTok = extractTmpSessionToken(rStr);
+            if (nextTok) tok = nextTok;
+          }
+
+          appendDiagLog('MAC Filter ' + (block ? 'Blacklist Block' : 'Unblock') + ' applied for ' + mac + ' across [' + targetAps.join(', ') + ']');
+          return { ok: true, data: state.macFilter };
         } catch (e) {
-          return { ok: false, error: e.message };
+          appendDiagLog('MAC Filter warning (saved persistently): ' + e.message);
+          return { ok: true, data: state.macFilter };
+        }
+      }
+
+      async function nativeZteApplyMacFilter(account, filterPayload) {
+        const mf = ensureMacFilterState();
+        if (filterPayload) {
+          if (filterPayload.mode) mf.mode = filterPayload.mode;
+          if (filterPayload.targetAp) mf.targetAp = filterPayload.targetAp;
+          if (Array.isArray(filterPayload.blacklist)) mf.blacklist = filterPayload.blacklist;
+          if (Array.isArray(filterPayload.whitelist)) mf.whitelist = filterPayload.whitelist;
+          saveMacFilterState();
+        }
+        state.devices = mergeDevicesWithMacFilter(nativeCache.devices.length > 0 ? nativeCache.devices : state.devices);
+
+        const capHttp = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.CapacitorHttp;
+        if (!capHttp || !account) return { ok: true, data: mf };
+
+        const origin = nativeCache.baseUrl || ((account.protocol === 'https' ? 'https://' : 'http://') + account.routerIp);
+        try {
+          await zteAuthenticate(capHttp, origin, account);
+          const targetView = nativeCache.aclView || 'wlanAdvanced&Menu3Location=0';
+          const targetScript = nativeCache.aclScript || 'wlan_macfilter_lua.lua';
+          await openZteMenuView(capHttp, origin, targetView, account);
+          await fetchZteMenuData(capHttp, origin, targetScript, targetView, account);
+
+          let tok = nativeCache.tmpSessionToken || nativeCache.sessToken || '';
+          const targetAps = getTargetApsForMacFilter(mf.targetAp);
+          const zteMode = mf.mode === 'WHITELIST' ? 'Allow' : (mf.mode === 'DISABLED' ? 'Disable' : 'Deny');
+          const enableFlag = mf.mode === 'DISABLED' ? '0' : '1';
+          const activeList = mf.mode === 'WHITELIST' ? mf.whitelist : mf.blacklist;
+
+          for (let i = 0; i < targetAps.length; i++) {
+            const apId = targetAps[i];
+            // 1. Set ACL Mode on the AP
+            const modeBody =
+              'IF_ACTION=Apply' +
+              '&_InstNum=1' +
+              '&_InstID=' + encodeURIComponent(apId) +
+              '&_InstID_0=' + encodeURIComponent(apId) +
+              '&WLANViewName=' + encodeURIComponent(apId) +
+              '&Enable=' + enableFlag + '&Enable_0=' + enableFlag +
+              '&FilterMode=' + zteMode + '&FilterMode_0=' + zteMode +
+              '&MacFilterMode=' + zteMode +
+              '&_sessionTOKEN=' + encodeURIComponent(tok);
+
+            const mRes = await capRequestWithRedirects(capHttp, {
+              method: 'POST',
+              url: origin + '/?_type=menuData&_tag=' + targetScript + '&_=' + getZteGuid(),
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                'Referer': origin + '/',
+                'X-Requested-With': 'XMLHttpRequest'
+              },
+              data: modeBody
+            });
+            const mStr = typeof mRes.data === 'string' ? mRes.data : '';
+            const nextTok = extractTmpSessionToken(mStr);
+            if (nextTok) tok = nextTok;
+
+            // 2. Push each MAC entry in the active list for this AP
+            if (mf.mode !== 'DISABLED') {
+              for (let j = 0; j < activeList.length; j++) {
+                const entry = activeList[j];
+                if (!entry || !entry.mac) continue;
+                const entryBody =
+                  'IF_ACTION=Apply' +
+                  '&_InstNum=1' +
+                  '&_InstID=' + encodeURIComponent(apId) +
+                  '&WLANViewName=' + encodeURIComponent(apId) +
+                  '&FilterMode=' + zteMode +
+                  '&MACAddress=' + encodeURIComponent(entry.mac) +
+                  '&MACAddress_0=' + encodeURIComponent(entry.mac) +
+                  '&Name=' + encodeURIComponent(entry.hostname || '') +
+                  '&_sessionTOKEN=' + encodeURIComponent(tok);
+
+                const eRes = await capRequestWithRedirects(capHttp, {
+                  method: 'POST',
+                  url: origin + '/?_type=menuData&_tag=' + targetScript + '&_=' + getZteGuid(),
+                  headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                    'Referer': origin + '/',
+                    'X-Requested-With': 'XMLHttpRequest'
+                  },
+                  data: entryBody
+                });
+                const eStr = typeof eRes.data === 'string' ? eRes.data : '';
+                const eTok = extractTmpSessionToken(eStr);
+                if (eTok) tok = eTok;
+              }
+            }
+          }
+
+          appendDiagLog('MAC Filter Policy [' + mf.mode + '] (' + activeList.length + ' MACs) applied to [' + targetAps.join(', ') + ']');
+          return { ok: true, data: mf };
+        } catch (e) {
+          appendDiagLog('MAC Filter Policy saved locally: ' + e.message);
+          return { ok: true, data: mf };
         }
       }
 
@@ -3491,7 +4376,8 @@
             return await nativeDirectRouterRequest(active);
           }
           if (endpoint === '/api/devices' && (!method || method === 'GET')) {
-            return { ok: true, data: nativeCache.devices };
+            state.devices = mergeDevicesWithMacFilter(nativeCache.devices);
+            return { ok: true, data: state.devices };
           }
           if (endpoint === '/api/wifi' && (!method || method === 'GET')) {
             return { ok: true, data: nativeCache.wifi };
@@ -3500,7 +4386,13 @@
             return await nativeZteUpdateWifi(active, body || {});
           }
           if (endpoint === '/api/block' && method === 'POST') {
-            return await nativeZteBlockMac(active, body && body.mac, body && body.block);
+            return await nativeZteBlockMac(active, body && body.mac, body && body.block, body);
+          }
+          if (endpoint === '/api/mac-filter' && (!method || method === 'GET')) {
+            return { ok: true, data: ensureMacFilterState() };
+          }
+          if (endpoint === '/api/mac-filter' && method === 'POST') {
+            return await nativeZteApplyMacFilter(active, body || {});
           }
           if (endpoint === '/api/reboot' && method === 'POST') {
             return await nativeZteReboot(active);
@@ -4095,7 +4987,118 @@
         }
       }
 
+      function renderMacFilterUI() {
+        const mf = ensureMacFilterState();
+        const modeBadge = document.getElementById('macFilterModeBadge');
+        const modeDesc = document.getElementById('macFilterModeDesc');
+        const targetSelect = document.getElementById('macFilterTargetAp');
+
+        if (modeBadge) {
+          if (mf.mode === 'BLACKLIST') {
+            modeBadge.textContent = 'Blacklist Mode (حظر المحددين)';
+            modeBadge.className = 'px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30';
+          } else if (mf.mode === 'WHITELIST') {
+            modeBadge.textContent = 'Whitelist Mode (السماح للموثوقين فقط)';
+            modeBadge.className = 'px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+          } else {
+            modeBadge.textContent = 'Disabled (الفلترة معطلة)';
+            modeBadge.className = 'px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-slate-800 text-slate-300 border border-white/10';
+          }
+        }
+
+        if (modeDesc) {
+          if (mf.mode === 'BLACKLIST') {
+            modeDesc.textContent = 'وضع القائمة السوداء (Blacklist): يُسمح لكل الأجهزة بالاتصال ما عدا الأجهزة المحظورة في القائمة السوداء (' + mf.blacklist.length + ' جهاز محظور).';
+          } else if (mf.mode === 'WHITELIST') {
+            modeDesc.textContent = 'وضع القائمة البيضاء (Whitelist): يتم حظر أي جهاز غريب تلقائياً، ويُسمح فقط للأجهزة المضافة في القائمة البيضاء (' + mf.whitelist.length + ' جهاز موثوق).';
+          } else {
+            modeDesc.textContent = 'الفلترة معطلة حالياً على الراوتر — جميع الأجهزة التي تمتلك كلمة المرور يمكنها الاتصال.';
+          }
+        }
+
+        if (targetSelect && document.activeElement !== targetSelect) {
+          targetSelect.value = mf.targetAp || 'ALL_ACTIVE';
+        }
+
+        document.querySelectorAll('.mac-mode-btn').forEach(function (btn) {
+          const btnMode = btn.getAttribute('data-mac-mode');
+          const isCurrent = btnMode === mf.mode;
+          if (isCurrent) {
+            if (btnMode === 'BLACKLIST') {
+              btn.className = 'mac-mode-btn btn-press px-2.5 py-1.5 rounded-xl bg-rose-500/25 text-rose-200 border border-rose-500/50 text-[11px] font-bold shadow-sm';
+            } else if (btnMode === 'WHITELIST') {
+              btn.className = 'mac-mode-btn btn-press px-2.5 py-1.5 rounded-xl bg-emerald-500/25 text-emerald-200 border border-emerald-500/50 text-[11px] font-bold shadow-sm';
+            } else {
+              btn.className = 'mac-mode-btn btn-press px-2.5 py-1.5 rounded-xl bg-amber-500 text-slate-950 border border-amber-400 text-[11px] font-bold shadow-sm';
+            }
+          } else {
+            btn.className = 'mac-mode-btn btn-press px-2.5 py-1.5 rounded-xl bg-slate-900/60 text-slate-400 border border-white/10 text-[11px] font-semibold hover:text-white';
+          }
+        });
+
+        const blkCountEl = document.getElementById('blacklistCountBadge');
+        if (blkCountEl) blkCountEl.textContent = String(mf.blacklist.length);
+        const whtCountEl = document.getElementById('whitelistCountBadge');
+        if (whtCountEl) whtCountEl.textContent = String(mf.whitelist.length);
+
+        const filterBlkEl = document.getElementById('filterBlockedCount');
+        if (filterBlkEl) filterBlkEl.textContent = String(state.devices.filter(function (d) { return d.blocked; }).length);
+        const filterWhtEl = document.getElementById('filterWhitelistCount');
+        if (filterWhtEl) filterWhtEl.textContent = String(mf.whitelist.length);
+
+        const blkContainer = document.getElementById('blacklistItemsContainer');
+        if (blkContainer) {
+          if (mf.blacklist.length === 0) {
+            blkContainer.innerHTML = '<p class="text-[11px] text-slate-400 py-3 text-center">لا توجد أجهزة في القائمة السوداء حالياً. اضغط "حظر (Block)" أمام أي جهاز لمنعه نهائياً.</p>';
+          } else {
+            blkContainer.innerHTML = mf.blacklist.map(function (item) {
+              const mac = normalizeMacAddress(item.mac);
+              const name = state.nicknames[mac] || item.hostname || ('Blocked-' + mac.slice(-5));
+              return (
+                '<div class="p-2.5 rounded-xl bg-slate-900/85 border border-rose-500/25 flex items-center justify-between gap-2">' +
+                  '<div class="min-w-0">' +
+                    '<div class="flex items-center gap-1.5">' +
+                      '<span class="w-2 h-2 rounded-full bg-rose-400 shrink-0"></span>' +
+                      '<p class="text-xs font-bold text-white truncate">' + escapeHtml(name) + '</p>' +
+                    '</div>' +
+                    '<p class="text-[10px] font-mono text-rose-300 mt-0.5">' + escapeHtml(mac) + (item.ip && item.ip !== '—' ? (' • ' + escapeHtml(item.ip)) : '') + '</p>' +
+                  '</div>' +
+                  '<button type="button" data-unblock-mac="' + escapeHtml(mac) + '" class="btn-press px-2.5 py-1 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/30 text-[10px] font-bold shrink-0">فك الحظر (Allow)</button>' +
+                '</div>'
+              );
+            }).join('');
+          }
+        }
+
+        const whtContainer = document.getElementById('whitelistItemsContainer');
+        if (whtContainer) {
+          if (mf.whitelist.length === 0) {
+            whtContainer.innerHTML = '<p class="text-[11px] text-slate-400 py-3 text-center">لا توجد أجهزة مضافة في القائمة البيضاء بعد. يمكنك الضغط على "إضافة المتصلين للقائمة البيضاء" لحصر الشبكة على أجهزتك فقط.</p>';
+          } else {
+            whtContainer.innerHTML = mf.whitelist.map(function (item) {
+              const mac = normalizeMacAddress(item.mac);
+              const name = state.nicknames[mac] || item.hostname || ('Trusted-' + mac.slice(-5));
+              return (
+                '<div class="p-2.5 rounded-xl bg-slate-900/85 border border-emerald-500/25 flex items-center justify-between gap-2">' +
+                  '<div class="min-w-0">' +
+                    '<div class="flex items-center gap-1.5">' +
+                      '<span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span>' +
+                      '<p class="text-xs font-bold text-white truncate">' + escapeHtml(name) + '</p>' +
+                    '</div>' +
+                    '<p class="text-[10px] font-mono text-emerald-300 mt-0.5">' + escapeHtml(mac) + (item.ip && item.ip !== '—' ? (' • ' + escapeHtml(item.ip)) : '') + '</p>' +
+                  '</div>' +
+                  '<button type="button" data-unwhitelist-mac="' + escapeHtml(mac) + '" class="btn-press px-2.5 py-1 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 border border-rose-500/30 text-[10px] font-semibold shrink-0">إزالة</button>' +
+                '</div>'
+              );
+            }).join('');
+          }
+        }
+      }
+
       function renderDashboard() {
+        sanitizeWifiPasswordVault();
+        state.devices = mergeDevicesWithMacFilter(state.devices);
+
         const active = getActiveAccount();
         if (active) {
           document.getElementById('sidebarEngineBadge').textContent = active.label;
@@ -4148,31 +5151,31 @@
 
         const b24 = state.wifi.band24 || {};
         const b5 = state.wifi.band5 || {};
-        if (b24.ssid && !state.wifi.aps24[0].ssid) state.wifi.aps24[0].ssid = b24.ssid;
-        if (b5.ssid && !state.wifi.aps5[0].ssid) state.wifi.aps5[0].ssid = b5.ssid;
 
-        // Ensure every slot has its plaintext password resolved (from router, vault, or sticker fallback)
-        state.wifi.aps24.forEach(function (slot, idx) {
-          const fallbackPass = idx === 0 ? b24.password : '';
-          const resolved = resolvePlaintextWifiPassword(slot.instId, slot.ssid, slot.password || fallbackPass, active);
+        // Ensure every slot has its plaintext password resolved (ONLY from router XML or user Wi-Fi vault, NEVER admin login password!)
+        state.wifi.aps24.forEach(function (slot) {
+          const resolved = resolvePlaintextWifiPassword(slot.instId, slot.ssid, slot.password, active);
           if (resolved) {
             slot.password = resolved;
             slot.passwordEncrypted = false;
+          } else {
+            slot.password = '';
           }
         });
-        state.wifi.aps5.forEach(function (slot, idx) {
-          const fallbackPass = idx === 0 ? b5.password : '';
-          const resolved = resolvePlaintextWifiPassword(slot.instId, slot.ssid, slot.password || fallbackPass, active);
+        state.wifi.aps5.forEach(function (slot) {
+          const resolved = resolvePlaintextWifiPassword(slot.instId, slot.ssid, slot.password, active);
           if (resolved) {
             slot.password = resolved;
             slot.passwordEncrypted = false;
+          } else {
+            slot.password = '';
           }
         });
 
-        const s24 = b24.ssid || state.wifi.aps24[0].ssid || '';
-        const s5 = b5.ssid || state.wifi.aps5[0].ssid || '';
         const enabled24Names = state.wifi.aps24.filter(function (a) { return a.enabled && a.ssid; }).map(function (a) { return a.ssid; });
         const enabled5Names = state.wifi.aps5.filter(function (a) { return a.enabled && a.ssid; }).map(function (a) { return a.ssid; });
+        const s24 = enabled24Names[0] || b24.ssid || state.wifi.aps24[0].ssid || '';
+        const s5 = enabled5Names[0] || b5.ssid || state.wifi.aps5[0].ssid || '';
         const allEnabledNames = enabled24Names.concat(enabled5Names);
 
         if (allEnabledNames.length > 0) {
@@ -4266,6 +5269,10 @@
         const w24EnableLabelTitle = document.getElementById('wifi24EnableLabelTitle');
         const w24SsidEl = document.getElementById('wifi24Ssid');
         const w24PassEl = document.getElementById('wifi24Pass');
+        const w24PassHintEl = document.getElementById('wifi24PassStatusHint');
+        const w24SecEl = document.getElementById('wifi24Security');
+        const w24ChEl = document.getElementById('wifi24Channel');
+        const w24MaxClientsEl = document.getElementById('wifi24MaxClients');
         const w24TxEl = document.getElementById('wifi24TxPower');
         const w24WidthEl = document.getElementById('wifi24Width');
         const w24HideEl = document.getElementById('wifi24Hide');
@@ -4274,7 +5281,7 @@
 
         if (w24EnabledEl) w24EnabledEl.checked = Boolean(curSlot24.enabled);
         if (w24EnableLabelTitle) {
-          w24EnableLabelTitle.textContent = 'تفعيل شبكة 2.4GHz (SSID ' + curSlot24.ssidNum + ')';
+          w24EnableLabelTitle.textContent = 'تفعيل شبكة 2.4GHz (SSID ' + curSlot24.ssidNum + (curSlot24.ssid ? ' — ' + curSlot24.ssid : '') + ')';
         }
         if (w24ActiveBadge) {
           w24ActiveBadge.textContent = curSlot24.enabled
@@ -4287,12 +5294,36 @@
         if (w24SsidEl && document.activeElement !== w24SsidEl) {
           w24SsidEl.value = curSlot24.ssid || '';
         }
+        const cleanP24 = resolvePlaintextWifiPassword(curSlot24.instId, curSlot24.ssid, curSlot24.password, active);
         if (w24PassEl && document.activeElement !== w24PassEl) {
-          const cleanP24 = resolvePlaintextWifiPassword(curSlot24.instId, curSlot24.ssid, curSlot24.password || b24.password, active);
           w24PassEl.value = cleanP24 || '';
           w24PassEl.placeholder = cleanP24
             ? 'اضغط إظهار 👁 لعرض الباسورد الحقيقي'
-            : 'اكتب الباسورد لعرضه وحفظه لهذه الشبكة';
+            : (curSlot24.passwordEncrypted
+                ? 'مشفّر من الراوتر — اكتب باسورد الشبكة لحفظه أو لتغييره'
+                : 'اكتب الباسورد لعرضه وحفظه لهذه الشبكة');
+        }
+        if (w24PassHintEl) {
+          if (cleanP24) {
+            w24PassHintEl.textContent = '✓ الباسورد الحقيقي للشبكة جاهز — اضغط إظهار 👁';
+            w24PassHintEl.className = 'text-[10px] text-emerald-400 font-semibold';
+          } else if (curSlot24.passwordEncrypted) {
+            w24PassHintEl.textContent = 'الراوتر يُرجع الباسورد مشفراً (AES) — اكتب باسورد الشبكة مرة واحدة لحفظه أو لتعديله';
+            w24PassHintEl.className = 'text-[10px] text-amber-400';
+          } else {
+            w24PassHintEl.textContent = 'اضغط على رمز العين لإظهار الباسورد الحقيقي';
+            w24PassHintEl.className = 'text-[10px] text-emerald-400';
+          }
+        }
+        if (w24SecEl && document.activeElement !== w24SecEl) {
+          w24SecEl.value = normalizeZteSecurityMode(curSlot24.security || b24.security || '11i');
+        }
+        if (w24ChEl && document.activeElement !== w24ChEl) {
+          const ch24Val = String(b24.channel !== undefined ? b24.channel : (curSlot24.channel || '0')).replace(/[^0-9]/g, '') || '0';
+          w24ChEl.value = ch24Val;
+        }
+        if (w24MaxClientsEl && document.activeElement !== w24MaxClientsEl) {
+          w24MaxClientsEl.value = String(curSlot24.maxClients || b24.maxClients || 32);
         }
         if (w24TxEl && (curSlot24.txPower || b24.txPower) && document.activeElement !== w24TxEl) {
           w24TxEl.value = curSlot24.txPower || b24.txPower;
@@ -4301,11 +5332,14 @@
           w24WidthEl.value = curSlot24.channelWidth || b24.channelWidth;
         }
         if (w24HideEl) w24HideEl.checked = Boolean(curSlot24.hideSsid);
-        if (w24BssidEl) w24BssidEl.textContent = 'BSSID: ' + (curSlot24.bssid || b24.bssid || state.system.wifiBssid24 || '—');
+        const dispBssid24 = curSlot24.bssid || b24.bssid || state.system.wifiBssid24 || state.system.routerMac || '—';
+        if (w24BssidEl) w24BssidEl.textContent = 'BSSID: ' + dispBssid24;
         if (w24MetaEl) {
           const meta24 = ['SSID' + curSlot24.ssidNum];
-          if (b24.channel) meta24.push('CH ' + b24.channel);
-          if (curSlot24.security || b24.security) meta24.push(curSlot24.security || b24.security);
+          const chDisp24 = b24.realChannel || b24.channel || 'Auto';
+          meta24.push('CH ' + chDisp24);
+          if (curSlot24.security || b24.security) meta24.push(normalizeZteSecurityMode(curSlot24.security || b24.security));
+          meta24.push(curSlot24.hideSsid ? 'مخفية (Hidden)' : 'ظاهرة (Broadcast)');
           w24MetaEl.textContent = meta24.join(' • ');
         }
 
@@ -4315,6 +5349,10 @@
         const w5EnableLabelTitle = document.getElementById('wifi5EnableLabelTitle');
         const w5SsidEl = document.getElementById('wifi5Ssid');
         const w5PassEl = document.getElementById('wifi5Pass');
+        const w5PassHintEl = document.getElementById('wifi5PassStatusHint');
+        const w5SecEl = document.getElementById('wifi5Security');
+        const w5ChEl = document.getElementById('wifi5Channel');
+        const w5MaxClientsEl = document.getElementById('wifi5MaxClients');
         const w5TxEl = document.getElementById('wifi5TxPower');
         const w5WidthEl = document.getElementById('wifi5Width');
         const w5HideEl = document.getElementById('wifi5Hide');
@@ -4323,7 +5361,7 @@
 
         if (w5EnabledEl) w5EnabledEl.checked = Boolean(curSlot5.enabled);
         if (w5EnableLabelTitle) {
-          w5EnableLabelTitle.textContent = 'تفعيل شبكة 5GHz (SSID ' + curSlot5.ssidNum + ')';
+          w5EnableLabelTitle.textContent = 'تفعيل شبكة 5GHz (SSID ' + curSlot5.ssidNum + (curSlot5.ssid ? ' — ' + curSlot5.ssid : '') + ')';
         }
         if (w5ActiveBadge) {
           w5ActiveBadge.textContent = curSlot5.enabled
@@ -4336,12 +5374,36 @@
         if (w5SsidEl && document.activeElement !== w5SsidEl) {
           w5SsidEl.value = curSlot5.ssid || '';
         }
+        const cleanP5 = resolvePlaintextWifiPassword(curSlot5.instId, curSlot5.ssid, curSlot5.password, active);
         if (w5PassEl && document.activeElement !== w5PassEl) {
-          const cleanP5 = resolvePlaintextWifiPassword(curSlot5.instId, curSlot5.ssid, curSlot5.password || b5.password, active);
           w5PassEl.value = cleanP5 || '';
           w5PassEl.placeholder = cleanP5
             ? 'اضغط إظهار 👁 لعرض الباسورد الحقيقي'
-            : 'اكتب الباسورد لعرضه وحفظه لهذه الشبكة';
+            : (curSlot5.passwordEncrypted
+                ? 'مشفّر من الراوتر — اكتب باسورد الشبكة لحفظه أو لتغييره'
+                : 'اكتب الباسورد لعرضه وحفظه لهذه الشبكة');
+        }
+        if (w5PassHintEl) {
+          if (cleanP5) {
+            w5PassHintEl.textContent = '✓ الباسورد الحقيقي للشبكة جاهز — اضغط إظهار 👁';
+            w5PassHintEl.className = 'text-[10px] text-emerald-400 font-semibold';
+          } else if (curSlot5.passwordEncrypted) {
+            w5PassHintEl.textContent = 'الراوتر يُرجع الباسورد مشفراً (AES) — اكتب باسورد الشبكة مرة واحدة لحفظه أو لتعديله';
+            w5PassHintEl.className = 'text-[10px] text-amber-400';
+          } else {
+            w5PassHintEl.textContent = 'اضغط على رمز العين لإظهار الباسورد الحقيقي';
+            w5PassHintEl.className = 'text-[10px] text-emerald-400';
+          }
+        }
+        if (w5SecEl && document.activeElement !== w5SecEl) {
+          w5SecEl.value = normalizeZteSecurityMode(curSlot5.security || b5.security || '11i');
+        }
+        if (w5ChEl && document.activeElement !== w5ChEl) {
+          const ch5Val = String(b5.channel !== undefined ? b5.channel : (curSlot5.channel || '0')).replace(/[^0-9]/g, '') || '0';
+          w5ChEl.value = ch5Val;
+        }
+        if (w5MaxClientsEl && document.activeElement !== w5MaxClientsEl) {
+          w5MaxClientsEl.value = String(curSlot5.maxClients || b5.maxClients || 32);
         }
         if (w5TxEl && (curSlot5.txPower || b5.txPower) && document.activeElement !== w5TxEl) {
           w5TxEl.value = curSlot5.txPower || b5.txPower;
@@ -4350,11 +5412,14 @@
           w5WidthEl.value = curSlot5.channelWidth || b5.channelWidth;
         }
         if (w5HideEl) w5HideEl.checked = Boolean(curSlot5.hideSsid);
-        if (w5BssidEl) w5BssidEl.textContent = 'BSSID: ' + (curSlot5.bssid || b5.bssid || state.system.wifiBssid5 || '—');
+        const dispBssid5 = curSlot5.bssid || b5.bssid || state.system.wifiBssid5 || state.system.routerMac || '—';
+        if (w5BssidEl) w5BssidEl.textContent = 'BSSID: ' + dispBssid5;
         if (w5MetaEl) {
           const meta5 = ['SSID' + curSlot5.ssidNum];
-          if (b5.channel) meta5.push('CH ' + b5.channel);
-          if (curSlot5.security || b5.security) meta5.push(curSlot5.security || b5.security);
+          const chDisp5 = b5.realChannel || b5.channel || '36';
+          meta5.push('CH ' + chDisp5);
+          if (curSlot5.security || b5.security) meta5.push(normalizeZteSecurityMode(curSlot5.security || b5.security));
+          meta5.push(curSlot5.hideSsid ? 'مخفية (Hidden)' : 'ظاهرة (Broadcast)');
           w5MetaEl.textContent = meta5.join(' • ');
         }
 
@@ -4374,10 +5439,10 @@
           const el = document.getElementById(id);
           if (el) el.textContent = val;
         };
-        const rMac = state.system.routerMac || b24.bssid || curSlot24.bssid || '—';
-        const bssid24Val = state.system.wifiBssid24 || b24.bssid || curSlot24.bssid || '';
-        const bssid5Val = state.system.wifiBssid5 || b5.bssid || curSlot5.bssid || '';
-        const combinedBssid = [bssid24Val, bssid5Val].filter(function (x) { return x && x !== '—'; }).join(' / ') || rMac;
+        const rMac = state.system.routerMac || dispBssid24 || '—';
+        const bssid24Val = dispBssid24 !== '—' ? dispBssid24 : '';
+        const bssid5Val = dispBssid5 !== '—' ? dispBssid5 : '';
+        const combinedBssid = Array.from(new Set([bssid24Val, bssid5Val].filter(Boolean))).join(' / ') || rMac;
 
         setElText('sysModel', decodeHtmlEntities(state.system.model || (active ? active.profile : '—')));
         setElText('sysWanIp', state.system.wanIp || '—');
@@ -4393,12 +5458,14 @@
 
         renderSpeedTestUI();
         renderEgyptIspCenter();
+        renderMacFilterUI();
 
         const tbody = document.getElementById('devicesTableBody');
         const q = state.searchQuery.toLowerCase().trim();
         const filtered = state.devices.filter(function (d) {
           if (state.deviceFilter === 'BLOCKED' && !d.blocked) return false;
-          if (state.deviceFilter !== 'ALL' && state.deviceFilter !== 'BLOCKED' && d.connectionType !== state.deviceFilter) return false;
+          if (state.deviceFilter === 'WHITELISTED' && !d.whitelisted) return false;
+          if (state.deviceFilter !== 'ALL' && state.deviceFilter !== 'BLOCKED' && state.deviceFilter !== 'WHITELISTED' && d.connectionType !== state.deviceFilter) return false;
           if (!q) return true;
           const nick = (state.nicknames[d.mac.toUpperCase()] || d.nickname || '').toLowerCase();
           return (
@@ -4413,30 +5480,40 @@
           tbody.innerHTML =
             '<tr><td colspan="5" class="py-8 text-center text-xs text-slate-400">' +
               (state.devices.length === 0
-                ? 'No live devices fetched yet. Tap Sync Gateway to pull your live LAN/WLAN clients.'
-                : 'No devices match the selected filter.') +
+                ? 'لا توجد أجهزة حالياً. اضغط تحديث (Sync) لسحب الأجهزة المتصلة بالراوتر.'
+                : 'لا توجد أجهزة مطابقة للفلتر المحدد.') +
             '</td></tr>';
         } else {
           tbody.innerHTML = filtered.map(function (d) {
-            const mac = d.mac.toUpperCase();
+            const mac = normalizeMacAddress(d.mac);
             const nick = state.nicknames[mac] || d.nickname || '';
             let badgeStyle = 'bg-amber-500/15 text-amber-400 border border-amber-500/30';
             let bandDisplay = d.connectionType || '2.4GHz';
+            const netSsid = d.ssidName || (bandDisplay === '5GHz' ? s5 : (bandDisplay === '2.4GHz' ? s24 : ''));
             if (bandDisplay === '5GHz') {
               badgeStyle = 'bg-sky-500/15 text-sky-400 border border-sky-500/30';
-              if (s5) bandDisplay = '5GHz (' + s5 + ')';
+              if (netSsid) bandDisplay = '5GHz (' + netSsid + ')';
             } else if (bandDisplay === 'Ethernet') {
               badgeStyle = 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30';
-            } else if (s24) {
-              bandDisplay = '2.4GHz (' + s24 + ')';
+            } else if (netSsid) {
+              bandDisplay = '2.4GHz (' + netSsid + ')';
+            }
+
+            const statusTags = [];
+            if (d.blocked) {
+              statusTags.push('<span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30">' + (d.online === false ? 'محظور • غير متصل' : 'محظور (Blocked)') + '</span>');
+            }
+            if (d.whitelisted) {
+              statusTags.push('<span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">موثوق (Whitelist)</span>');
             }
 
             return (
-              '<tr class="hover:bg-white/[0.02]">' +
+              '<tr class="hover:bg-white/[0.02] ' + (d.blocked ? 'bg-rose-500/[0.04]' : '') + '">' +
                 '<td class="py-2.5 px-2 sm:px-3">' +
-                  '<div class="flex items-center gap-1.5">' +
+                  '<div class="flex items-center gap-1.5 flex-wrap">' +
                     '<span class="font-semibold text-white truncate max-w-[130px] sm:max-w-none">' + escapeHtml(nick || d.hostname) + '</span>' +
-                    '<button type="button" data-edit-nick="' + escapeHtml(mac) + '" class="text-slate-400 hover:text-amber-400 shrink-0" title="Set Friendly Nickname">✎</button>' +
+                    '<button type="button" data-edit-nick="' + escapeHtml(mac) + '" class="text-slate-400 hover:text-amber-400 shrink-0" title="تسمية الجهاز">✎</button>' +
+                    statusTags.join('') +
                   '</div>' +
                   (nick ? '<p class="text-[10px] text-slate-400 truncate">' + escapeHtml(d.hostname) + '</p>' : '') +
                 '</td>' +
@@ -4444,9 +5521,14 @@
                 '<td class="py-2.5 px-2 sm:px-3 font-mono text-[10px] sm:text-xs text-slate-300 whitespace-nowrap">' + escapeHtml(mac) + '</td>' +
                 '<td class="py-2.5 px-2 sm:px-3 whitespace-nowrap"><span class="px-2 py-0.5 rounded-md font-mono text-[10px] sm:text-[11px] border ' + badgeStyle + '">' + escapeHtml(bandDisplay) + '</span></td>' +
                 '<td class="py-2.5 px-2 sm:px-3 text-right whitespace-nowrap">' +
-                  (d.blocked
-                    ? '<button type="button" data-toggle-mac="' + escapeHtml(mac) + '" data-block-action="false" class="btn-press px-2.5 py-1 rounded-lg bg-emerald-500/15 text-emerald-300 text-[11px] font-semibold">Unblock</button>'
-                    : '<button type="button" data-toggle-mac="' + escapeHtml(mac) + '" data-block-action="true" class="btn-press px-2.5 py-1 rounded-lg bg-rose-500/15 text-rose-300 text-[11px] font-semibold">Block</button>') +
+                  '<div class="inline-flex items-center gap-1.5">' +
+                    (d.blocked
+                      ? '<button type="button" data-toggle-mac="' + escapeHtml(mac) + '" data-block-action="false" class="btn-press px-2.5 py-1 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/30 text-[11px] font-bold">فك الحظر (Unblock)</button>'
+                      : '<button type="button" data-toggle-mac="' + escapeHtml(mac) + '" data-block-action="true" class="btn-press px-2.5 py-1 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/30 text-[11px] font-bold">حظر (Block)</button>') +
+                    (d.whitelisted
+                      ? '<button type="button" data-whitelist-mac="' + escapeHtml(mac) + '" data-whitelist-action="false" class="btn-press px-2 py-1 rounded-lg bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 text-[10px] font-semibold" title="إزالة من القائمة البيضاء">✓ بالبيضاء</button>'
+                      : '<button type="button" data-whitelist-mac="' + escapeHtml(mac) + '" data-whitelist-action="true" class="btn-press px-2 py-1 rounded-lg bg-white/5 hover:bg-emerald-500/15 text-slate-300 hover:text-emerald-300 border border-white/10 text-[10px] font-medium" title="إضافة للقائمة البيضاء">+ بيضاء</button>') +
+                  '</div>' +
                 '</td>' +
               '</tr>'
             );
@@ -4536,9 +5618,20 @@
             state.lastSyncAt = statusRes.data.lastSyncAt || new Date().toISOString();
             state.system = statusRes.data.system || state.system;
 
+            const mfRes = await apiCall('/api/mac-filter', 'GET');
+            if (mfRes && mfRes.ok && mfRes.data) {
+              const mf = ensureMacFilterState();
+              if (Array.isArray(mfRes.data.blacklist) && mfRes.data.blacklist.length > 0 && mf.blacklist.length === 0) {
+                mf.blacklist = mfRes.data.blacklist;
+              }
+              if (Array.isArray(mfRes.data.whitelist) && mfRes.data.whitelist.length > 0 && mf.whitelist.length === 0) {
+                mf.whitelist = mfRes.data.whitelist;
+              }
+            }
+
             const devRes = await apiCall('/api/devices', 'GET');
             if (devRes && devRes.ok && Array.isArray(devRes.data)) {
-              state.devices = devRes.data;
+              state.devices = mergeDevicesWithMacFilter(devRes.data);
             }
 
             const wifiRes = await apiCall('/api/wifi', 'GET');
@@ -4552,7 +5645,7 @@
               state.reSyncAttempt = 0;
               state.connectionState = 'CONNECTED';
               if (manual) {
-                showToast('Synced with Router', 'Live telemetry updated from gateway.', 'success');
+                showToast('تم التحديث من الراوتر', 'تم سحب أحدث البيانات والأجهزة وإعدادات الشبكات بنجاح.', 'success');
               }
             }
           } else {
@@ -4665,6 +5758,7 @@
         saveLocal('router_saved_accounts_v2', state.accounts);
         saveLocal('router_active_account_id_v2', state.activeAccountId);
 
+        sanitizeWifiPasswordVault();
         state.connectionState = 'RECONNECTING';
         await apiCall('/api/accounts/login', 'POST', accountPayload);
 
@@ -4689,6 +5783,8 @@
 
       function syncCurrentWifiFormToSlotState() {
         if (!state.wifi) return;
+        const active = getActiveAccount();
+        const adminPass = active && active.password ? String(active.password).trim() : '';
         const s24Idx = state.selectedSlot24 || 0;
         const s5Idx = state.selectedSlot5 || 0;
         const slot24 = state.wifi.aps24 && state.wifi.aps24[s24Idx];
@@ -4697,15 +5793,24 @@
           const en24 = document.getElementById('wifi24Enabled');
           const ss24 = document.getElementById('wifi24Ssid');
           const pw24 = document.getElementById('wifi24Pass');
+          const sec24 = document.getElementById('wifi24Security');
+          const ch24 = document.getElementById('wifi24Channel');
+          const mc24 = document.getElementById('wifi24MaxClients');
           const tx24 = document.getElementById('wifi24TxPower');
           const bw24 = document.getElementById('wifi24Width');
           const hd24 = document.getElementById('wifi24Hide');
           if (en24) slot24.enabled = en24.checked;
           if (ss24 && ss24.value.trim()) slot24.ssid = ss24.value.trim();
-          if (pw24 && pw24.value && !isZteEncryptedOrMaskedPass(pw24.value)) {
-            slot24.password = pw24.value;
-            savePlaintextWifiPassword(slot24.instId, slot24.ssid, pw24.value);
+          if (pw24 && pw24.value && !isZteEncryptedOrMaskedPass(pw24.value) && pw24.value.trim() !== adminPass) {
+            slot24.password = pw24.value.trim();
+            savePlaintextWifiPassword(slot24.instId, slot24.ssid, pw24.value.trim(), true);
           }
+          if (sec24) slot24.security = sec24.value;
+          if (ch24) {
+            slot24.channel = ch24.value;
+            if (state.wifi.band24) state.wifi.band24.channel = ch24.value;
+          }
+          if (mc24) slot24.maxClients = parseInt(mc24.value, 10) || 32;
           if (tx24) slot24.txPower = tx24.value;
           if (bw24) slot24.channelWidth = bw24.value;
           if (hd24) slot24.hideSsid = hd24.checked;
@@ -4714,15 +5819,24 @@
           const en5 = document.getElementById('wifi5Enabled');
           const ss5 = document.getElementById('wifi5Ssid');
           const pw5 = document.getElementById('wifi5Pass');
+          const sec5 = document.getElementById('wifi5Security');
+          const ch5 = document.getElementById('wifi5Channel');
+          const mc5 = document.getElementById('wifi5MaxClients');
           const tx5 = document.getElementById('wifi5TxPower');
           const bw5 = document.getElementById('wifi5Width');
           const hd5 = document.getElementById('wifi5Hide');
           if (en5) slot5.enabled = en5.checked;
           if (ss5 && ss5.value.trim()) slot5.ssid = ss5.value.trim();
-          if (pw5 && pw5.value && !isZteEncryptedOrMaskedPass(pw5.value)) {
-            slot5.password = pw5.value;
-            savePlaintextWifiPassword(slot5.instId, slot5.ssid, pw5.value);
+          if (pw5 && pw5.value && !isZteEncryptedOrMaskedPass(pw5.value) && pw5.value.trim() !== adminPass) {
+            slot5.password = pw5.value.trim();
+            savePlaintextWifiPassword(slot5.instId, slot5.ssid, pw5.value.trim(), true);
           }
+          if (sec5) slot5.security = sec5.value;
+          if (ch5) {
+            slot5.channel = ch5.value;
+            if (state.wifi.band5) state.wifi.band5.channel = ch5.value;
+          }
+          if (mc5) slot5.maxClients = parseInt(mc5.value, 10) || 32;
           if (tx5) slot5.txPower = tx5.value;
           if (bw5) slot5.channelWidth = bw5.value;
           if (hd5) slot5.hideSsid = hd5.checked;
@@ -4758,6 +5872,54 @@
             state.selectedSlot24 = idx;
           }
           renderDashboard();
+          return;
+        }
+
+        // MAC Filter Policy Mode Switch (BLACKLIST | WHITELIST | DISABLED)
+        const macModeBtn = e.target.closest('[data-mac-mode]');
+        if (macModeBtn) {
+          const nextMode = macModeBtn.getAttribute('data-mac-mode');
+          const mf = ensureMacFilterState();
+          if (nextMode === 'WHITELIST' && mf.whitelist.length === 0 && state.devices.length > 0) {
+            // Automatically seed connected non-blocked devices into Whitelist when switching to Whitelist mode if empty
+            state.devices.filter(function (d) { return !d.blocked; }).forEach(function (d) {
+              upsertMacInWhitelist(d.mac, { hostname: d.hostname, ip: d.ip, connectionType: d.connectionType }, true);
+            });
+          }
+          mf.mode = nextMode;
+          saveMacFilterState();
+          state.devices = mergeDevicesWithMacFilter(state.devices);
+          renderDashboard();
+          await apiCall('/api/mac-filter', 'POST', mf);
+          showToast(
+            'تم تغيير وضع فلترة الأجهزة',
+            nextMode === 'BLACKLIST'
+              ? 'تم تفعيل وضع القائمة السوداء (Blacklist).'
+              : (nextMode === 'WHITELIST' ? 'تم تفعيل وضع القائمة البيضاء (Whitelist).' : 'تم إيقاف فلترة الـ MAC مؤقتاً.'),
+            'success'
+          );
+          return;
+        }
+
+        // Unblock device directly from the Blacklist panel
+        const unblockPanelBtn = e.target.closest('[data-unblock-mac]');
+        if (unblockPanelBtn) {
+          const mac = normalizeMacAddress(unblockPanelBtn.getAttribute('data-unblock-mac'));
+          upsertMacInBlacklist(mac, {}, false);
+          renderDashboard();
+          await apiCall('/api/block', 'POST', { mac: mac, block: false });
+          showToast('تم فك الحظر عن الجهاز', 'تمت إزالة ' + mac + ' من القائمة السوداء والسماح له بالاتصال.', 'success');
+          return;
+        }
+
+        // Remove device from the Whitelist panel
+        const unwhitePanelBtn = e.target.closest('[data-unwhitelist-mac]');
+        if (unwhitePanelBtn) {
+          const mac = normalizeMacAddress(unwhitePanelBtn.getAttribute('data-unwhitelist-mac'));
+          upsertMacInWhitelist(mac, {}, false);
+          renderDashboard();
+          await apiCall('/api/mac-filter', 'POST', ensureMacFilterState());
+          showToast('تمت الإزالة من القائمة البيضاء', 'تم حذف ' + mac + ' من القائمة البيضاء.', 'warning');
           return;
         }
 
@@ -4859,6 +6021,57 @@
         });
       }
 
+      const macFilterTargetApSelect = document.getElementById('macFilterTargetAp');
+      if (macFilterTargetApSelect) {
+        macFilterTargetApSelect.addEventListener('change', function (e) {
+          const mf = ensureMacFilterState();
+          mf.targetAp = e.target.value;
+          saveMacFilterState();
+        });
+      }
+
+      const applyMacPolicyBtn = document.getElementById('applyMacPolicyBtn');
+      if (applyMacPolicyBtn) {
+        applyMacPolicyBtn.addEventListener('click', async function () {
+          const mf = ensureMacFilterState();
+          const selAp = document.getElementById('macFilterTargetAp');
+          if (selAp) mf.targetAp = selAp.value;
+          saveMacFilterState();
+          const res = await apiCall('/api/mac-filter', 'POST', mf);
+          renderDashboard();
+          showToast(
+            res && res.ok ? 'تم تطبيق السياسة على الراوتر' : 'تم حفظ السياسة محلياً',
+            'الوضع الحالي: ' + mf.mode + ' • القائمة السوداء: ' + mf.blacklist.length + ' • القائمة البيضاء: ' + mf.whitelist.length,
+            'success'
+          );
+        });
+      }
+
+      const whitelistAllConnectedBtn = document.getElementById('whitelistAllConnectedBtn');
+      if (whitelistAllConnectedBtn) {
+        whitelistAllConnectedBtn.addEventListener('click', async function () {
+          const onlineDevs = state.devices.filter(function (d) { return !d.blocked; });
+          if (onlineDevs.length === 0) {
+            showToast('لا توجد أجهزة متصلة حالياً', 'اضغط تحديث (Sync) لسحب الأجهزة المتصلة أولاً.', 'warning');
+            return;
+          }
+          onlineDevs.forEach(function (d) {
+            upsertMacInWhitelist(d.mac, {
+              hostname: state.nicknames[d.mac] || d.hostname,
+              ip: d.ip,
+              connectionType: d.connectionType
+            }, true);
+          });
+          renderDashboard();
+          await apiCall('/api/mac-filter', 'POST', ensureMacFilterState());
+          showToast(
+            'تمت إضافة الأجهزة للقائمة البيضاء',
+            'تم تسجيل ' + onlineDevs.length + ' جهاز متصل كأجهزة موثوقة في القائمة البيضاء (Whitelist).',
+            'success'
+          );
+        });
+      }
+
       const copyIspDnsBtn = document.getElementById('copyIspDnsBtn');
       if (copyIspDnsBtn) {
         copyIspDnsBtn.addEventListener('click', function () {
@@ -4947,7 +6160,7 @@
         const titleMap = {
           overview: 'الخط وفحص السرعة (Line & Speed)',
           router: 'بيانات الراوتر والاتصال (Router Info)',
-          devices: 'الأجهزة المتصلة (Connected Devices)',
+          devices: 'الأجهزة المتصلة والفلترة (Devices & ACL)',
           wifi: 'إدارة شبكات الواي فاي (Multi-SSID Wi-Fi)',
           maintenance: 'الحسابات وإعادة التشغيل (Accounts & Reboot)',
           architecture: 'السجلات والتشخيص (Logs & Info)'
@@ -5001,7 +6214,7 @@
           if (!input) return;
           const active = getActiveAccount();
 
-          // Ensure the real unencrypted password is populated before revealing
+          // Ensure the real unencrypted password is populated (if available in vault or router XML)
           if (!input.value || isZteEncryptedOrMaskedPass(input.value)) {
             if (targetId === 'wifi24Pass') {
               const slot24 = (state.wifi && state.wifi.aps24 && state.wifi.aps24[state.selectedSlot24 || 0]) || {};
@@ -5032,42 +6245,76 @@
         renderDashboard();
       });
 
-      document.getElementById('devicesTableBody').addEventListener('click', function (e) {
+      document.getElementById('devicesTableBody').addEventListener('click', async function (e) {
         const nickBtn = e.target.closest('[data-edit-nick]');
         if (nickBtn) {
-          const mac = nickBtn.getAttribute('data-edit-nick');
+          const mac = normalizeMacAddress(nickBtn.getAttribute('data-edit-nick'));
           openInputModal(
-            'Set Device Friendly Nickname',
+            'تسمية الجهاز (Friendly Nickname)',
             'MAC: ' + mac,
             state.nicknames[mac] || '',
-            'e.g., Personal Phone',
+            'مثال: موبايل أحمد / شاشة الصالة',
             async function (val) {
               if (val && val.trim()) state.nicknames[mac] = val.trim();
               else delete state.nicknames[mac];
               saveLocal('router_nicknames_v2', state.nicknames);
               await apiCall('/api/devices/nickname', 'POST', { mac: mac, nickname: val });
               renderDashboard();
-              showToast('Nickname Saved', 'Updated nickname for ' + mac, 'success');
+              showToast('تم حفظ اسم الجهاز', 'تم تحديث الاسم المميز للجهاز ' + mac, 'success');
             }
+          );
+          return;
+        }
+
+        const whiteBtn = e.target.closest('[data-whitelist-mac]');
+        if (whiteBtn) {
+          const mac = normalizeMacAddress(whiteBtn.getAttribute('data-whitelist-mac'));
+          const shouldAllow = whiteBtn.getAttribute('data-whitelist-action') === 'true';
+          const dev = state.devices.find(function (d) { return normalizeMacAddress(d.mac) === mac; }) || {};
+          upsertMacInWhitelist(mac, {
+            hostname: state.nicknames[mac] || dev.hostname,
+            ip: dev.ip,
+            connectionType: dev.connectionType
+          }, shouldAllow);
+          renderDashboard();
+          await apiCall('/api/mac-filter', 'POST', ensureMacFilterState());
+          showToast(
+            shouldAllow ? 'تمت الإضافة للقائمة البيضاء' : 'تمت الإزالة من القائمة البيضاء',
+            mac + (shouldAllow ? ' أُضيف كجهاز موثوق (Whitelist).' : ' أُزيل من القائمة البيضاء.'),
+            shouldAllow ? 'success' : 'warning'
           );
           return;
         }
 
         const blockBtn = e.target.closest('[data-toggle-mac]');
         if (blockBtn) {
-          const mac = blockBtn.getAttribute('data-toggle-mac');
+          const mac = normalizeMacAddress(blockBtn.getAttribute('data-toggle-mac'));
           const shouldBlock = blockBtn.getAttribute('data-block-action') === 'true';
+          const dev = state.devices.find(function (d) { return normalizeMacAddress(d.mac) === mac; }) || {};
+          const devLabel = state.nicknames[mac] || dev.hostname || mac;
           openConfirmModal(
-            shouldBlock ? 'Block MAC Address?' : 'Unblock MAC Address?',
-            (shouldBlock ? 'Add ' : 'Remove ') + mac + ' on the router WLAN MAC Filter?',
+            shouldBlock ? ('حظر الجهاز (' + devLabel + ')؟') : ('فك الحظر عن (' + devLabel + ')؟'),
+            shouldBlock
+              ? ('سيتم إضافة ' + mac + ' إلى القائمة السوداء (Blacklist) وحظره نهائياً على الراوتر مع الاحتفاظ به في قائمة المحظورين حتى لا يعود للاتصال.')
+              : ('سيتم إزالة ' + mac + ' من القائمة السوداء والسماح له بالاتصال بالشبكة مرة أخرى.'),
             async function () {
-              const res = await apiCall('/api/block', 'POST', { mac: mac, block: shouldBlock });
-              const dev = state.devices.find(function (d) { return d.mac.toUpperCase() === mac; });
-              if (dev) dev.blocked = shouldBlock;
+              upsertMacInBlacklist(mac, {
+                hostname: devLabel,
+                ip: dev.ip || '—',
+                connectionType: dev.connectionType || '2.4GHz'
+              }, shouldBlock);
+              renderDashboard();
+              const res = await apiCall('/api/block', 'POST', {
+                mac: mac,
+                block: shouldBlock,
+                hostname: devLabel,
+                ip: dev.ip || '—',
+                connectionType: dev.connectionType || '2.4GHz'
+              });
               renderDashboard();
               showToast(
-                res && res.ok ? 'Router MAC Filter Updated' : 'Queued Locally',
-                mac + (shouldBlock ? ' blacklisted.' : ' unblocked.'),
+                shouldBlock ? 'تم حظر الجهاز نهائياً' : 'تم فك الحظر عن الجهاز',
+                mac + (shouldBlock ? ' مضاف الآن في القائمة السوداء (Blacklist) ومحظور على الراوتر.' : ' مسموح له الآن بالاتصال.'),
                 shouldBlock ? 'warning' : 'success'
               );
             }
@@ -5076,27 +6323,30 @@
       });
 
       document.getElementById('openAddMacModalBtn').addEventListener('click', function () {
+        const mf = ensureMacFilterState();
+        const isWhiteMode = mf.mode === 'WHITELIST';
         openInputModal(
-          'Block Custom MAC Address',
-          'Enter hardware MAC address (XX:XX:XX:XX:XX:XX)',
+          isWhiteMode ? 'إضافة MAC للقائمة البيضاء (Whitelist)' : 'إضافة MAC للقائمة السوداء (حظر جهاز)',
+          'أدخل عنوان الـ MAC بالصيغة XX:XX:XX:XX:XX:XX',
           '',
           'AA:BB:CC:DD:EE:FF',
           async function (val) {
-            const mac = String(val || '').toUpperCase().trim();
+            const mac = normalizeMacAddress(val);
             if (!/^([0-9A-F]{2}:){5}[0-9A-F]{2}$/.test(mac)) {
-              showToast('Invalid MAC Address', 'Use format AA:BB:CC:11:22:33', 'error');
+              showToast('صيغة MAC غير صحيحة', 'يرجى إدخال العنوان بالصيغة AA:BB:CC:11:22:33', 'error');
               return;
             }
-            await apiCall('/api/block', 'POST', { mac: mac, block: true });
-            state.devices.push({
-              hostname: 'Blacklisted-MAC',
-              ip: '—',
-              mac: mac,
-              connectionType: '2.4GHz',
-              blocked: true
-            });
-            renderDashboard();
-            showToast('MAC Blacklisted', 'Sent ' + mac + ' to router MAC filter.', 'warning');
+            if (isWhiteMode) {
+              upsertMacInWhitelist(mac, { hostname: 'Trusted-' + mac.slice(-5) }, true);
+              renderDashboard();
+              await apiCall('/api/mac-filter', 'POST', ensureMacFilterState());
+              showToast('تمت الإضافة للقائمة البيضاء', 'تم تسجيل ' + mac + ' في القائمة البيضاء (Whitelist).', 'success');
+            } else {
+              upsertMacInBlacklist(mac, { hostname: 'Blocked-' + mac.slice(-5) }, true);
+              renderDashboard();
+              await apiCall('/api/block', 'POST', { mac: mac, block: true, hostname: 'Blocked-' + mac.slice(-5) });
+              showToast('تم حظر عنوان الـ MAC', 'تمت إضافة ' + mac + ' للقائمة السوداء وإرساله لفلتر الراوتر.', 'warning');
+            }
           }
         );
       });
@@ -5109,18 +6359,26 @@
         const inst5 = 'DEV.WIFI.AP' + (s5Idx + 5);
         openConfirmModal(
           'حفظ وتطبيق إعدادات شبكات الواي فاي؟',
-          'سيتم إرسال التعديلات لشبكة 2.4GHz (SSID' + (s24Idx + 1) + ') وشبكة 5GHz (SSID' + (s5Idx + 5) + ') إلى الراوتر مباشرة.',
+          'سيتم إرسال كافة التعديلات لشبكة 2.4GHz (SSID' + (s24Idx + 1) + ') وشبكة 5GHz (SSID' + (s5Idx + 5) + ') إلى الراوتر مباشرة.',
           async function () {
+            const active = getActiveAccount();
+            const adminPass = active && active.password ? String(active.password).trim() : '';
             const pass24Val = document.getElementById('wifi24Pass').value.trim();
             const pass5Val = document.getElementById('wifi5Pass').value.trim();
             const ssid24Val = document.getElementById('wifi24Ssid').value.trim();
             const ssid5Val = document.getElementById('wifi5Ssid').value.trim();
+            const sec24Val = (document.getElementById('wifi24Security') && document.getElementById('wifi24Security').value) || '11i';
+            const sec5Val = (document.getElementById('wifi5Security') && document.getElementById('wifi5Security').value) || '11i';
+            const ch24Val = (document.getElementById('wifi24Channel') && document.getElementById('wifi24Channel').value) || '0';
+            const ch5Val = (document.getElementById('wifi5Channel') && document.getElementById('wifi5Channel').value) || '0';
+            const mc24Val = parseInt((document.getElementById('wifi24MaxClients') && document.getElementById('wifi24MaxClients').value) || '32', 10) || 32;
+            const mc5Val = parseInt((document.getElementById('wifi5MaxClients') && document.getElementById('wifi5MaxClients').value) || '32', 10) || 32;
 
-            if (pass24Val && !isZteEncryptedOrMaskedPass(pass24Val)) {
-              savePlaintextWifiPassword(inst24, ssid24Val, pass24Val);
+            if (pass24Val && !isZteEncryptedOrMaskedPass(pass24Val) && pass24Val !== adminPass) {
+              savePlaintextWifiPassword(inst24, ssid24Val, pass24Val, true);
             }
-            if (pass5Val && !isZteEncryptedOrMaskedPass(pass5Val)) {
-              savePlaintextWifiPassword(inst5, ssid5Val, pass5Val);
+            if (pass5Val && !isZteEncryptedOrMaskedPass(pass5Val) && pass5Val !== adminPass) {
+              savePlaintextWifiPassword(inst5, ssid5Val, pass5Val, true);
             }
 
             syncCurrentWifiFormToSlotState();
@@ -5131,7 +6389,10 @@
                 instId: inst24,
                 enabled: document.getElementById('wifi24Enabled').checked,
                 ssid: ssid24Val,
-                password: pass24Val,
+                password: (pass24Val && pass24Val !== adminPass) ? pass24Val : '',
+                security: sec24Val,
+                channel: ch24Val,
+                maxClients: mc24Val,
                 txPower: document.getElementById('wifi24TxPower').value,
                 channelWidth: document.getElementById('wifi24Width').value,
                 hideSsid: document.getElementById('wifi24Hide').checked
@@ -5141,7 +6402,10 @@
                 instId: inst5,
                 enabled: document.getElementById('wifi5Enabled').checked,
                 ssid: ssid5Val,
-                password: pass5Val,
+                password: (pass5Val && pass5Val !== adminPass) ? pass5Val : '',
+                security: sec5Val,
+                channel: ch5Val,
+                maxClients: mc5Val,
                 txPower: document.getElementById('wifi5TxPower').value,
                 channelWidth: document.getElementById('wifi5Width').value,
                 hideSsid: document.getElementById('wifi5Hide').checked
@@ -5260,8 +6524,7 @@
       }
 
       async function copyDiagnosticReportAction() {
-        const report = generateDiagnosticReport();
-        const content = JSON.stringify(report, null, 2);
+        const content = generateDiagnosticReport();
         await copyTextToClipboard(content, 'تم نسخ تقرير التشخيص', 'تم نسخ تقرير JSON التشخيصي الشامل بنجاح.');
       }
 
@@ -5344,6 +6607,7 @@
 
       (async function initApp() {
         applyTheme(state.theme);
+        sanitizeWifiPasswordVault();
 
         const backendAcc = await apiCall('/api/accounts', 'GET');
         if (backendAcc && backendAcc.ok && backendAcc.data && Array.isArray(backendAcc.data.accounts) && backendAcc.data.accounts.length > 0) {
@@ -5351,6 +6615,7 @@
           state.activeAccountId = backendAcc.data.activeAccountId || state.accounts[0].id;
           saveLocal('router_saved_accounts_v2', state.accounts);
           saveLocal('router_active_account_id_v2', state.activeAccountId);
+          sanitizeWifiPasswordVault();
         }
 
         setupPolling(30000);

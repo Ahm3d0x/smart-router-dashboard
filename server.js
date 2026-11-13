@@ -106,15 +106,48 @@ app.post('/api/devices/nickname', (req, res) => {
   res.json({ ok: true, mac, nickname: map[mac.toUpperCase()] || '' });
 });
 
-// POST /api/block - Block or unblock MAC on router
-app.post('/api/block', async (req, res) => {
+// GET /api/mac-filter - Retrieve persistent Blacklist & Whitelist MAC filter configuration
+app.get('/api/mac-filter', (req, res) => {
+  res.json({ ok: true, data: configStore.getMacFilter() });
+});
+
+// POST /api/mac-filter - Update Blacklist / Whitelist MAC filter mode & rules
+app.post('/api/mac-filter', async (req, res) => {
   try {
-    const { mac, block } = req.body || {};
-    if (!mac) return res.status(400).json({ ok: false, error: 'MAC address is required' });
-    const result = await routerService.toggleBlockDevice(mac, Boolean(block));
-    res.json(result);
+    const saved = configStore.saveMacFilter(req.body || {});
+    res.json({ ok: true, data: saved });
   } catch (err) {
-    res.status(503).json({ ok: false, error: err.message });
+    res.status(500).json({ ok: false, error: err.message });
+  }
+});
+
+// POST /api/block - Block or unblock MAC on router and persist in Blacklist
+app.post('/api/block', async (req, res) => {
+  const { mac, block, hostname, ip, connectionType, ssid } = req.body || {};
+  if (!mac) return res.status(400).json({ ok: false, error: 'MAC address is required' });
+  const normMac = String(mac).toUpperCase().trim();
+  const currentFilter = configStore.getMacFilter();
+  if (block) {
+    if (!currentFilter.blacklist.some(item => String(item.mac).toUpperCase() === normMac)) {
+      currentFilter.blacklist.push({
+        mac: normMac,
+        hostname: hostname || ('Device-' + normMac.slice(-5)),
+        ip: ip || '—',
+        connectionType: connectionType || '2.4GHz',
+        ssid: ssid || '',
+        addedAt: new Date().toISOString()
+      });
+    }
+  } else {
+    currentFilter.blacklist = currentFilter.blacklist.filter(item => String(item.mac).toUpperCase() !== normMac);
+  }
+  const updatedFilter = configStore.saveMacFilter(currentFilter);
+
+  try {
+    const result = await routerService.toggleBlockDevice(normMac, Boolean(block));
+    res.json({ ...result, macFilter: updatedFilter });
+  } catch (err) {
+    res.json({ ok: true, persistedLocally: true, mac: normMac, blocked: Boolean(block), macFilter: updatedFilter, warning: err.message });
   }
 });
 

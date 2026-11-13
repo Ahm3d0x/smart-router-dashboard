@@ -1,0 +1,7 @@
+{
+  "mode": "BLACKLIST",
+  "enabled": false,
+  "targetAp": "ALL_ACTIVE",
+  "blacklist": [],
+  "whitelist": []
+}

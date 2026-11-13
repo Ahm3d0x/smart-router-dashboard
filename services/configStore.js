@@ -180,6 +180,45 @@ function saveNickname(mac, nickname) {
   return map;
 }
 
+const MAC_FILTER_FILE = path.join(DATA_DIR, 'mac_filter.json');
+
+function getMacFilter() {
+  const defaultFilter = {
+    mode: 'BLACKLIST',
+    targetAp: 'ALL_ACTIVE',
+    blacklist: [],
+    whitelist: []
+  };
+  if (!fs.existsSync(MAC_FILTER_FILE)) {
+    fs.writeFileSync(MAC_FILTER_FILE, JSON.stringify(defaultFilter, null, 2), 'utf8');
+    return defaultFilter;
+  }
+  try {
+    const parsed = JSON.parse(fs.readFileSync(MAC_FILTER_FILE, 'utf8'));
+    return {
+      mode: parsed.mode || 'BLACKLIST',
+      targetAp: parsed.targetAp || 'ALL_ACTIVE',
+      blacklist: Array.isArray(parsed.blacklist) ? parsed.blacklist : [],
+      whitelist: Array.isArray(parsed.whitelist) ? parsed.whitelist : []
+    };
+  } catch {
+    return defaultFilter;
+  }
+}
+
+function saveMacFilter(nextState) {
+  const current = getMacFilter();
+  const updated = {
+    mode: nextState.mode || current.mode || 'BLACKLIST',
+    targetAp: nextState.targetAp || current.targetAp || 'ALL_ACTIVE',
+    blacklist: Array.isArray(nextState.blacklist) ? nextState.blacklist : current.blacklist,
+    whitelist: Array.isArray(nextState.whitelist) ? nextState.whitelist : current.whitelist,
+    updatedAt: new Date().toISOString()
+  };
+  fs.writeFileSync(MAC_FILTER_FILE, JSON.stringify(updated, null, 2), 'utf8');
+  return updated;
+}
+
 module.exports = {
   listAccounts,
   getActiveAccount,
@@ -187,5 +226,8 @@ module.exports = {
   setActiveAccount,
   deleteAccount,
   getNicknames,
-  saveNickname
+  saveNickname,
+  getMacFilter,
+  saveMacFilter
 };
+
